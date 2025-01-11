@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.team2641.robot2025.commands;
 
 import edu.wpi.first.networktables.IntegerPublisher;
@@ -14,7 +11,6 @@ public class Rev extends Command {
   private int speed;
   IntegerPublisher speedPub;
 
-  /** Creates a new Flywheel. */
   public Rev(int speed) {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     speedPub = table.getIntegerTopic("shooterSpeed").publish();
@@ -25,7 +21,6 @@ public class Rev extends Command {
     addRequirements(shooter);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     speedPub.set(speed);
@@ -39,15 +34,14 @@ public class Rev extends Command {
       shooter.intake();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  public void execute() {}
+  public void execute() {
+  }
 
   @Override
   public void end(boolean interrupted) {
     shooter.stop();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

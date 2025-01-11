@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.team2641.robot2025.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,14 +14,12 @@ public class Feed extends Command {
   private Drivetrain drivetrain;
   IntegerSubscriber speedSub;
 
-  /** Creates a new Flywheel. */
   public Feed() {
     drivetrain = Drivetrain.getInstance();
     indexer = Indexer.getInstance();
     addRequirements(indexer);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
@@ -48,7 +43,6 @@ public class Feed extends Command {
       indexer.stop();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   public void execute() {
   }
 
@@ -57,7 +51,6 @@ public class Feed extends Command {
     indexer.stop();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
