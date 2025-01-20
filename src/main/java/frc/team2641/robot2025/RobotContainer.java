@@ -64,11 +64,11 @@ public class RobotContainer {
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.6 : -driverGamepad.getLeftY(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
             OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.6 : -driverGamepad.getLeftX(),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.6 : -driverGamepad.getRightX(),
+        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
         () -> robotSub.get());
     
     drivetrain.setDefaultCommand(driveCommand);
