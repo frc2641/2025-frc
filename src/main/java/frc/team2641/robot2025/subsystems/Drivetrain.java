@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.team2641.robot2025.Constants;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,6 @@ import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
-import swervelib.SwerveDriveTest;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -207,22 +205,6 @@ public class Drivetrain extends SubsystemBase {
     }
 
     return Commands.none();
-  }
-
-  public Command sysIdDriveMotorCommand() {
-    return SwerveDriveTest.generateSysIdCommand(
-      SwerveDriveTest.setDriveSysIdRoutine(
-        new Config(),
-        this, swerveDrive, 12),
-      3.0, 5.0, 3.0);
-  }
-
-  public Command sysIdAngleMotorCommand() {
-    return SwerveDriveTest.generateSysIdCommand(
-      SwerveDriveTest.setAngleSysIdRoutine(
-        new Config(),
-        this, swerveDrive),
-      3.0, 5.0, 3.0);
   }
 
   public Command centerModulesCommand() {
