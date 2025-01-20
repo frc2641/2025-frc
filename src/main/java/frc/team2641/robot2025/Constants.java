@@ -28,16 +28,7 @@ public final class Constants {
   }
 
   public static final class CAN {
-    public static final int shooterMotor = 14;
-    public static final int indexerMotor = 13;
     public static final int pdh = 20;
     public static final int ph = 21;
-  }
-
-  public static final class MotorSpeeds {
-    public static final double speakerSpeed = 1;
-    public static final double ampSpeed = 0.1;
-    public static final double trapSpeed = 0.5;
-    public static final double intakeSpeed = 0.1;
   }
 }

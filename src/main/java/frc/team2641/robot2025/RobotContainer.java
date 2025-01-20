@@ -6,8 +6,6 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.IntegerPublisher;
-import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,9 +42,6 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
-  IntegerPublisher stagePub;
-  IntegerSubscriber stageSub;
-
   public RobotContainer() {
     configureBindings();
 
@@ -59,10 +54,6 @@ public class RobotContainer {
     angularVelocityPub = table.getDoubleTopic("angularVelocity").publish();
     angularVelocityPub.set(0);
     angularVelocitySub = table.getDoubleTopic("angularVelocity").subscribe(0);
-
-    stagePub = table.getIntegerTopic("stageAngle").publish();
-    stagePub.set(0);
-    stageSub = table.getIntegerTopic("stageAngle").subscribe(0);
 
     sniperPub = table.getBooleanTopic("sniperMode").publish();
     sniperPub.set(false);
@@ -79,22 +70,15 @@ public class RobotContainer {
             OperatorConstants.LEFT_X_DEADBAND),
         () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.6 : -driverGamepad.getRightX(),
         () -> robotSub.get());
+    
+    drivetrain.setDefaultCommand(driveCommand);
 
-    NamedCommands.registerCommand("autoShoot", new AutoShoot());
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
     NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
     
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
-    autoChooser.addOption("Shoot Creep Amp", "Shoot Creep Amp");
-    autoChooser.addOption("Shoot Stationary", "Shoot Stationary");
-    autoChooser.addOption("Test Auto 1", "Test Auto 1");
-    // autoChooser.addOption("Shoot Top Jackass", "Shoot Top Jackass");
-    // autoChooser.addOption("Shoot Center Jackass", "Shoot Center Jackass");
-    // autoChooser.addOption("Shoot Bottom Jackass", "Shoot Bottom Jackass");
     SmartDashboard.putData("Auto", autoChooser);
-
-    drivetrain.setDefaultCommand(driveCommand);
   }
 
   private void configureBindings() {
@@ -103,16 +87,10 @@ public class RobotContainer {
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
     driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
+    driverGamepad.rightBumper().whileTrue(new Climb());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
-
-    operatorGamepad.a().whileTrue(new Rev(1));
-    operatorGamepad.b().whileTrue(new Rev(2));
-    operatorGamepad.x().whileTrue(new Rev(3));
-    operatorGamepad.y().whileTrue(new Climb());
-    operatorGamepad.leftTrigger().whileTrue(new Intake());
-    operatorGamepad.rightTrigger().whileTrue(new Feed());
   }
 
   public Command getAutonomousCommand() {
