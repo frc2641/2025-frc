@@ -6,14 +6,15 @@ import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
 public final class Constants {
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 47; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms spark max velocity lag
 
   public static final class AutoConstants {
-    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-    public static final PIDConstants ANGLE_PID = new PIDConstants(0.4, 0, 0.01);
-  }
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(1.25, 0, 0);
+    public static final PIDConstants ANGLE_PID = new PIDConstants(6, 0, 0);
+  }//   >14.5, 17, 16 kP, 12.5__5
+  //    100, 10, 50, 5
 
   public static final class DriveConstants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds

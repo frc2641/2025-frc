@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Meter;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
@@ -30,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Constants.AutoConstants;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class Drivetrain extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    swerveDrive.setHeadingCorrection(false);
+    swerveDrive.setHeadingCorrection(true);
     swerveDrive.setCosineCompensator(false);
     swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
     swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
@@ -116,9 +117,10 @@ public class Drivetrain extends SubsystemBase {
             }
           },
           new PPHolonomicDriveController(
-              new PIDConstants(5.0, 0.0, 0.0),
-              new PIDConstants(5.0, 0.0, 0.0)
-          ),
+            AutoConstants.TRANSLATION_PID,
+            AutoConstants.ANGLE_PID             
+            ),
+
           config,
           () -> {
             var alliance = DriverStation.getAlliance();
