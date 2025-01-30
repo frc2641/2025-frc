@@ -13,8 +13,7 @@ public final class Constants {
   public static final class AutoConstants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(1.25, 0, 0);
     public static final PIDConstants ANGLE_PID = new PIDConstants(6, 0, 0);
-  }//   >14.5, 17, 16 kP, 12.5__5
-  //    100, 10, 50, 5
+  }
 
   public static final class DriveConstants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
@@ -31,5 +30,11 @@ public final class Constants {
   public static final class CAN {
     public static final int pdh = 20;
     public static final int ph = 21;
+  }
+
+  /** @see IMPORTANT needs to have speeds set */
+  public static final class MotorSpeeds{
+    public static final double elevatorSpeed = 0;
+    public static final double intakeSpeed = 0;
   }
 }

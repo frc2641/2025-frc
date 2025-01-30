@@ -69,7 +69,7 @@ public class Robot extends LoggedRobot {
     pneumatics = Pneumatics.getInstance();
 
     navx = new AHRS(NavXComType.kMXP_SPI);
-    
+
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
 
@@ -120,7 +120,7 @@ public class Robot extends LoggedRobot {
       autoCommand.schedule();
     }
 
-    pneumatics.enable();
+    //pneumatics.enable();
   }
 
   @Override
@@ -134,7 +134,7 @@ public class Robot extends LoggedRobot {
     }
     robotContainer.setMotorBrake(true);
 
-    pneumatics.enable();
+    //pneumatics.enable();
   }
 
   @Override

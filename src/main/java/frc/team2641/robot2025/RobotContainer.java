@@ -91,6 +91,20 @@ public class RobotContainer {
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
+
+    operatorGamepad.a().onTrue(new MoveElevator(1)); /*L1 */
+    operatorGamepad.b().onTrue(new MoveElevator(2)); /*L2 */
+    operatorGamepad.x().onTrue(new MoveElevator(3)); /*L3 */
+    operatorGamepad.y().onTrue(new MoveElevator(4)); /*L4 */
+    operatorGamepad.leftBumper().onTrue(new MoveElevator(5)); /*Human Player */
+    operatorGamepad.rightBumper().onTrue(new MoveElevator(6)); /*Processor */
+    operatorGamepad.leftTrigger().whileTrue(new SpinIntake(true));
+    operatorGamepad.rightTrigger().whileTrue(new SpinIntake(false));
+
+    operatorGamepad.povUp().whileTrue(new MoveElevatorBAD(true));
+    operatorGamepad.povDown().whileTrue(new MoveElevatorBAD(false));
+    
+
   }
 
   public Command getAutonomousCommand() {
