@@ -1,11 +1,11 @@
 package frc.team2641.robot2025;
 
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2641.robot2025.subsystems.Pneumatics;
@@ -18,19 +18,12 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
-
 
 public class Robot extends LoggedRobot {
   private static Robot instance;
   private Command autoCommand;
 
   private static Pneumatics pneumatics;
-  private static AHRS navx;
-  private static float maxX;
-  private static float maxY;
-  private static float maxZ;
 
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
@@ -67,33 +60,19 @@ public class Robot extends LoggedRobot {
     // CameraServer.startAutomaticCapture(0);
     // CameraServer.startAutomaticCapture(1);
     pneumatics = Pneumatics.getInstance();
-
-    navx = new AHRS(NavXComType.kMXP_SPI);
-
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
 
-    for (int port = 5800; port <= 5807; port++) {
+    for (int port = 5800; port <= 5807; port++) 
       PortForwarder.add(port, "10.26.41.25", port);
-    }
+
+    if (isSimulation())
+      DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-        if(Math.abs(navx.getVelocityX()) > Math.abs(maxX) )
-        maxX = navx.getVelocityX();
-      
-      if(Math.abs(navx.getVelocityY()) > Math.abs(maxY) )
-        maxY = navx.getVelocityY();
-      
-        if(Math.abs(navx.getVelocityZ()) > Math.abs(maxZ) )
-        maxZ = navx.getVelocityZ();
-      
-      SmartDashboard.putNumber("greatestVelX", maxX);
-      SmartDashboard.putNumber("greatestVelY", maxY);
-      SmartDashboard.putNumber("greatestVelZ", maxZ);
-
   }
 
   @Override

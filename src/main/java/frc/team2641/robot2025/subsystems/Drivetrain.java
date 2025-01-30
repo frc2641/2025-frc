@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.AutoConstants;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -63,28 +62,37 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
-      swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(Constants.DriveConstants.MAX_SPEED,
-                                                                  new Pose2d(new Translation2d(Meter.of(1),
-                                                                                               Meter.of(4)),
-                                                                             Rotation2d.fromDegrees(0)));
+      swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
+        .createSwerveDrive(
+          Constants.DriveConstants.MAX_SPEED,
+          new Pose2d(new Translation2d(
+            Meter.of(1),
+            Meter.of(4)),
+            Rotation2d.fromDegrees(0)
+          )
+        );
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
     swerveDrive.setHeadingCorrection(true);
-    swerveDrive.setCosineCompensator(false);
+    swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
     swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
-    swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
+    swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
     swerveDrive.pushOffsetsToEncoders();
     setupPathPlanner();
   }
 
   public Drivetrain(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-    swerveDrive = new SwerveDrive(driveCfg,
-                                  controllerCfg,
-                                  Constants.DriveConstants.MAX_SPEED,
-                                  new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
-                                             Rotation2d.fromDegrees(0)));
+    swerveDrive = new SwerveDrive(
+      driveCfg,
+      controllerCfg,
+      Constants.DriveConstants.MAX_SPEED,
+      new Pose2d(
+        new Translation2d(Meter.of(2), Meter.of(0)),
+        Rotation2d.fromDegrees(0)
+      )
+    );
   }
 
   @Override
@@ -102,32 +110,31 @@ public class Drivetrain extends SubsystemBase {
 
       final boolean enableFeedforward = true;
       AutoBuilder.configure(
-          this::getPose,
-          this::resetOdometry,
-          this::getRobotVelocity,
-          (speedsRobotRelative, moduleFeedForwards) -> {
-            if (enableFeedforward) {
-              swerveDrive.drive(
-                  speedsRobotRelative,
-                  swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
-                  moduleFeedForwards.linearForces()
-              );
-            } else {
-              swerveDrive.setChassisSpeeds(speedsRobotRelative);
-            }
-          },
-          new PPHolonomicDriveController(
-            AutoConstants.TRANSLATION_PID,
-            AutoConstants.ANGLE_PID             
-            ),
-
-          config,
-          () -> {
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) return alliance.get() == DriverStation.Alliance.Red;
-            return false;
-          },
-          this
+        this::getPose,
+        this::resetOdometry,
+        this::getRobotVelocity,
+        (speedsRobotRelative, moduleFeedForwards) -> {
+          if (enableFeedforward) {
+            swerveDrive.drive(
+              speedsRobotRelative,
+              swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
+              moduleFeedForwards.linearForces()
+            );
+          } else {
+            swerveDrive.setChassisSpeeds(speedsRobotRelative);
+          }
+        },
+        new PPHolonomicDriveController(
+          AutoConstants.TRANSLATION_PID,
+          AutoConstants.ANGLE_PID             
+        ),
+        config,
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) return alliance.get() == DriverStation.Alliance.Red;
+          return false;
+        },
+        this
       );
     } catch (Exception e) {
       e.printStackTrace();
@@ -153,10 +160,8 @@ public class Drivetrain extends SubsystemBase {
     SwerveController controller = swerveDrive.getSwerveController();
     return run(
       () -> {
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0,
-                                                  controller.headingCalculate(getHeading().getRadians(),
-                                                                              getSpeakerYaw().getRadians()),
-                                                                      getHeading());
+        ChassisSpeeds speeds = ChassisSpeeds
+          .fromFieldRelativeSpeeds(0, 0, controller.headingCalculate(getHeading().getRadians(), getSpeakerYaw().getRadians()), getHeading());
         drive(speeds);
       }).until(() -> Math.abs(getSpeakerYaw().minus(getHeading()).getDegrees()) < tolerance);
   }
@@ -178,20 +183,16 @@ public class Drivetrain extends SubsystemBase {
 
   private Command driveWithSetpointGenerator(Supplier<ChassisSpeeds> robotRelativeChassisSpeed) throws IOException, ParseException {
     SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(RobotConfig.fromGUISettings(), swerveDrive.getMaximumChassisAngularVelocity());
-    AtomicReference<SwerveSetpoint> prevSetpoint = new AtomicReference<>(new SwerveSetpoint(swerveDrive.getRobotVelocity(),
-                                                   swerveDrive.getStates(),
-                                                   DriveFeedforwards.zeros(swerveDrive.getModules().length)));
+    AtomicReference<SwerveSetpoint> prevSetpoint = new AtomicReference<>(
+      new SwerveSetpoint(swerveDrive.getRobotVelocity(), swerveDrive.getStates(), DriveFeedforwards.zeros(swerveDrive.getModules().length))
+    );
     AtomicReference<Double> previousTime = new AtomicReference<>();
 
     return startRun(() -> previousTime.set(Timer.getFPGATimestamp()),
       () -> {
         double newTime = Timer.getFPGATimestamp();
-        SwerveSetpoint newSetpoint = setpointGenerator.generateSetpoint(prevSetpoint.get(),
-                                                                        robotRelativeChassisSpeed.get(),
-                                                                        newTime - previousTime.get());
-        swerveDrive.drive(newSetpoint.robotRelativeSpeeds(),
-                          newSetpoint.moduleStates(),
-                          newSetpoint.feedforwards().linearForces());
+        SwerveSetpoint newSetpoint = setpointGenerator.generateSetpoint(prevSetpoint.get(), robotRelativeChassisSpeed.get(), newTime - previousTime.get());
+        swerveDrive.drive(newSetpoint.robotRelativeSpeeds(), newSetpoint.moduleStates(), newSetpoint.feedforwards().linearForces());
         prevSetpoint.set(newSetpoint);
         previousTime.set(newTime);
       });
@@ -210,14 +211,12 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Command centerModulesCommand() {
-    return run(() -> Arrays.asList(swerveDrive.getModules())
-                           .forEach(it -> it.setAngle(0.0)));
+    return run(() -> Arrays.asList(swerveDrive.getModules()) .forEach(it -> it.setAngle(0.0)));
   }
 
   public Command driveToDistanceCommand(double distanceInMeters, double speedInMetersPerSecond) {
     return run(() -> drive(new ChassisSpeeds(speedInMetersPerSecond, 0, 0)))
-      .until(() -> swerveDrive.getPose().getTranslation().getDistance(new Translation2d(0, 0)) >
-                    distanceInMeters);
+      .until(() -> swerveDrive.getPose().getTranslation().getDistance(new Translation2d(0, 0)) > distanceInMeters);
   }
 
   public void replaceSwerveModuleFeedforward(double kS, double kV, double kA) {
@@ -226,33 +225,33 @@ public class Drivetrain extends SubsystemBase {
 
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX, BooleanSupplier robotRelative) {
     return run(() -> {
-      swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
-                            translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-                            translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()), 0.8),
-                        Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
-                        !robotRelative.getAsBoolean(),
-                        false);
+      swerveDrive.drive(
+        SwerveMath.scaleTranslation(
+          new Translation2d(translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(), translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()), 0.8
+        ),
+        Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
+        !robotRelative.getAsBoolean(),
+        false);
     });
   }
 
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY) {
     return run(() -> {
-      Translation2d scaledInputs = SwerveMath.scaleTranslation(new Translation2d(translationX.getAsDouble(),
-                                                                                 translationY.getAsDouble()), 0.8);
+      Translation2d scaledInputs = SwerveMath.scaleTranslation(new Translation2d(translationX.getAsDouble(), translationY.getAsDouble()), 0.8);
 
-      driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(), scaledInputs.getY(),
-                                                                      headingX.getAsDouble(),
-                                                                      headingY.getAsDouble(),
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
-                                                                      swerveDrive.getMaximumChassisVelocity()));
+      driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(
+        scaledInputs.getX(),
+        scaledInputs.getY(),
+        headingX.getAsDouble(),
+        headingY.getAsDouble(),
+        swerveDrive.getOdometryHeading().getRadians(),
+        swerveDrive.getMaximumChassisVelocity())
+      );
     });
   }
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-    swerveDrive.drive(translation,
-                      rotation,
-                      fieldRelative,
-                      false);
+    swerveDrive.drive(translation, rotation, fieldRelative, false);
   }
 
   public void driveFieldOriented(ChassisSpeeds velocity) {
@@ -317,22 +316,26 @@ public class Drivetrain extends SubsystemBase {
 
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY) {
     Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
-    return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
-                                                        scaledInputs.getY(),
-                                                        headingX,
-                                                        headingY,
-                                                        getHeading().getRadians(),
-                                                        Constants.DriveConstants.MAX_SPEED);
+    return swerveDrive.swerveController.getTargetSpeeds(
+      scaledInputs.getX(),
+      scaledInputs.getY(),
+      headingX,
+      headingY,
+      getHeading().getRadians(),
+      Constants.DriveConstants.MAX_SPEED
+    );
   }
 
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
     Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
 
-    return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
-                                                        scaledInputs.getY(),
-                                                        angle.getRadians(),
-                                                        getHeading().getRadians(),
-                                                        Constants.DriveConstants.MAX_SPEED);
+    return swerveDrive.swerveController.getTargetSpeeds(
+      scaledInputs.getX(),
+      scaledInputs.getY(),
+      angle.getRadians(),
+      getHeading().getRadians(),
+      Constants.DriveConstants.MAX_SPEED
+    );
   }
 
   public ChassisSpeeds getFieldVelocity() {
