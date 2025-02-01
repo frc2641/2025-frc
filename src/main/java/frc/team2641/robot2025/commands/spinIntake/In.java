@@ -1,17 +1,16 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.spinIntake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.Intake;
 
-public class SpinIntake extends Command {
+public class In extends Command {
   private Intake intake;
-  private boolean takingIn;
 
-  public SpinIntake(boolean takingIn) {
-    this.takingIn = takingIn;
+  public In() {
     this.intake = Intake.getInstance();
     addRequirements(intake);
   }
+  
 
   @Override
   public void initialize() {
@@ -20,10 +19,9 @@ public class SpinIntake extends Command {
 
   @Override
   public void execute() {
-    if(takingIn)
+    
     intake.in();
-    else
-    intake.out();
+    
   }
 
   @Override

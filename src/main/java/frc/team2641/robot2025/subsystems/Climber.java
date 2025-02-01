@@ -1,11 +1,16 @@
 package frc.team2641.robot2025.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Robot;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.team2641.robot2025.Constants;
 
 public class Climber extends SubsystemBase {
   private static Climber instance;
+  private boolean extended = false;
+
+    private TalonFX climber;
 
   public static Climber getInstance() {
     if (instance == null)
@@ -13,34 +18,29 @@ public class Climber extends SubsystemBase {
     return instance;
   }
 
-  private DoubleSolenoid climber = Robot.getPH().makeDoubleSolenoid(10, 9);
 
   private Climber() {
-    lower();
+    // Needs ID set
+    climber = new TalonFX(-1);
   }
 
-  public void depressurize() {
-    climber.set(DoubleSolenoid.Value.kOff);
+  public void up(){
+    climber.set(Constants.MotorSpeeds.climbSpeed);
   }
 
-  public void lower() {
-    climber.set(DoubleSolenoid.Value.kReverse);
+  public void down()
+  {
+    climber.set(-Constants.MotorSpeeds.climbSpeed);
   }
 
-  public void raise() {
-    climber.set(DoubleSolenoid.Value.kForward);
+  public void stop() {
+    climber.stopMotor();
   }
 
-  public void toggle() {
-    if (get().equals(DoubleSolenoid.Value.kReverse))
-      raise();
-    else
-      lower();
+  public boolean isAt(double pos){
+    return Math.abs(pos-climber.getPosition().getValueAsDouble())<0.5;
   }
 
-  public DoubleSolenoid.Value get() {
-    return climber.get();
-  }
 
   @Override
   public void periodic() {

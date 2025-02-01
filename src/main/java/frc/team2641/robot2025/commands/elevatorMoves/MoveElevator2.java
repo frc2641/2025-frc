@@ -1,14 +1,13 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.elevatorMoves;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.Elevator;
 
-public class MoveElevatorBAD extends Command {
+public class MoveElevator2 extends Command {
   private Elevator elev;
-  private boolean up;
+  private int stage = 2;
 
-  public MoveElevatorBAD(boolean up) {
-    this.up = up;
+  public MoveElevator2() {
     this.elev = Elevator.getInstance();
     addRequirements(elev);
   }
@@ -16,15 +15,12 @@ public class MoveElevatorBAD extends Command {
 
   @Override
   public void initialize() {
-    
+    elev.setPos(stage);
   }
 
   @Override
   public void execute() {
-   if(up)
-   elev.up();
-   else
-   elev.down(); 
+    
   }
 
   @Override

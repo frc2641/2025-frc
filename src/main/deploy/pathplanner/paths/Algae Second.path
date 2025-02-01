@@ -61,7 +61,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Reefscape Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999

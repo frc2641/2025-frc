@@ -1,5 +1,7 @@
 package frc.team2641.robot2025.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,17 +22,15 @@ public class Elevator extends SubsystemBase {
       // Needs ID set
       elevMotor1 = new TalonFX(-1);
       elevMotor2 = new TalonFX(-1);
-
+      configMotors();
     }
     public void up() {
-      elevMotor1.set(Constants.MotorSpeeds.elevatorSpeed);
-      elevMotor2.set(Constants.MotorSpeeds.elevatorSpeed);
+      set(Constants.MotorSpeeds.elevatorSpeed);
 
     }
   
     public void down() {
-      elevMotor1.set(-Constants.MotorSpeeds.elevatorSpeed);
-      elevMotor2.set(-Constants.MotorSpeeds.elevatorSpeed);
+      set(-Constants.MotorSpeeds.elevatorSpeed);
     }
   
     public void stop() {
@@ -47,53 +47,74 @@ public class Elevator extends SubsystemBase {
  *@see 6 = processor
  */
     public void setPos(int stage){
-      if(stage<0){
-        if(stage == -1)
-          up();
-        else if(stage ==-2)
-          down();
-      }
-      double goal = 0;
+
+      double goal = 0.0;
       switch (stage) {
         case 1:
-
+        goal = Constants.ElevPositions.L1;
         break;
 
         case 2:
-      
+        goal = Constants.ElevPositions.L2;
         break;
 
         case 3:
-
+        goal = Constants.ElevPositions.L3;
         break;
 
         case 4:
-
+        goal = Constants.ElevPositions.L4;
         break;
 
         case 5:
-
+        goal = Constants.ElevPositions.humanPlayer;
         break;
 
         case 6:
-
+        goal = Constants.ElevPositions.processor;
         break;
 
         default:
-
+        goal = Constants.ElevPositions.L1;
         break;
       }
 
-      while(Math.abs(elevMotor1.getPosition().getValueAsDouble()-goal) < 0.05)
-      {
-          if(elevMotor1.getPosition().getValueAsDouble()-goal<0)
-            up();
-          if(elevMotor1.getPosition().getValueAsDouble()-goal>0)
-            down();
-      }
+      setPos(goal);
     }
+
+    public void set(double value) {
+      elevMotor1.set(Constants.IntakeGains.elevatorRateLimiter.calculate(value * Constants.IntakeGains.elevatorGains.kPeakOutput));
+      elevMotor2.set(Constants.IntakeGains.elevatorRateLimiter.calculate(value * Constants.IntakeGains.elevatorGains.kPeakOutput));
+
+    }
+
+  public void setPos(double pos) {
+    elevMotor1.set(ControlMode.Position, pos);
+  }
   
   @Override
   public void periodic() {
+  }
+
+  private void configMotors(){
+    
+
+      
+    elevMotor1.configAllowableClosedloopError(0, Constants.IntakeGains.elevatorGains.kAllowableError, 30);
+
+    elevMotor1.config_kP(0, Constants.IntakeGains.elevatorGains.kP, 30);
+    elevMotor1.config_kI(0, Constants.IntakeGains.elevatorGains.kI, 30);
+    elevMotor1.config_kD(0, Constants.IntakeGains.elevatorGains.kD, 30);
+    elevMotor1.config_kF(0, Constants.IntakeGains.elevatorGains.kF, 30);
+
+
+    
+    elevMotor2.configAllowableClosedloopError(0, Constants.IntakeGains.elevatorGains.kAllowableError, 30);
+
+    elevMotor2.config_kP(0, Constants.IntakeGains.elevatorGains.kP, 30);
+    elevMotor2.config_kI(0, Constants.IntakeGains.elevatorGains.kI, 30);
+    elevMotor2.config_kD(0, Constants.IntakeGains.elevatorGains.kD, 30);
+    elevMotor2.config_kF(0, Constants.IntakeGains.elevatorGains.kF, 30);
+
   }
 }

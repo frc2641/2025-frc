@@ -1,6 +1,8 @@
 package frc.team2641.robot2025;
 
 import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -35,6 +37,29 @@ public final class Constants {
   /** @see IMPORTANT needs to have speeds set */
   public static final class MotorSpeeds{
     public static final double elevatorSpeed = 0;
+    public static final double climbSpeed = 0;
     public static final double intakeSpeed = 0;
+  }
+  public static final class IntakeGains{
+    public static final PIDConstants wristGains = new PIDConstants(0, 0, 0);
+    public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
+   
+    public static final PIDConstants elevatorGains = new PIDConstants(0, 0, 0);
+    public static final SlewRateLimiter elevatorRateLimiter = new SlewRateLimiter(6);
+    
+  }
+  public static final class ClimberPositions{
+    public static final double extended = 0.0;
+    public static final double start = 0.0;
+
+  }
+
+  public static final class ElevPositions{
+    public static final double L1 = 0.0;
+    public static final double L2 = 0.0;
+    public static final double L3 = 0.0;
+    public static final double L4 = 0.0;
+    public static final double humanPlayer = 0.0;
+    public static final double processor = 0.0;
   }
 }

@@ -1,14 +1,13 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.elevatorMoves;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.Elevator;
 
-public class MoveElevator extends Command {
+public class MoveElevator5 extends Command {
   private Elevator elev;
-  private int stage;
+  private int stage = 5;
 
-  public MoveElevator(int stage) {
-    this.stage = stage;
+  public MoveElevator5() {
     this.elev = Elevator.getInstance();
     addRequirements(elev);
   }

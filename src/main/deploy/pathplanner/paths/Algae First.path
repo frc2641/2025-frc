@@ -37,7 +37,7 @@
       },
       "prevControl": {
         "x": 6.351134868421053,
-        "y": 0.08853618421052611
+        "y": 0.08853618421052623
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Reefscape Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -59.99999999999999
