@@ -5,13 +5,13 @@ import frc.team2641.robot2025.subsystems.Elevator;
 
 public class Up extends Command {
   private Elevator elev;
+  private int stage = 8;
 
   public Up() {
     this.elev = Elevator.getInstance();
     addRequirements(elev);
   }
   
-
   @Override
   public void initialize() {
     
@@ -19,7 +19,7 @@ public class Up extends Command {
 
   @Override
   public void execute() {
-   elev.up();
+   elev.setPos(stage);
    }
 
   @Override

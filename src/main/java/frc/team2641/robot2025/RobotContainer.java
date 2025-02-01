@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.OperatorConstants;
@@ -42,6 +43,10 @@ public class RobotContainer {
   BooleanPublisher robotPub;
   BooleanSubscriber robotSub;
 
+  BooleanPublisher spinPub;
+  BooleanSubscriber spinSub;
+  
+
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
@@ -65,6 +70,10 @@ public class RobotContainer {
     robotPub = table.getBooleanTopic("robotRelative").publish();
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
+   
+    spinPub = table.getBooleanTopic("intakeSpinningOut").publish();
+    spinPub.set(false);
+    spinSub = table.getBooleanTopic("intakeSpinningOut").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
         () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
@@ -90,7 +99,6 @@ public class RobotContainer {
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
     driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
-    driverGamepad.rightBumper().whileTrue(new Climb()); /* toggles climber state... maybe */
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
@@ -101,13 +109,11 @@ public class RobotContainer {
     operatorGamepad.y().onTrue(new MoveElevator4()); /*L4 */
     operatorGamepad.leftBumper().onTrue(new MoveElevator5()); /*Human Player */
     operatorGamepad.rightBumper().onTrue(new MoveElevator6()); /*Processor */
-    operatorGamepad.leftTrigger().whileTrue(new In());
-    operatorGamepad.rightTrigger().whileTrue(new Out());
-    
-    operatorGamepad.povUp().whileTrue(new Up());
-    operatorGamepad.povDown().whileTrue(new Down());
-    
+    operatorGamepad.leftTrigger().whileTrue(new Spin()); /* intake/outtake */
+    operatorGamepad.rightTrigger().whileTrue(new IntakeSpinningOut());/* shift key */
 
+    operatorGamepad.povUp().whileTrue(new Climb(true));
+    operatorGamepad.povDown().whileTrue(new Climb(false));
   }
 
   public Command getAutonomousCommand() {

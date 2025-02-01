@@ -1,42 +1,37 @@
 package frc.team2641.robot2025.commands;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.Climber;
-import frc.team2641.robot2025.Constants;
 
 public class Climb extends Command {
   private Climber climber;
-  private boolean extended;
-
-  public Climb() {
+  private boolean forwards;
+  public Climb(boolean forwards) {
+    this.forwards = forwards;
     this.climber = Climber.getInstance();
     addRequirements(climber);
-    extended = false;
   }
 
   @Override
   public void initialize() {
-    extended = !extended;
+    
   }
 
   @Override
   public void execute() {
-    if(extended)
-    climber.up();
-    else
-    climber.down();
+    if(forwards)
+      climber.extend();
+    else 
+      climber.retract();
   }
 
   @Override
   public void end(boolean interrupted) {
+    climber.stop();
   }
 
   @Override
   public boolean isFinished() {
-    if(extended)
-      return climber.isAt(Constants.ClimberPositions.extended);
-      else
-      return climber.isAt(Constants.ClimberPositions.start);
+    return false;
   }
 }

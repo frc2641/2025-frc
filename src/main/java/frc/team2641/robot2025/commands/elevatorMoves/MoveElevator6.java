@@ -12,7 +12,6 @@ public class MoveElevator6 extends Command {
     addRequirements(elev);
   }
   
-
   @Override
   public void initialize() {
     elev.setPos(stage);
