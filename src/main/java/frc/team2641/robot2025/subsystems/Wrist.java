@@ -32,6 +32,10 @@ public class Wrist extends SubsystemBase {
     public void setPos(double pos){
       wristMotor.setPosition(pos);
     }
+
+    public double getPos(){
+      return wristMotor.getPosition().getValueAsDouble();
+    }
   
   @Override
   public void periodic() {

@@ -4,30 +4,45 @@
 
 package frc.team2641.robot2025.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2641.robot2025.subsystems.Arm;
+import frc.team2641.robot2025.helpers.ArmPos;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetArm extends Command {
-  /** Creates a new SetArm. */
-  public SetArm() {
+import edu.wpi.first.wpilibj2.command.Command;
+  
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class SetArmPosition extends Command {
+
+  private ArmPos pos;
+  private Arm arm;
+  
+  public SetArmPosition(ArmPos pos) {
+    this.pos = pos;
+    arm = Arm.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    arm.isAuto = true;
+    arm.setTargetPosition(pos);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
-    
+
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    arm.isAuto = false;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return arm.atPos();
   }
 }

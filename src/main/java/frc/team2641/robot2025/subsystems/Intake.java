@@ -22,7 +22,6 @@ public class Intake extends SubsystemBase {
     return instance;
   }
 
-
   private Intake() {
     // Needs ID set
     intake1 = new TalonFX(Constants.CAN.intakeMotor1);

@@ -14,6 +14,7 @@ public class Arm extends SubsystemBase {
   private Wrist wrist;
   private Elevator elev;
   private ArmPos pos;
+  public boolean isAuto;
   private static Arm instance;
 
 
@@ -24,6 +25,7 @@ public class Arm extends SubsystemBase {
   }
   /** Creates a new Arm. */
   private Arm() {
+    isAuto = false;
     wrist = Wrist.getInstance();
     elev = Elevator.getInstance();
     pos = new ArmPos(0, 0);
@@ -33,13 +35,30 @@ public class Arm extends SubsystemBase {
     this.pos = pos;
   }
 
-  public void setPosition(){
+  public void move(){
+    
     wrist.setPos(pos.getWrist());
     elev.setPos(pos.getElev());
+  }
+
+  public void changeTarget(ArmPos pos){
+    this.pos = pos;
+  }
+
+  public ArmPos getPosition(){
+    return pos;
+  }
+
+  public boolean atPos(){
+    return (Math.abs(pos.getWrist()-wrist.getPos())<0.5)&&(Math.abs(pos.getElev()-elev.getPos())<0.5);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  
+
+
 }

@@ -17,14 +17,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
-import frc.team2641.robot2025.commands.elevatorMoves.*;
 import frc.team2641.robot2025.commands.shifts.*;
-import frc.team2641.robot2025.commands.spinIntake.*;
+import frc.team2641.robot2025.subsystems.Arm;
 import frc.team2641.robot2025.subsystems.Drivetrain;
 
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Arm arm = Arm.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -84,6 +84,7 @@ public class RobotContainer {
         () -> robotSub.get());
     
     drivetrain.setDefaultCommand(driveCommand);
+    arm.setDefaultCommand(new MoveArm());
 
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
@@ -99,7 +100,7 @@ public class RobotContainer {
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
     driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
-    driverGamepad.leftTrigger().whileTrue(new SniperMode());
+    driverGarightTriggermepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
     
@@ -110,7 +111,7 @@ public class RobotContainer {
     operatorGamepad.leftBumper().onTrue(new MoveElevator5()); /*Human Player */
     operatorGamepad.rightBumper().onTrue(new MoveElevator6()); /*Processor */
     operatorGamepad.leftTrigger().whileTrue(new Spin()); /* intake/outtake */
-    operatorGamepad.rightTrigger().whileTrue(new IntakeSpinningOut());/* shift key */
+    operatorGamepad.().whileTrue(new IntakeSpinningOut());/* shift key */
 
     operatorGamepad.povUp().whileTrue(new Climb(true));
     operatorGamepad.povDown().whileTrue(new Climb(false));
@@ -122,5 +123,13 @@ public class RobotContainer {
 
   public void setMotorBrake(boolean brake) {
     drivetrain.setMotorBrake(brake);
+  }
+
+  public double getOpLeftJoy() {
+    return operatorGamepad.getLeftY();
+  }
+
+  public double getOpRightJoy(){
+    return operatorGamepad.getRightY();
   }
 }

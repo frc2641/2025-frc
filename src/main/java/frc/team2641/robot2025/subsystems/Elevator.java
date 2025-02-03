@@ -32,6 +32,10 @@ public class Elevator extends SubsystemBase {
     public void setPos(double pos){
       elevMotor.setPosition(pos);
     }
+
+    public double getPos(){
+      return elevMotor.getPosition().getValueAsDouble();
+    }
   
   @Override
   public void periodic() {

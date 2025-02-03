@@ -33,8 +33,6 @@ public class Climber extends SubsystemBase {
     climber.stopMotor();
   }
 
-  
-
   @Override
   public void periodic() {
   }

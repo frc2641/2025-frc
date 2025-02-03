@@ -13,6 +13,7 @@ public class ArmPos {
     public ArmPos(double wrist, double elev){
         this.wrist = wrist;
         this.elev = elev;
+        preventDisaster();
     }
 
     public double getWrist(){
@@ -25,5 +26,15 @@ public class ArmPos {
 
     public String toString(){
         return "Wrist : "+wrist+" Elevator : "+elev;
+    } 
+    private void preventDisaster(){
+        if (wrist > 0) 
+            wrist = 0;
+        if (wrist < 0)
+            wrist = 0;
+        if (elev > 0)
+            elev = 0;
+        if (elev < 0)
+            elev = 0;
     }
 }
