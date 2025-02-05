@@ -1,7 +1,6 @@
 package frc.team2641.robot2025.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -42,11 +41,11 @@ public class Elevator extends SubsystemBase {
   }
 
   private void configMotors() {
-    elevMotor.configAllowableClosedloopError(0, Constants.IntakeGains.elevatorGains.kAllowableError, 30);
+    Slot0Configs slot0Configs = new Slot0Configs();
+    slot0Configs.kP = Constants.IntakeGains.elevatorGains.kP;
+    slot0Configs.kI = Constants.IntakeGains.elevatorGains.kI;
+    slot0Configs.kD = Constants.IntakeGains.elevatorGains.kD;
 
-    elevMotor.config_kP(0, Constants.IntakeGains.elevatorGains.kP, 30);
-    elevMotor.config_kI(0, Constants.IntakeGains.elevatorGains.kI, 30);
-    elevMotor.config_kD(0, Constants.IntakeGains.elevatorGains.kD, 30);
-    elevMotor.config_kF(0, Constants.IntakeGains.elevatorGains.kF, 30);
+    elevMotor.getConfigurator().apply(slot0Configs);
   }
 }

@@ -7,7 +7,6 @@ package frc.team2641.robot2025.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Robot;
-import frc.team2641.robot2025.RobotContainer;
 import frc.team2641.robot2025.helpers.ArmPos;
 import frc.team2641.robot2025.subsystems.Arm;
 

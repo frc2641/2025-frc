@@ -4,8 +4,6 @@
 
 package frc.team2641.robot2025.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.helpers.ArmPos;
 
@@ -15,6 +13,15 @@ public class Arm extends SubsystemBase {
   private Elevator elev;
   private ArmPos pos;
   public boolean isAuto;
+  public static enum switcher {
+    L1,
+    L2,
+    L3,
+    L4,
+    HUMAN_PLAYER,
+    PROCESSOR,
+    ALGAE_REMOVAL
+  };
   private static Arm instance;
 
 
@@ -29,6 +36,8 @@ public class Arm extends SubsystemBase {
     wrist = Wrist.getInstance();
     elev = Elevator.getInstance();
     pos = new ArmPos(0, 0);
+
+    
   }
 
   public void setTargetPosition(ArmPos pos){

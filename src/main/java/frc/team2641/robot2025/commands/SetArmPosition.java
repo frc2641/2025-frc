@@ -5,6 +5,7 @@
 package frc.team2641.robot2025.commands;
 
 import frc.team2641.robot2025.subsystems.Arm;
+import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.helpers.ArmPos;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +22,41 @@ public class SetArmPosition extends Command {
     this.pos = pos;
     arm = Arm.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public SetArmPosition(Arm.switcher pos){
+    switch (pos) {
+      case L1:
+        this.pos = Constants.ArmPositions.L1;
+        break;
+        case L2:
+        this.pos = Constants.ArmPositions.L2;
+        
+        break;
+        case L3:
+        this.pos = Constants.ArmPositions.L3;
+
+        break;
+        case L4:
+        this.pos = Constants.ArmPositions.L4;
+
+        break;
+        case HUMAN_PLAYER:
+        this.pos = Constants.ArmPositions.humanPlayer;
+
+        break;
+        case PROCESSOR:
+        this.pos = Constants.ArmPositions.processor;
+
+        break;
+
+        case ALGAE_REMOVAL:
+        this.pos = Constants.ArmPositions.algaeRemoval;
+        break;
+      default:
+        this.pos = new ArmPos(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        break;
+    }
   }
 
   // Called when the command is initially scheduled.

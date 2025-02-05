@@ -69,6 +69,7 @@ public final class Constants {
     public static final ArmPos L4 = new ArmPos(-1, -1);
     public static final ArmPos humanPlayer = new ArmPos(-1, -1);
     public static final ArmPos processor = new ArmPos(-1, -1);
+    public static final ArmPos algaeRemoval = new ArmPos(-1, -1);
   }
 
   

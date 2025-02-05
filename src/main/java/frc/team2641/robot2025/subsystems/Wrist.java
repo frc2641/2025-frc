@@ -1,7 +1,6 @@
 package frc.team2641.robot2025.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -42,11 +41,11 @@ public class Wrist extends SubsystemBase {
   }
 
   private void configMotors() {
-    wristMotor.configAllowableClosedloopError(0, Constants.IntakeGains.wristGains.kAllowableError, 30);
+    Slot0Configs slot0Configs = new Slot0Configs();
+    slot0Configs.kP = Constants.IntakeGains.wristGains.kP;
+    slot0Configs.kI = Constants.IntakeGains.wristGains.kI;
+    slot0Configs.kD = Constants.IntakeGains.wristGains.kD;
 
-    wristMotor.config_kP(0, Constants.IntakeGains.wristGains.kP, 30);
-    wristMotor.config_kI(0, Constants.IntakeGains.wristGains.kI, 30);
-    wristMotor.config_kD(0, Constants.IntakeGains.wristGains.kD, 30);
-    wristMotor.config_kF(0, Constants.IntakeGains.wristGains.kF, 30);
+    wristMotor.getConfigurator().apply(slot0Configs);
   }
 }

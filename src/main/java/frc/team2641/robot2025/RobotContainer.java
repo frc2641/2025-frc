@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.OperatorConstants;
@@ -20,6 +19,7 @@ import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.subsystems.Arm;
 import frc.team2641.robot2025.subsystems.Drivetrain;
+import frc.team2641.robot2025.subsystems.Arm.switcher;
 
 
 public class RobotContainer {
@@ -100,18 +100,18 @@ public class RobotContainer {
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
     driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
-    driverGarightTriggermepad.leftTrigger().whileTrue(new SniperMode());
+    driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
     
-    operatorGamepad.a().onTrue(new MoveElevator1()); /*L1 */
-    operatorGamepad.b().onTrue(new MoveElevator2()); /*L2 */
-    operatorGamepad.x().onTrue(new MoveElevator3()); /*L3 */
-    operatorGamepad.y().onTrue(new MoveElevator4()); /*L4 */
-    operatorGamepad.leftBumper().onTrue(new MoveElevator5()); /*Human Player */
-    operatorGamepad.rightBumper().onTrue(new MoveElevator6()); /*Processor */
+    operatorGamepad.a().onTrue(new SetArmPosition(switcher.L1)); /*L1 */
+    operatorGamepad.b().onTrue(new SetArmPosition(switcher.L2)); /*L2 */
+    operatorGamepad.x().onTrue(new SetArmPosition(switcher.L3)); /*L3 */
+    operatorGamepad.y().onTrue(new SetArmPosition(switcher.L4)); /*L4 */
+    operatorGamepad.leftBumper().onTrue(new SetArmPosition(switcher.HUMAN_PLAYER)); /*Human Player */
+    operatorGamepad.rightBumper().onTrue(new SetArmPosition(switcher.PROCESSOR)); /*Processor */
     operatorGamepad.leftTrigger().whileTrue(new Spin()); /* intake/outtake */
-    operatorGamepad.().whileTrue(new IntakeSpinningOut());/* shift key */
+    operatorGamepad.rightTrigger().whileTrue(new IntakeSpinningOut());/* shift key */
 
     operatorGamepad.povUp().whileTrue(new Climb(true));
     operatorGamepad.povDown().whileTrue(new Climb(false));
