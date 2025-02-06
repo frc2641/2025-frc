@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.subsystems.Pneumatics;
+// import frc.team2641.robot2025.subsystems.Pneumatics;
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -23,7 +23,7 @@ public class Robot extends LoggedRobot {
   private static Robot instance;
   private Command autoCommand;
 
-  private static Pneumatics pneumatics;
+  // private static Pneumatics pneumatics;
 
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
@@ -59,7 +59,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // CameraServer.startAutomaticCapture(0);
     // CameraServer.startAutomaticCapture(1);
-    pneumatics = Pneumatics.getInstance();
+    // pneumatics = Pneumatics.getInstance();
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
 
@@ -80,7 +80,7 @@ public class Robot extends LoggedRobot {
     robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
-    pneumatics.disable();
+    // pneumatics.disable();
   }
 
   @Override
@@ -94,12 +94,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     robotContainer.setMotorBrake(true);
+
     autoCommand = robotContainer.getAutonomousCommand();
     if (autoCommand != null) {
       autoCommand.schedule();
     }
 
-    //pneumatics.enable();
+    // pneumatics.enable();
   }
 
   @Override
@@ -108,12 +109,13 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    robotContainer.setMotorBrake(true);
+
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    robotContainer.setMotorBrake(true);
 
-    //pneumatics.enable();
+    // pneumatics.enable();
   }
 
   @Override
@@ -123,6 +125,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+
     try {
       new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"));
     } catch (IOException e) {

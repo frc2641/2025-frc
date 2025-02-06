@@ -5,23 +5,24 @@ import frc.team2641.robot2025.subsystems.Climber;
 
 public class Climb extends Command {
   private Climber climber;
+
   private boolean forwards;
+
   public Climb(boolean forwards) {
-    this.forwards = forwards;
     this.climber = Climber.getInstance();
+    this.forwards = forwards;
     addRequirements(climber);
   }
 
   @Override
   public void initialize() {
-    
   }
 
   @Override
   public void execute() {
-    if(forwards)
+    if (forwards)
       climber.extend();
-    else 
+    else
       climber.retract();
   }
 

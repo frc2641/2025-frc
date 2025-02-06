@@ -9,13 +9,13 @@ import frc.team2641.robot2025.Limelight;
 import frc.team2641.robot2025.subsystems.Drivetrain;
 
 public class LimelightTracking extends Command {
-  private final Drivetrain swerveSubsystem;
+  private final Drivetrain drivetrain;
 
   private final PIDController controllerX;
   private final PIDController controllerAngle;
 
   public LimelightTracking() {
-    this.swerveSubsystem = Drivetrain.getInstance();
+    this.drivetrain = Drivetrain.getInstance();
 
     controllerX = new PIDController(3, 1, 0);
     controllerX.setTolerance(0.025);
@@ -25,7 +25,7 @@ public class LimelightTracking extends Command {
     controllerAngle.setTolerance(0.01);
     controllerAngle.setSetpoint(0.0);
 
-    addRequirements(this.swerveSubsystem);
+    addRequirements(this.drivetrain);
   }
 
   @Override
@@ -40,7 +40,7 @@ public class LimelightTracking extends Command {
     double translationX = MathUtil.clamp(controllerX.calculate(tx, 0.0), -1, 1);
     double rotation = MathUtil.clamp(controllerAngle.calculate(tangle, 0.0), -1, 1);
 
-    swerveSubsystem.drive(new Translation2d(0, translationX), -rotation, false);
+    drivetrain.drive(new Translation2d(0, translationX), -rotation, false);
     SmartDashboard.putNumber("translationX", translationX);
     SmartDashboard.putNumber("rotation", rotation);
   }
@@ -52,6 +52,6 @@ public class LimelightTracking extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    swerveSubsystem.lock();
+    drivetrain.lock();
   }
 }

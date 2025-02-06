@@ -18,9 +18,8 @@ import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.subsystems.Arm;
+import frc.team2641.robot2025.subsystems.Arm.ArmTargets;
 import frc.team2641.robot2025.subsystems.Drivetrain;
-import frc.team2641.robot2025.subsystems.Arm.switcher;
-
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -43,10 +42,9 @@ public class RobotContainer {
   BooleanPublisher robotPub;
   BooleanSubscriber robotSub;
 
-  BooleanPublisher spinPub;
-  BooleanSubscriber spinSub;
+  BooleanPublisher reverseIntakePub;
+  BooleanSubscriber reverseIntakeSub;
   
-
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
@@ -71,17 +69,17 @@ public class RobotContainer {
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
    
-    spinPub = table.getBooleanTopic("intakeSpinningOut").publish();
-    spinPub.set(false);
-    spinSub = table.getBooleanTopic("intakeSpinningOut").subscribe(false);
+    reverseIntakePub = table.getBooleanTopic("reverseIntake").publish();
+    reverseIntakePub.set(false);
+    reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
             OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
-        () -> robotSub.get());
+      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
+      () -> robotSub.get());
     
     drivetrain.setDefaultCommand(driveCommand);
     arm.setDefaultCommand(new MoveArm());
@@ -104,14 +102,14 @@ public class RobotContainer {
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
     
-    operatorGamepad.a().onTrue(new SetArmPosition(switcher.L1)); /*L1 */
-    operatorGamepad.b().onTrue(new SetArmPosition(switcher.L2)); /*L2 */
-    operatorGamepad.x().onTrue(new SetArmPosition(switcher.L3)); /*L3 */
-    operatorGamepad.y().onTrue(new SetArmPosition(switcher.L4)); /*L4 */
-    operatorGamepad.leftBumper().onTrue(new SetArmPosition(switcher.HUMAN_PLAYER)); /*Human Player */
-    operatorGamepad.rightBumper().onTrue(new SetArmPosition(switcher.PROCESSOR)); /*Processor */
-    operatorGamepad.leftTrigger().whileTrue(new Spin()); /* intake/outtake */
-    operatorGamepad.rightTrigger().whileTrue(new IntakeSpinningOut());/* shift key */
+    operatorGamepad.a().onTrue(new SetArmTarget(ArmTargets.L1));
+    operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
+    operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
+    operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
+    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
+    operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
+    operatorGamepad.leftTrigger().whileTrue(new RunIntake());
+    operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
 
     operatorGamepad.povUp().whileTrue(new Climb(true));
     operatorGamepad.povDown().whileTrue(new Climb(false));
@@ -125,11 +123,11 @@ public class RobotContainer {
     drivetrain.setMotorBrake(brake);
   }
 
-  public double getOpLeftJoy() {
+  public double getOpLeftStickY() {
     return operatorGamepad.getLeftY();
   }
 
-  public double getOpRightJoy(){
+  public double getOpRightStickY() {
     return operatorGamepad.getRightY();
   }
 }

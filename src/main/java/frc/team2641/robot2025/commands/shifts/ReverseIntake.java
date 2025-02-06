@@ -5,13 +5,13 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class IntakeSpinningOut extends Command {
+public class ReverseIntake extends Command {
   BooleanPublisher spinningPub;
 
-  public IntakeSpinningOut() {
+  public ReverseIntake() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
 
-    spinningPub = table.getBooleanTopic("intakeSpinningOut").publish();
+    spinningPub = table.getBooleanTopic("reverseIntake").publish();
     spinningPub.set(false);
   }
 

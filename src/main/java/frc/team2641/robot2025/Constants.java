@@ -1,11 +1,10 @@
 package frc.team2641.robot2025;
 
 import com.pathplanner.lib.config.PIDConstants;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import frc.team2641.robot2025.helpers.ArmPos;
+import frc.team2641.robot2025.helpers.ArmPosition;
 import swervelib.math.Matter;
 
 public final class Constants {
@@ -31,23 +30,22 @@ public final class Constants {
   }
 
   public static final class CAN {
-    
-    public static final int elevMotor = -1;
-    public static final int intakeMotor1 = -1;
-    public static final int intakeMotor2 = -1;
+    public static final int elevator = -1;
+    public static final int intake1 = -1;
+    public static final int intake2 = -1;
     public static final int wrist = -1;
-    public static final int climb = -1;
+    public static final int climber = -1;
 
     public static final int pdh = 20;
     public static final int ph = 21;
   }
 
-  /** @see IMPORTANT needs to have speeds set */
   public static final class MotorSpeeds{
     public static final double elevatorSpeed = 0;
     public static final double climbSpeed = 0;
     public static final double intakeSpeed = 0;
   }
+
   public static final class IntakeGains{
     public static final PIDConstants wristGains = new PIDConstants(0, 0, 0);
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
@@ -56,6 +54,7 @@ public final class Constants {
     public static final SlewRateLimiter elevatorRateLimiter = new SlewRateLimiter(6);
     
   }
+
   public static final class ClimberPositions{
     public static final double extended = 0.0;
     public static final double start = 0.0;
@@ -63,14 +62,12 @@ public final class Constants {
   }
 
   public static final class ArmPositions{
-    public static final ArmPos L1 = new ArmPos(-1, -1);
-    public static final ArmPos L2 = new ArmPos(-1, -1);
-    public static final ArmPos L3 = new ArmPos(-1, -1);
-    public static final ArmPos L4 = new ArmPos(-1, -1);
-    public static final ArmPos humanPlayer = new ArmPos(-1, -1);
-    public static final ArmPos processor = new ArmPos(-1, -1);
-    public static final ArmPos algaeRemoval = new ArmPos(-1, -1);
-  }
-
-  
+    public static final ArmPosition L1 = new ArmPosition(-1, -1);
+    public static final ArmPosition L2 = new ArmPosition(-1, -1);
+    public static final ArmPosition L3 = new ArmPosition(-1, -1);
+    public static final ArmPosition L4 = new ArmPosition(-1, -1);
+    public static final ArmPosition humanPlayer = new ArmPosition(-1, -1);
+    public static final ArmPosition processor = new ArmPosition(-1, -1);
+    public static final ArmPosition algaeRemoval = new ArmPosition(-1, -1);
+  } 
 }
