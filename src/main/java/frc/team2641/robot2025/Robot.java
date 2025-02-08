@@ -1,13 +1,19 @@
 package frc.team2641.robot2025;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2641.robot2025.subsystems.Swerve;
+
 // import frc.team2641.robot2025.subsystems.Pneumatics;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +24,15 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.ironmaple.simulation.*;
+import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation.SelfControlledModuleSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
 
-public class Robot extends LoggedRobot {
+public class Robot extends TimedRobot {
   private static Robot instance;
   private Command autoCommand;
 
@@ -32,21 +45,22 @@ public class Robot extends LoggedRobot {
   private Timer disabledTimer;
 
   public Robot() {
-    Logger.recordMetadata("ProjectName", "2025-frc");
+    // Logger.recordMetadata("ProjectName", "2025-frc");
 
-    if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter());
-      Logger.addDataReceiver(new NT4Publisher());
-      pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
-      ph = new PneumaticHub(Constants.CAN.ph);  
-    } else {
-      setUseTiming(false);
-      String logPath = LogFileUtil.findReplayLog();
-      Logger.setReplaySource(new WPILOGReader(logPath));
-      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-    }
+    // if (isReal()) {
+    //   Logger.addDataReceiver(new WPILOGWriter());
+    //   Logger.addDataReceiver(new NT4Publisher());
+    //   pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
+    //   ph = new PneumaticHub(Constants.CAN.ph);  
+    // } else {
+    //   // setUseTiming(false);
+    //   String logPath = LogFileUtil.findReplayLog();
+    //   Logger.setReplaySource(new WPILOGReader(logPath));
+    //   Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+    // }
 
-    Logger.start();
+    // Logger.start();
+
 
     instance = this;
   }
@@ -143,6 +157,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void simulationPeriodic() {
+    robotContainer.updateSimulation();
   }
 
   public static PneumaticHub getPH() {

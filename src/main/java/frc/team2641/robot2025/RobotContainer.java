@@ -1,13 +1,22 @@
 package frc.team2641.robot2025;
 
+import java.util.Optional;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +29,8 @@ import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.subsystems.Arm;
 import frc.team2641.robot2025.subsystems.Arm.ArmTargets;
 import frc.team2641.robot2025.subsystems.Drivetrain;
+import frc.team2641.robot2025.subsystems.Swerve;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
@@ -47,6 +58,9 @@ public class RobotContainer {
   
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
+
+  public SimulatedArena simArena;
+  Optional<SwerveDriveSimulation> driveSimulation;
 
   public RobotContainer() {
     configureBindings();
@@ -90,6 +104,9 @@ public class RobotContainer {
     
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     SmartDashboard.putData("Auto", autoChooser);
+
+    simArena = SimulatedArena.getInstance();
+    driveSimulation = Swerve.getInstance().getSwerveDrive().getMapleSimDrive();
   }
 
   private void configureBindings() {
@@ -129,5 +146,17 @@ public class RobotContainer {
 
   public double getOpRightStickY() {
     return operatorGamepad.getRightY();
+  }
+
+StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("MyPoseArray", Pose3d.struct)
+      .publish();
+
+  public void updateSimulation() {
+    simArena.simulationPeriodic();
+
+      Pose3d[] algaePoses = SimulatedArena.getInstance()
+            .getGamePiecesArrayByType("Algae");
+      notePoses.accept(algaePoses);
   }
 }

@@ -21,7 +21,6 @@ public class Drivetrain extends Swerve {
   }
 
   public Drivetrain() {
-    super();
     this.swerveDrive = super.getSwerveDrive();
   }
 

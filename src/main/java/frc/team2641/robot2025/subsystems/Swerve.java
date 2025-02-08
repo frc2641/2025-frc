@@ -1,6 +1,11 @@
 package frc.team2641.robot2025.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -18,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -35,6 +41,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import javax.security.sasl.AuthorizeCallback;
+
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.json.simple.parser.ParseException;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -55,10 +67,11 @@ public class Swerve extends SubsystemBase {
   }
 
   private final SwerveDrive swerveDrive;
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
 
   public Swerve() {
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
     try {
       swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
         .createSwerveDrive(
@@ -73,11 +86,10 @@ public class Swerve extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    swerveDrive.setHeadingCorrection(true);
+    swerveDrive.setHeadingCorrection(!SwerveDriveTelemetry.isSimulation);
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
     swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
     swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
-    swerveDrive.pushOffsetsToEncoders();
     setupPathPlanner();
   }
 
@@ -102,43 +114,45 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setupPathPlanner() {
-    RobotConfig config;
-    try {
-      config = RobotConfig.fromGUISettings();
+    if (!AutoBuilder.isConfigured()) {
+      RobotConfig config;
+      try {
+        config = RobotConfig.fromGUISettings();
 
-      final boolean enableFeedforward = true;
-      AutoBuilder.configure(
-        this::getPose,
-        this::resetOdometry,
-        this::getRobotVelocity,
-        (speedsRobotRelative, moduleFeedForwards) -> {
-          if (enableFeedforward) {
-            swerveDrive.drive(
-              speedsRobotRelative,
-              swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
-              moduleFeedForwards.linearForces()
-            );
-          } else {
-            swerveDrive.setChassisSpeeds(speedsRobotRelative);
-          }
-        },
-        new PPHolonomicDriveController(
-          AutoConstants.TRANSLATION_PID,
-          AutoConstants.ANGLE_PID             
-        ),
-        config,
-        () -> {
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) return alliance.get() == DriverStation.Alliance.Red;
-          return false;
-        },
-        this
-      );
-    } catch (Exception e) {
-      e.printStackTrace();
+        final boolean enableFeedforward = true;
+        AutoBuilder.configure(
+          this::getPose,
+          this::resetOdometry,
+          this::getRobotVelocity,
+          (speedsRobotRelative, moduleFeedForwards) -> {
+            if (enableFeedforward) {
+              swerveDrive.drive(
+                speedsRobotRelative,
+                swerveDrive.kinematics.toSwerveModuleStates(speedsRobotRelative),
+                moduleFeedForwards.linearForces()
+              );
+            } else {
+              swerveDrive.setChassisSpeeds(speedsRobotRelative);
+            }
+          },
+          new PPHolonomicDriveController(
+            AutoConstants.TRANSLATION_PID,
+            AutoConstants.ANGLE_PID             
+          ),
+          config,
+          () -> {
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) return alliance.get() == DriverStation.Alliance.Red;
+            return false;
+          },
+          this
+        );
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      PathfindingCommand.warmupCommand().schedule();
     }
-
-    PathfindingCommand.warmupCommand().schedule();
   }
 
   public Command getAutonomousCommand(String pathName) {
