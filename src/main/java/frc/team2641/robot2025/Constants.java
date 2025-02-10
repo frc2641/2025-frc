@@ -24,17 +24,18 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final double LEFT_X_DEADBAND = 0.1;
+    
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 6;
   }
 
   public static final class CAN {
-    public static final int elevator = -1;
-    public static final int intake1 = -1;
-    public static final int intake2 = -1;
-    public static final int wrist = -1;
-    public static final int climber = -1;
+    public static final int elevator = 1; // TEST
+    public static final int intake1 = 2;
+    public static final int intake2 = 3;
+    public static final int wrist = 4;
+    public static final int climber = 5;
 
     public static final int pdh = 20;
     public static final int ph = 21;

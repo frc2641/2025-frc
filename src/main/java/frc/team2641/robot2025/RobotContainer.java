@@ -154,9 +154,5 @@ StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
 
   public void updateSimulation() {
     simArena.simulationPeriodic();
-
-      Pose3d[] algaePoses = SimulatedArena.getInstance()
-            .getGamePiecesArrayByType("Algae");
-      notePoses.accept(algaePoses);
   }
 }
