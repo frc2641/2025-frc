@@ -17,8 +17,8 @@ public class Arm extends SubsystemBase {
     L4,
     HUMAN_PLAYER,
     PROCESSOR,
-    ALGAE_REMOVAL
-  };
+    ALGAE_REMOVAL;
+  }
 
   private static Arm instance;
   public static Arm getInstance() {

@@ -60,7 +60,8 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   public SimulatedArena simArena;
-  Optional<SwerveDriveSimulation> driveSimulation;
+  // Optional<SwerveDriveSimulation> driveSimulation;
+    SwerveDriveSimulation driveSimulation;
 
   public RobotContainer() {
     configureBindings();
@@ -106,7 +107,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto", autoChooser);
 
     simArena = SimulatedArena.getInstance();
-    driveSimulation = Swerve.getInstance().getSwerveDrive().getMapleSimDrive();
+    driveSimulation = Swerve.getInstance().getSwerveDrive().getMapleSimDrive().get();
   }
 
   private void configureBindings() {
@@ -125,6 +126,7 @@ public class RobotContainer {
     operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
     operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
     operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
+    operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
 

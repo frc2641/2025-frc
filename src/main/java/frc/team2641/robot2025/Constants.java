@@ -56,12 +56,6 @@ public final class Constants {
     
   }
 
-  public static final class ClimberPositions{
-    public static final double extended = 0.0;
-    public static final double start = 0.0;
-
-  }
-
   public static final class ArmPositions{
     public static final ArmPosition L1 = new ArmPosition(-1, -1);
     public static final ArmPosition L2 = new ArmPosition(-1, -1);

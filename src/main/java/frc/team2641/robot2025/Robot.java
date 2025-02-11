@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    robotContainer.simArena.addDriveTrainSimulation(robotContainer.driveSimulation.get());
+    robotContainer.simArena.addDriveTrainSimulation(robotContainer.driveSimulation);
   }
 
   @Override
