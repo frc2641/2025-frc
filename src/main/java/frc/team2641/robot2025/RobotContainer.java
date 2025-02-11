@@ -2,6 +2,7 @@ package frc.team2641.robot2025;
 
 import java.util.Optional;
 
+import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 
@@ -60,8 +61,6 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   public SimulatedArena simArena;
-  // Optional<SwerveDriveSimulation> driveSimulation;
-    SwerveDriveSimulation driveSimulation;
 
   public RobotContainer() {
     configureBindings();
@@ -107,7 +106,6 @@ public class RobotContainer {
     SmartDashboard.putData("Auto", autoChooser);
 
     simArena = SimulatedArena.getInstance();
-    driveSimulation = Swerve.getInstance().getSwerveDrive().getMapleSimDrive().get();
   }
 
   private void configureBindings() {
@@ -156,5 +154,7 @@ StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
 
   public void updateSimulation() {
     simArena.simulationPeriodic();
+
+    
   }
 }

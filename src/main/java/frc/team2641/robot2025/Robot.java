@@ -1,8 +1,13 @@
 package frc.team2641.robot2025;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -31,6 +36,8 @@ import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation.Se
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralAlgaeStack;
 
 public class Robot extends TimedRobot {
   private static Robot instance;
@@ -44,23 +51,27 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
 
+  StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
+    .publish();
+
+  StructArrayPublisher<Pose3d> coralPoses = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("FieldElements/Coral", Pose3d.struct)
+    .publish();
+
   public Robot() {
-    // Logger.recordMetadata("ProjectName", "2025-frc");
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));
+    
+    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+    algaePoses.accept(algae);
 
-    // if (isReal()) {
-    //   Logger.addDataReceiver(new WPILOGWriter());
-    //   Logger.addDataReceiver(new NT4Publisher());
-    //   pdh = new PowerDistribution(Constants.CAN.pdh, PowerDistribution.ModuleType.kRev);
-    //   ph = new PneumaticHub(Constants.CAN.ph);  
-    // } else {
-    //   // setUseTiming(false);
-    //   String logPath = LogFileUtil.findReplayLog();
-    //   Logger.setReplaySource(new WPILOGReader(logPath));
-    //   Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-    // }
+SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+    // We must specify a heading since the coral is a tube
+    new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
 
-    // Logger.start();
 
+    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+    coralPoses.accept(coral);
 
     instance = this;
   }
@@ -153,7 +164,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    robotContainer.simArena.addDriveTrainSimulation(robotContainer.driveSimulation);
   }
 
   @Override

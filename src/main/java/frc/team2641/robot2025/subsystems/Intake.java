@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.RobotContainer;
 
 public class Intake extends SubsystemBase {
   private TalonFX intake1;
@@ -40,10 +41,15 @@ public class Intake extends SubsystemBase {
   }
 
   public void spin() {
-    if(spinSub.get())
+    if(spinSub.get()){
       out();
-    else
+      
+        IntakeSim.getInstance().setRunning(true);
+    }
+    else{
       in();
+      IntakeSim.getInstance().setRunning(false);
+    }
   }
 
   public void stop() {
@@ -54,4 +60,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
   }
+
+
 }
