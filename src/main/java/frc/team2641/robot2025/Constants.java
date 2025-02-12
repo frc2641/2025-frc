@@ -53,6 +53,9 @@ public final class Constants {
    
     public static final PIDConstants elevatorGains = new PIDConstants(0, 0, 0);
     public static final SlewRateLimiter elevatorRateLimiter = new SlewRateLimiter(6);
+
+    public static final PIDConstants climbGains = new PIDConstants(6, 0, 0);
+    public static final SlewRateLimiter climbRateLimiter = new SlewRateLimiter(6);
     
   }
 

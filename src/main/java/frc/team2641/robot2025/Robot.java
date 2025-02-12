@@ -62,8 +62,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));
     
-    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
-    algaePoses.accept(algae);
 
 SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
     // We must specify a heading since the coral is a tube
@@ -164,11 +162,19 @@ SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
 
   @Override
   public void simulationInit() {
+    SimulatedArena.getInstance().resetFieldForAuto();
   }
 
   @Override
   public void simulationPeriodic() {
     robotContainer.updateSimulation();
+    
+    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+    algaePoses.accept(algae);
+
+    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+    coralPoses.accept(coral);
+
   }
 
   public static PneumaticHub getPH() {
