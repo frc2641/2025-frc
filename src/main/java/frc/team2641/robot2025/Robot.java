@@ -4,11 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -17,27 +15,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.subsystems.Swerve;
-
 // import frc.team2641.robot2025.subsystems.Pneumatics;
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.ironmaple.simulation.*;
-import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
-import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation.SelfControlledModuleSimulation;
-import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralAlgaeStack;
 
 public class Robot extends TimedRobot {
   private static Robot instance;
@@ -51,25 +35,10 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
 
-  StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
-    .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
-    .publish();
-
-  StructArrayPublisher<Pose3d> coralPoses = NetworkTableInstance.getDefault()
-    .getStructArrayTopic("FieldElements/Coral", Pose3d.struct)
-    .publish();
-
+  
   public Robot() {
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));
+
     
-
-SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
-    // We must specify a heading since the coral is a tube
-    new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
-
-
-    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
-    coralPoses.accept(coral);
 
     instance = this;
   }
@@ -162,19 +131,26 @@ SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
 
   @Override
   public void simulationInit() {
-    SimulatedArena.getInstance().resetFieldForAuto();
+    // SimulatedArena.getInstance().resetFieldForAuto();
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));
+    
+
+    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
+        // We must specify a heading since the coral is a tube
+        new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
+    
+    
+        Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+        Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+
+        robotContainer.coralPoses.accept(coral);
+        robotContainer.algaePoses.accept(algae);
   }
 
   @Override
   public void simulationPeriodic() {
-    robotContainer.updateSimulation();
     
-    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
-    algaePoses.accept(algae);
-
-    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
-    coralPoses.accept(coral);
-
+    robotContainer.updateSimulation();
   }
 
   public static PneumaticHub getPH() {

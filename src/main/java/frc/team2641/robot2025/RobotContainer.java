@@ -60,7 +60,15 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
-  public SimulatedArena simArena;
+  StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
+    .publish();
+
+  StructArrayPublisher<Pose3d> coralPoses = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("FieldElements/Coral", Pose3d.struct)
+    .publish();
+
+
 
   public RobotContainer() {
     configureBindings();
@@ -96,7 +104,7 @@ public class RobotContainer {
       () -> robotSub.get());
     
     drivetrain.setDefaultCommand(driveCommand);
-    arm.setDefaultCommand(new MoveArm());
+    // arm.setDefaultCommand(new MoveArm());
 
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
@@ -105,7 +113,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     SmartDashboard.putData("Auto", autoChooser);
 
-    simArena = SimulatedArena.getInstance();
+
   }
 
   private void configureBindings() {
@@ -148,13 +156,19 @@ public class RobotContainer {
     return operatorGamepad.getRightY();
   }
 
-StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
-      .getStructArrayTopic("MyPoseArray", Pose3d.struct)
-      .publish();
+// StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
+//       .getStructArrayTopic("MyPoseArray", Pose3d.struct)
+//       .publish();
 
   public void updateSimulation() {
-    simArena.simulationPeriodic();
 
     
+    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+    algaePoses.accept(algae);
+
+    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+    coralPoses.accept(coral);
+
+    SimulatedArena.getInstance().simulationPeriodic();
   }
 }
