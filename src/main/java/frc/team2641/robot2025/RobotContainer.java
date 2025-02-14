@@ -1,16 +1,9 @@
 package frc.team2641.robot2025;
 
-import java.util.Optional;
-
-import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -27,15 +20,13 @@ import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
-import frc.team2641.robot2025.subsystems.Arm;
-import frc.team2641.robot2025.subsystems.Arm.ArmTargets;
-import frc.team2641.robot2025.subsystems.Drivetrain;
-import frc.team2641.robot2025.subsystems.Swerve;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
+import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final Arm arm = Arm.getInstance();
+  private final Superstructure arm = Superstructure.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -60,6 +51,8 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
 
+  private SimulatedArena arena;
+
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
     .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
     .publish();
@@ -68,12 +61,11 @@ public class RobotContainer {
     .getStructArrayTopic("FieldElements/Coral", Pose3d.struct)
     .publish();
 
-
-
   public RobotContainer() {
     configureBindings();
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+    if (Robot.isSimulation()) arena = Robot.getArena();
 
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
@@ -112,8 +104,6 @@ public class RobotContainer {
     
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     SmartDashboard.putData("Auto", autoChooser);
-
-
   }
 
   private void configureBindings() {
@@ -135,7 +125,6 @@ public class RobotContainer {
     operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-
     operatorGamepad.povUp().whileTrue(new Climb(true));
     operatorGamepad.povDown().whileTrue(new Climb(false));
   }
@@ -156,19 +145,16 @@ public class RobotContainer {
     return operatorGamepad.getRightY();
   }
 
-// StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
-//       .getStructArrayTopic("MyPoseArray", Pose3d.struct)
-//       .publish();
-
   public void updateSimulation() {
-
+    if (Robot.isReal()) return;
+    if (arena == null) arena = Robot.getArena();
     
-    Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+    Pose3d[] algae = arena.getGamePiecesArrayByType("Algae");
     algaePoses.accept(algae);
 
-    Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+    Pose3d[] coral = arena.getGamePiecesArrayByType("Coral");
     coralPoses.accept(coral);
 
-    SimulatedArena.getInstance().simulationPeriodic();
+    arena.simulationPeriodic();
   }
 }

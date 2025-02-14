@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Limelight;
-import frc.team2641.robot2025.subsystems.Drivetrain;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class LimelightTracking extends Command {
   private final Drivetrain drivetrain;

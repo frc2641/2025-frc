@@ -5,8 +5,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -33,13 +31,11 @@ public class Robot extends TimedRobot {
   private static PneumaticHub ph;
   public RobotContainer robotContainer;
 
+  private static SimulatedArena arena;
+
   private Timer disabledTimer;
 
-  
   public Robot() {
-
-    
-
     instance = this;
   }
 
@@ -58,8 +54,10 @@ public class Robot extends TimedRobot {
     for (int port = 5800; port <= 5807; port++) 
       PortForwarder.add(port, "10.26.41.25", port);
 
-    if (isSimulation())
+    if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
+      arena = SimulatedArena.getInstance();
+    }
   }
 
   @Override
@@ -131,25 +129,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    // SimulatedArena.getInstance().resetFieldForAuto();
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));
-    
+    // arena.resetFieldForAuto();
+    arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
 
-    SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(
-        // We must specify a heading since the coral is a tube
-        new Pose2d(2, 2, Rotation2d.fromDegrees(90))));
-    
-    
-        Pose3d[] coral = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
-        Pose3d[] algae = SimulatedArena.getInstance().getGamePiecesArrayByType("Algae");
+    arena.addGamePiece(new ReefscapeCoralOnField(
+      new Pose2d(2, 2, Rotation2d.fromDegrees(90))
+    ));
+  
+    Pose3d[] coral = arena.getGamePiecesArrayByType("Coral");
+    Pose3d[] algae = arena.getGamePiecesArrayByType("Algae");
 
-        robotContainer.coralPoses.accept(coral);
-        robotContainer.algaePoses.accept(algae);
+    robotContainer.coralPoses.accept(coral);
+    robotContainer.algaePoses.accept(algae);
   }
 
   @Override
   public void simulationPeriodic() {
-    
     robotContainer.updateSimulation();
   }
 
@@ -159,5 +154,9 @@ public class Robot extends TimedRobot {
 
   public static PowerDistribution getPDH() {
     return pdh;
+  }
+
+  public static SimulatedArena getArena() {
+    return arena;
   }
 }

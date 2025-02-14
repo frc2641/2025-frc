@@ -1,11 +1,6 @@
-package frc.team2641.robot2025.subsystems;
+package frc.team2641.robot2025.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meter;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -23,7 +18,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -41,12 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import javax.security.sasl.AuthorizeCallback;
-
-import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.json.simple.parser.ParseException;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -57,21 +45,20 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class Swerve extends SubsystemBase {
-  private static Swerve instance = null;
+public class SwerveBase extends SubsystemBase {
+  private static SwerveBase instance = null;
 
-  public static Swerve getInstance() {
+  public static SwerveBase getInstance() {
     if (instance == null)
-      instance = new Swerve();
+      instance = new SwerveBase();
     return instance;
   }
 
   private final SwerveDrive swerveDrive;
   private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-
-  public Swerve() {
-    // SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
+  public SwerveBase() {
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
     try {
       swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
         .createSwerveDrive(
@@ -93,7 +80,7 @@ public class Swerve extends SubsystemBase {
     setupPathPlanner();
   }
 
-  public Swerve(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
+  public SwerveBase(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
     swerveDrive = new SwerveDrive(
       driveCfg,
       controllerCfg,

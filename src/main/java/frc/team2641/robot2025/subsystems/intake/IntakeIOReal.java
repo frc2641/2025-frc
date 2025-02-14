@@ -1,27 +1,25 @@
 package frc.team2641.robot2025.subsystems.intake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.team2641.robot2025.Constants;
 
-public class IntakeReal implements IntakeIO {
-    private TalonFX intake1;
+public class IntakeIOReal implements IntakeIO {
+  private TalonFX intake1;
   private TalonFX intake2;
   private BooleanSubscriber spinSub;
   
-  private static IntakeReal instance;
+  private static IntakeIOReal instance;
   
   public static IntakeIO getInstance() {
-      if (instance == null)
-        instance = new IntakeReal();
-      return instance;
-    }
+    if (instance == null)
+      instance = new IntakeIOReal();
+    return instance;
+  }
 
-    private IntakeReal() {
-        
+  private IntakeIOReal() {
     // TODO: Set ID
     intake1 = new TalonFX(Constants.CAN.intake1);
     intake2 = new TalonFX(Constants.CAN.intake2);
@@ -30,22 +28,21 @@ public class IntakeReal implements IntakeIO {
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
   }
 
-  public void in() {
+  public void intake() {
     intake1.set(Constants.MotorSpeeds.intakeSpeed);
     intake2.set(Constants.MotorSpeeds.intakeSpeed);
   }
 
-  public void out() {
+  public void shoot() {
     intake1.set(-Constants.MotorSpeeds.intakeSpeed);
     intake2.set(-Constants.MotorSpeeds.intakeSpeed);
   }
 
-  @Override
   public void spin() {
     if(spinSub.get())
-      out();
+      shoot();
     else 
-      in();
+      intake();
   }
 
   @Override

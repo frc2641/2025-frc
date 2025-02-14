@@ -1,21 +1,21 @@
 package frc.team2641.robot2025.commands;
 
-import frc.team2641.robot2025.subsystems.Arm;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.helpers.ArmPosition;
+import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
 import edu.wpi.first.wpilibj2.command.Command;
   
 public class SetArmTarget extends Command {
   private ArmPosition pos;
-  private Arm arm;
+  private Superstructure arm;
   
   public SetArmTarget(ArmPosition pos) {
     this.pos = pos;
-    arm = Arm.getInstance();
+    arm = Superstructure.getInstance();
     addRequirements(arm);
   }
 
-  public SetArmTarget(Arm.ArmTargets target) {
+  public SetArmTarget(Superstructure.ArmTargets target) {
     switch (target) {
       case L1:
         this.pos = Constants.ArmPositions.L1;

@@ -1,9 +1,9 @@
-package frc.team2641.robot2025.subsystems;
+package frc.team2641.robot2025.subsystems.superstructure;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.helpers.ArmPosition;
 
-public class Arm extends SubsystemBase {
+public class Superstructure extends SubsystemBase {
   private Wrist wrist;
   private Elevator elevator;
 
@@ -20,14 +20,14 @@ public class Arm extends SubsystemBase {
     ALGAE_REMOVAL;
   }
 
-  private static Arm instance;
-  public static Arm getInstance() {
+  private static Superstructure instance;
+  public static Superstructure getInstance() {
     if (instance == null)
-      instance = new Arm();
+      instance = new Superstructure();
     return instance;
   }
 
-  private Arm() {
+  private Superstructure() {
     wrist = Wrist.getInstance();
     elevator = Elevator.getInstance();
     pos = new ArmPosition(0, 0);

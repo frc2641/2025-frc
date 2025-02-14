@@ -10,38 +10,41 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.ironmaple.simulation.SimulatedArena;
 
 public class Telemetry {
-    private static Telemetry instance = null;
+	private static Telemetry instance = null;
 
-    public static Telemetry getInstance() {
-        if (instance == null) instance = new Telemetry();
-        return instance;
-    }
+	private SimulatedArena arena;
 
-    public final Field2d field2d;
+	public static Telemetry getInstance() {
+		if (instance == null) instance = new Telemetry();
+		return instance;
+	}
 
-    StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
-            .getStructArrayTopic("MyPoseArray", Pose3d.struct)
-            .publish();
+	public final Field2d field2d;
 
-    public Telemetry() {
-        this.field2d = new Field2d();
-        SmartDashboard.putData("field", field2d);
-    }
+	StructArrayPublisher<Pose3d> notePoses = NetworkTableInstance.getDefault()
+		.getStructArrayTopic("MyPoseArray", Pose3d.struct)
+		.publish();
 
-    public Field2d getFieldWidget() {
-        return field2d;
-    }
+	public Telemetry() {
+		this.field2d = new Field2d();
+		SmartDashboard.putData("field", field2d);
+		if (RobotBase.isSimulation()) arena = Robot.getArena();
+	}
 
-    public void feedSimulationRobotPose(Pose2d simulationRobotPose) {
-        field2d.setRobotPose(simulationRobotPose);
-    }
+	public Field2d getFieldWidget() {
+		return field2d;
+	}
 
-    public void feedOdometryPose(Pose2d odometryPose) {
-        if (RobotBase.isReal()) field2d.setRobotPose(odometryPose);
-        else field2d.getObject("Odometry").setPose(odometryPose);
-    }
+	public void feedSimulationRobotPose(Pose2d simulationRobotPose) {
+		field2d.setRobotPose(simulationRobotPose);
+	}
 
-    public void publishSimulationNotePoses() {
-        notePoses.accept(SimulatedArena.getInstance().getGamePiecesArrayByType("Note"));
-    }
+	public void feedOdometryPose(Pose2d odometryPose) {
+		if (RobotBase.isReal()) field2d.setRobotPose(odometryPose);
+		else field2d.getObject("Odometry").setPose(odometryPose);
+	}
+
+	public void publishSimulationNotePoses() {
+		notePoses.accept(arena.getGamePiecesArrayByType("Note"));
+	}
 }

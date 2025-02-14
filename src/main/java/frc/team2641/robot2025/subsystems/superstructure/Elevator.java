@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems;
+package frc.team2641.robot2025.subsystems.superstructure;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -6,17 +6,17 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 
-public class Wrist extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   private TalonFX motor;
-
-  private static Wrist instance;
-  public static Wrist getInstance() {
+  
+  private static Elevator instance;
+  public static Elevator getInstance() {
     if (instance == null)
-      instance = new Wrist();
+      instance = new Elevator();
     return instance;
   }   
 
-  private Wrist() {
+  private Elevator() {
     configMotors();
   }
 
@@ -34,15 +34,15 @@ public class Wrist extends SubsystemBase {
 
   private void configMotors() {
     // TODO: Set ID
-    motor = new TalonFX(Constants.CAN.wrist);
+    motor = new TalonFX(Constants.CAN.elevator);
 
     Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = Constants.IntakeGains.wristGains.kP;
-    slot0Configs.kI = Constants.IntakeGains.wristGains.kI;
-    slot0Configs.kD = Constants.IntakeGains.wristGains.kD;
+    slot0Configs.kP = Constants.IntakeGains.elevatorGains.kP;
+    slot0Configs.kI = Constants.IntakeGains.elevatorGains.kI;
+    slot0Configs.kD = Constants.IntakeGains.elevatorGains.kD;
 
     motor.getConfigurator().apply(slot0Configs);
-
+    
     motor.setNeutralMode(NeutralModeValue.Brake);
   }
   
