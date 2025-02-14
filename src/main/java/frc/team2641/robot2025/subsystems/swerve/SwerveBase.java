@@ -55,7 +55,7 @@ public class SwerveBase extends SubsystemBase {
   }
 
   private final SwerveDrive swerveDrive;
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
   public SwerveBase() {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
