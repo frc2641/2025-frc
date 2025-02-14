@@ -20,13 +20,13 @@ import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
-import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
+// import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
 import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final Superstructure arm = Superstructure.getInstance();
+  // private final Superstructure arm = Superstructure.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
