@@ -11,10 +11,12 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
@@ -28,8 +30,10 @@ public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   // private final Superstructure arm = Superstructure.getInstance();
 
-  CommandXboxController driverGamepad = new CommandXboxController(0);
-  CommandXboxController operatorGamepad = new CommandXboxController(1);
+  CommandPS4Controller driverGamepadPS4 = new CommandPS4Controller(0);
+  CommandPS4Controller operatorGamepadPS4 = new CommandPS4Controller(1);
+  CommandXboxController driverGamepadXbox = new CommandXboxController(0);
+  CommandXboxController operatorGamepadXbox = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
@@ -87,14 +91,24 @@ public class RobotContainer {
     reverseIntakePub.set(false);
     reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
-    driveCommand = drivetrain.driveCommand(
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
-            OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
-            OperatorConstants.LEFT_X_DEADBAND),
-      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
-      () -> robotSub.get());
-    
+    if (DriverStation.getJoystickIsXbox(0)) {
+      driveCommand = drivetrain.driveCommand(
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepadXbox.getLeftY() * 0.25 : -driverGamepadXbox.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepadXbox.getLeftX() * 0.25 : -driverGamepadXbox.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND),
+        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepadXbox.getRightX() * 0.75 : -driverGamepadXbox.getRightX(),
+        () -> robotSub.get());
+    } else {
+      driveCommand = drivetrain.driveCommand(
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepadPS4.getLeftY() * 0.25 : -driverGamepadPS4.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepadPS4.getLeftX() * 0.25 : -driverGamepadPS4.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND),
+        () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepadPS4.getRightX() * 0.75 : -driverGamepadPS4.getRightX(),
+        () -> robotSub.get());
+    }
+        
     drivetrain.setDefaultCommand(driveCommand);
     // arm.setDefaultCommand(new MoveArm());
 
@@ -107,26 +121,49 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driverGamepad.a().whileTrue(new AutoAngle(1, false));
-    driverGamepad.b().whileTrue(new AutoAngle(2, false));
-    driverGamepad.x().whileTrue(new AutoAngle(3, false));
-    driverGamepad.y().whileTrue(new AutoAngle(4, false));
-    driverGamepad.leftBumper().whileTrue(new LimelightTracking());
-    driverGamepad.leftTrigger().whileTrue(new SniperMode());
-    driverGamepad.rightTrigger().whileTrue(new RobotRelative());
-    driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
+    if (DriverStation.getJoystickIsXbox(0)) {
+      driverGamepadXbox.a().whileTrue(new AutoAngle(1, false));
+      driverGamepadXbox.b().whileTrue(new AutoAngle(2, false));
+      driverGamepadXbox.x().whileTrue(new AutoAngle(3, false));
+      driverGamepadXbox.y().whileTrue(new AutoAngle(4, false));
+      driverGamepadXbox.leftBumper().whileTrue(new LimelightTracking());
+      driverGamepadXbox.leftTrigger().whileTrue(new SniperMode());
+      driverGamepadXbox.rightTrigger().whileTrue(new RobotRelative());
+      driverGamepadXbox.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
+    } else {
+      driverGamepadPS4.cross().whileTrue(new AutoAngle(1, false));
+      driverGamepadPS4.circle().whileTrue(new AutoAngle(2, false));
+      driverGamepadPS4.square().whileTrue(new AutoAngle(3, false));
+      driverGamepadPS4.triangle().whileTrue(new AutoAngle(4, false));
+      driverGamepadPS4.L1().whileTrue(new LimelightTracking());
+      driverGamepadPS4.L2().whileTrue(new SniperMode());
+      driverGamepadPS4.R2().whileTrue(new RobotRelative());
+      driverGamepadPS4.options().onTrue(new InstantCommand(drivetrain::zeroGyro));
+    }
     
-    operatorGamepad.a().onTrue(new SetArmTarget(ArmTargets.L1));
-    operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
-    operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
-    operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
-    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
-    operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
-    operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
-    operatorGamepad.leftTrigger().whileTrue(new RunIntake());
-    operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    operatorGamepad.povUp().whileTrue(new Climb(true));
-    operatorGamepad.povDown().whileTrue(new Climb(false));
+    if (DriverStation.getJoystickIsXbox(1)) {
+      operatorGamepadXbox.a().onTrue(new SetArmTarget(ArmTargets.L1));
+      operatorGamepadXbox.b().onTrue(new SetArmTarget(ArmTargets.L2));
+      operatorGamepadXbox.x().onTrue(new SetArmTarget(ArmTargets.L3));
+      operatorGamepadXbox.y().onTrue(new SetArmTarget(ArmTargets.L4));
+      operatorGamepadXbox.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
+      operatorGamepadXbox.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
+      operatorGamepadXbox.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
+      operatorGamepadXbox.leftTrigger().whileTrue(new RunIntake());
+      operatorGamepadXbox.rightTrigger().whileTrue(new ReverseIntake());
+      operatorGamepadXbox.povUp().whileTrue(new Climb(true));
+      operatorGamepadXbox.povDown().whileTrue(new Climb(false));
+    } else {
+      operatorGamepadPS4.cross().onTrue(new SetArmTarget(ArmTargets.L1));
+      operatorGamepadPS4.circle().onTrue(new SetArmTarget(ArmTargets.L2));
+      operatorGamepadPS4.square().onTrue(new SetArmTarget(ArmTargets.L3));
+      operatorGamepadPS4.triangle().onTrue(new SetArmTarget(ArmTargets.L4));
+      operatorGamepadPS4.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
+      operatorGamepadPS4.L2().whileTrue(new RunIntake());
+      operatorGamepadPS4.R2().whileTrue(new ReverseIntake());
+      operatorGamepadPS4.povUp().whileTrue(new Climb(true));
+      operatorGamepadPS4.povDown().whileTrue(new Climb(false));
+    }
   }
 
   public Command getAutonomousCommand() {
@@ -138,11 +175,11 @@ public class RobotContainer {
   }
 
   public double getOpLeftStickY() {
-    return operatorGamepad.getLeftY();
+    return DriverStation.getJoystickIsXbox(1) ? operatorGamepadXbox.getLeftY() : operatorGamepadPS4.getLeftY();
   }
 
   public double getOpRightStickY() {
-    return operatorGamepad.getRightY();
+    return DriverStation.getJoystickIsXbox(1) ? operatorGamepadXbox.getRightY() : operatorGamepadPS4.getRightY();
   }
 
   public void updateSimulation() {
