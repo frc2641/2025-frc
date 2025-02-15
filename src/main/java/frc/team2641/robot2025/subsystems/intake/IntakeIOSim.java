@@ -1,10 +1,16 @@
 package frc.team2641.robot2025.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.Optional;
 import org.ironmaple.simulation.IntakeSimulation;
+import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -26,6 +32,7 @@ public class IntakeIOSim implements IntakeIO {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
+
     driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
 
     // Here, create the intake simulation with respect to the intake on your real robot
@@ -43,6 +50,9 @@ public class IntakeIOSim implements IntakeIO {
       // The intake can hold up to 1 note
       1
     );
+
+    intakeSimulation.setGamePiecesCount(0);
+
   }
 
   @Override
@@ -62,8 +72,27 @@ public class IntakeIOSim implements IntakeIO {
 
   @Override
   public void spin() {
-    if (spinSub.get()) 
-      return;
+    if (spinSub.get()&&intakeSimulation.getGamePiecesAmount()>0) 
+      {
+        SimulatedArena.getInstance()
+    .addGamePieceProjectile(new ReefscapeCoralOnFly(
+        // Obtain robot position from drive simulation
+        driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+        // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+        new Translation2d(0.35, 0.35),
+        // Obtain robot speed from drive simulation
+        driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+        // Obtain robot facing from drive simulation
+        driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+        // The height at which the coral is ejected
+        Meters.of(1.28),
+        // The initial speed of the coral
+        MetersPerSecond.of(2),
+        // The coral is ejected at a 35-degree slope
+        Degrees.of(-35)));
+
+         intakeSimulation.setGamePiecesCount(1);
+      }
     else 
       intake();
   }

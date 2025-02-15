@@ -13,11 +13,16 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
+
 // import frc.team2641.robot2025.subsystems.Pneumatics;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+
 import swervelib.parser.SwerveParser;
 import org.ironmaple.simulation.*;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 
@@ -30,6 +35,8 @@ public class Robot extends TimedRobot {
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
   public RobotContainer robotContainer;
+  private Optional<SwerveDriveSimulation> driveSim;
+
 
   private static SimulatedArena arena;
 
@@ -57,6 +64,8 @@ public class Robot extends TimedRobot {
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
       arena = SimulatedArena.getInstance();
+      driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
+
     }
   }
 
@@ -129,7 +138,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    // arena.resetFieldForAuto();
+    driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,4), new Rotation2d(0)));
+    arena.resetFieldForAuto();
     arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
 
     arena.addGamePiece(new ReefscapeCoralOnField(
