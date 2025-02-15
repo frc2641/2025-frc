@@ -96,46 +96,7 @@ public class IntakeIOSim implements IntakeIO {
   public void spin() {
     if (spinSub.get()) 
       {
-        if(coralIntakeSim.getGamePiecesAmount()>0){
-        SimulatedArena.getInstance()
-    .addGamePieceProjectile(new ReefscapeCoralOnFly(
-        // Obtain robot position from drive simulation
-        driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
-        // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-        new Translation2d(0.35, 0.35),
-        // Obtain robot speed from drive simulation
-        driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-        // Obtain robot facing from drive simulation
-        driveSim.get().getSimulatedDriveTrainPose().getRotation(),
-        // The height at which the coral is ejected
-        Meters.of(1.28),
-        // The initial speed of the coral
-        MetersPerSecond.of(2),
-        // The coral is ejected at a 35-degree slope
-        Degrees.of(-35)));
-
-         coralIntakeSim.setGamePiecesCount(0);
-        }
-        else
-        {
-          SimulatedArena.getInstance()
-          .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
-              // Obtain robot position from drive simulation
-              driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
-              // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-              new Translation2d(0.35, 0.35),
-              // Obtain robot speed from drive simulation
-              driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-              // Obtain robot facing from drive simulation
-              driveSim.get().getSimulatedDriveTrainPose().getRotation(),
-              // The height at which the coral is ejected
-              Meters.of(1.28),
-              // The initial speed of the coral
-              MetersPerSecond.of(2),
-              // The coral is ejected at a 35-degree slope
-              Degrees.of(-35)));
-              aglaeIntakeSim.setGamePiecesCount(0);
-          } 
+       outtake(); 
       }
     else 
       intake();
@@ -152,6 +113,50 @@ public class IntakeIOSim implements IntakeIO {
     }
     return false;
     
+  }
+
+  private void outtake(){
+    if(coralIntakeSim.getGamePiecesAmount()>0){
+      SimulatedArena.getInstance()
+  .addGamePieceProjectile(new ReefscapeCoralOnFly(
+      // Obtain robot position from drive simulation
+      driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+      // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+      new Translation2d(0.35, 0.35),
+      // Obtain robot speed from drive simulation
+      driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+      // Obtain robot facing from drive simulation
+      driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+      // The height at which the coral is ejected
+      Meters.of(1.28),
+      // The initial speed of the coral
+      MetersPerSecond.of(2),
+      // The coral is ejected at a 35-degree slope
+      Degrees.of(-35)));
+
+       coralIntakeSim.setGamePiecesCount(0);
+      }
+      else if (aglaeIntakeSim.getGamePiecesAmount()>0)
+      {
+        SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
+            // Obtain robot position from drive simulation
+            driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+            // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+            new Translation2d(0.35, 0.35),
+            // Obtain robot speed from drive simulation
+            driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+            // Obtain robot facing from drive simulation
+            driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+            // The height at which the coral is ejected
+            Meters.of(1.28),
+            // The initial speed of the coral
+            MetersPerSecond.of(2),
+            // The coral is ejected at a 35-degree slope
+            Degrees.of(-35)));
+            aglaeIntakeSim.setGamePiecesCount(0);
+        } 
+
   }
     
   // @Override // Defined by IntakeIO

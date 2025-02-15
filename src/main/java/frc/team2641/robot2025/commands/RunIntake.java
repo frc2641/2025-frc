@@ -30,6 +30,7 @@ public class RunIntake extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    intake.stop();
   }
 
   @Override

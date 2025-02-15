@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
   public RobotContainer robotContainer;
-  private Optional<SwerveDriveSimulation> driveSim;
+   Optional<SwerveDriveSimulation> driveSim;
 
 
   private static SimulatedArena arena;

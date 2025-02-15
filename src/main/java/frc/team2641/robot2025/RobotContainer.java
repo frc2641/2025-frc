@@ -84,10 +84,14 @@ public class RobotContainer {
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
     operatorGamepad.povUp().whileTrue(new Climb(true));
     operatorGamepad.povDown().whileTrue(new Climb(false));
+    if (Robot.isSimulation()){
+      operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
+      operatorGamepad.back().onTrue(new CoralAtHPstationSim(true));
+    }
+
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     if (Robot.isSimulation()) arena = Robot.getArena();
-
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
     alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
