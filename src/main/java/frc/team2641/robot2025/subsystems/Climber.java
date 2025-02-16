@@ -39,12 +39,12 @@ public class Climber extends SubsystemBase {
     // TODO: Set ID
     climber = new TalonFX(Constants.CAN.climber);
 
-    Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = Constants.IntakeGains.climbGains.kP;
-    slot0Configs.kD = Constants.IntakeGains.climbGains.kD;
-    slot0Configs.kI = Constants.IntakeGains.climbGains.kI;
+    // Slot0Configs slot0Configs = new Slot0Configs();
+    // slot0Configs.kP = Constants.IntakeGains.climbGains.kP;
+    // slot0Configs.kD = Constants.IntakeGains.climbGains.kD;
+    // slot0Configs.kI = Constants.IntakeGains.climbGains.kI;
 
-    climber.getConfigurator().apply(slot0Configs);
+    // climber.getConfigurator().apply(slot0Configs);
     
     climber.setNeutralMode(NeutralModeValue.Brake);
   }

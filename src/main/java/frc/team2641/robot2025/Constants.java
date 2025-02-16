@@ -31,23 +31,23 @@ public final class Constants {
   }
 
   public static final class CAN {
-    public static final int elevator = 1; // TEST
-    public static final int intake1 = 2;
-    public static final int intake2 = 3;
-    public static final int wrist = 4;
-    public static final int climber = 5;
+    public static final int elevator = 13;
+    public static final int intake1 = 14;
+    public static final int intake2 = 15;
+    public static final int wrist = 16;
+    public static final int climber = 17;
 
     public static final int pdh = 20;
     public static final int ph = 21;
   }
 
-  public static final class MotorSpeeds{
+  public static final class MotorSpeeds {
     public static final double elevatorSpeed = 0;
-    public static final double climbSpeed = 0;
+    public static final double climbSpeed = 0.25;
     public static final double intakeSpeed = 0;
   }
 
-  public static final class IntakeGains{
+  public static final class IntakeGains {
     public static final PIDConstants wristGains = new PIDConstants(0, 0, 0);
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
    
@@ -56,10 +56,9 @@ public final class Constants {
 
     public static final PIDConstants climbGains = new PIDConstants(6, 0, 0);
     public static final SlewRateLimiter climbRateLimiter = new SlewRateLimiter(6);
-    
   }
 
-  public static final class ArmPositions{
+  public static final class ArmPositions {
     public static final ArmPosition L1 = new ArmPosition(-1, -1);
     public static final ArmPosition L2 = new ArmPosition(-1, -1);
     public static final ArmPosition L3 = new ArmPosition(-1, -1);

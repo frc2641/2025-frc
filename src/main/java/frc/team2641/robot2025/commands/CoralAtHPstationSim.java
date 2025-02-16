@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,7 +55,6 @@ SimulatedArena.getInstance()
       // The initial speed of the coral
       MetersPerSecond.of(2),
       // The coral is ejected at a 35-degree slope
-      Degrees.of(-35)));
-    
+      Degrees.of(-35))); }
   }
-}
+

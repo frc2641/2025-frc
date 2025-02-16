@@ -62,7 +62,6 @@ public class RobotContainer {
     .publish();
 
   public RobotContainer() {
-    driverGamepad = new CommandXboxController(0);
     driverGamepad.a().whileTrue(new AutoAngle(1, false));
     driverGamepad.b().whileTrue(new AutoAngle(2, false));
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
@@ -72,7 +71,6 @@ public class RobotContainer {
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    operatorGamepad = new CommandXboxController(1);
     operatorGamepad.a().onTrue(new SetArmTarget(ArmTargets.L1));
     operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
     operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
@@ -82,13 +80,13 @@ public class RobotContainer {
     operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    operatorGamepad.povUp().whileTrue(new Climb(true));
-    operatorGamepad.povDown().whileTrue(new Climb(false));
+    driverGamepad.povUp().whileTrue(new Climb(true));
+    driverGamepad.povDown().whileTrue(new Climb(false));
+    
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
       operatorGamepad.back().onTrue(new CoralAtHPstationSim(true));
     }
-
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     if (Robot.isSimulation()) arena = Robot.getArena();
