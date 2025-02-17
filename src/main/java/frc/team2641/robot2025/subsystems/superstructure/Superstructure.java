@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.helpers.ArmPosition;
 
 public class Superstructure extends SubsystemBase {
-  private Wrist wrist;
-  private Elevator elevator;
+  private WristIO wrist;
+  private ElevatorIO elevator;
 
   private ArmPosition pos;
   public boolean isAuto = false;
@@ -53,4 +53,5 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
   }
+
 }

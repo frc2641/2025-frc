@@ -21,8 +21,8 @@ public class MoveArm extends Command {
   @Override
   public void execute() {
     if (!arm.isAuto) {
-      double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(),0.5);
-      double rightY= MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(),0.5);
+      double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(),0.05);
+      double rightY= MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(),0.05);
       arm.setPosition(new ArmPosition(arm.getPosition().getWrist() + 30 * leftY, arm.getPosition().getElev() + 30 * rightY));
     }
 

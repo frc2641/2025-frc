@@ -1,6 +1,13 @@
 package frc.team2641.robot2025;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Second;
+
 import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -56,6 +63,24 @@ public final class Constants {
 
     public static final PIDConstants climbGains = new PIDConstants(6, 0, 0);
     public static final SlewRateLimiter climbRateLimiter = new SlewRateLimiter(6);
+
+    public static final double elevMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond); 
+    public static final double elevMaxAcceleration = Meters.of(6).per(Second).per(Second).in(MetersPerSecondPerSecond);
+
+    public static final class ElevatorConstants
+    {
+      public static final double kS = 0.02; //guessed
+      public static final double kG = 0.9; //guessed
+      public static final double kV = 3.8; //guessed
+      public static final double kA = 0.17; //guessed
+      
+      public static final double kGearing = 1; //motor gear ratio
+      public static final double kCarraigeMass = -1; //TODO ! ! ! in 
+      public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
+
+      public static final double maxHeight = Units.inchesToMeters(0);
+      public static final double minHeight = 0;
+    }
   }
 
   public static final class ArmPositions {

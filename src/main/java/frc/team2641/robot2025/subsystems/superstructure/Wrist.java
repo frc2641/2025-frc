@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 
-public class Wrist extends SubsystemBase {
+public class Wrist extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
   private static Wrist instance;
