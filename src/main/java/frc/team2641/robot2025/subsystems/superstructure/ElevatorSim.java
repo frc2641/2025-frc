@@ -7,14 +7,17 @@ package frc.team2641.robot2025.subsystems.superstructure;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 
 public class ElevatorSim extends SubsystemBase implements ElevatorIO {
 
 private static ElevatorSim instance;
+
 
   
   /** Creates a new ElevatorSim. 

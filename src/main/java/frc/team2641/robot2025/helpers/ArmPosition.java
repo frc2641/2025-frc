@@ -3,7 +3,7 @@ package frc.team2641.robot2025.helpers;
 public class ArmPosition {
 	private double wrist;
 	private double elev;
-
+/**@param notice <h1><b><i>Wrist THEN elev</b></i></h1> */
 	public ArmPosition(double wrist, double elev){
 		this.wrist = wrist;
 		this.elev = elev;

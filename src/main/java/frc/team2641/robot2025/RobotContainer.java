@@ -71,12 +71,12 @@ public class RobotContainer {
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
 
-    operatorGamepad.a().onTrue(new SetArmTarget(ArmTargets.L1));
+    operatorGamepad.a().onTrue(SuperStructureSequences.l1());
     operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
     operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
     operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
     operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
-    operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
+    operatorGamepad.rightBumper().onTrue(SuperStructureSequences.processor());
     operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
