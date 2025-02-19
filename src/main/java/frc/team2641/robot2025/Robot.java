@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,4), new Rotation2d(0)));
+    driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,3), new Rotation2d(0)));
     arena.resetFieldForAuto();
     arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
 
