@@ -57,7 +57,9 @@ public class Elevator extends SubsystemBase implements ElevatorIO {
   
   @Override
   public void periodic() {
-    if((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude())<0.1)&&(motor.getTorqueCurrent().getValue().baseUnitMagnitude()>30))
+    if((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude())<0.1)&&(motor.getTorqueCurrent().getValue().baseUnitMagnitude()>30)){
       stop();
-  }
+      System.out.println("\n Stall detected - Elevator Motor Stopped \n");
+    }
+}
 }
