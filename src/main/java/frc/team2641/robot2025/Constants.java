@@ -42,7 +42,7 @@ public final class Constants {
     public static final int intake1 = 14;
     public static final int intake2 = 15;
     public static final int wrist = 16;
-    public static final int climber = 17;
+    public static final int climber = 3; // elevator motor ID, set to 3 for testing
 
     public static final int pdh = 20;
     public static final int ph = 21;

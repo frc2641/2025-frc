@@ -4,7 +4,7 @@ public class WristSim implements WristIO {
 
     private static WristSim instance;
 
-    public WristSim getInstance(){
+    public static WristSim getInstance(){
         if (instance == null)
             instance = new WristSim();
         return instance;

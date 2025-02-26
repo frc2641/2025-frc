@@ -20,6 +20,8 @@ public class MoveArm extends Command {
 
   @Override
   public void execute() {
+    System.out.print("Arm Position: ");
+    System.out.println(arm.getPosition());
     if (!arm.isAuto) {
       double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(),0.05);
       double rightY= MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(),0.05);

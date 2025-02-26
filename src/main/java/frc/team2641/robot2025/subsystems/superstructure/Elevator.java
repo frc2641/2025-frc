@@ -16,10 +16,11 @@ public class Elevator extends SubsystemBase implements ElevatorIO {
 
   private static Elevator instance;
   public static ElevatorIO getInstance() {
-    if(Robot.isReal()){
-    if (instance == null)
-      instance = new Elevator();
-    return instance;
+    if(Robot.isReal()) {
+      if (instance == null) {
+        instance = new Elevator();
+      }
+      return instance;
     }
     return ElevatorSim.getInstance();
   }   
@@ -56,5 +57,7 @@ public class Elevator extends SubsystemBase implements ElevatorIO {
   
   @Override
   public void periodic() {
+    if((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude())<0.1)&&(motor.getTorqueCurrent().getValue().baseUnitMagnitude()>30))
+      stop();
   }
 }

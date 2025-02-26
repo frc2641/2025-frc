@@ -34,11 +34,11 @@ private static ElevatorSim instance;
 
     
 
-    public static ElevatorSim getInstance(){
-      if (instance == null)
-        instance = new ElevatorSim();
-      return instance;
-    } 
+  public static ElevatorSim getInstance(){
+    if (instance == null)
+      instance = new ElevatorSim();
+    return instance;
+  } 
 
   @Override
   public void periodic() {
