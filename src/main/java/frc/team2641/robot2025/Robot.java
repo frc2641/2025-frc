@@ -23,8 +23,6 @@ import java.util.Optional;
 import swervelib.parser.SwerveParser;
 import org.ironmaple.simulation.*;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 
 public class Robot extends TimedRobot {
   private static Robot instance;
@@ -139,12 +137,14 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit() {
     driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,3), new Rotation2d(0)));
-    arena.resetFieldForAuto();
-    arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
+    // driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)));
 
-    arena.addGamePiece(new ReefscapeCoralOnField(
-      new Pose2d(2, 2, Rotation2d.fromDegrees(90))
-    ));
+    arena.resetFieldForAuto();
+    // arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
+
+    // arena.addGamePiece(new ReefscapeCoralOnField(
+    //   new Pose2d(2, 2, Rotation2d.fromDegrees(90))
+    // ));
   
     Pose3d[] coral = arena.getGamePiecesArrayByType("Coral");
     Pose3d[] algae = arena.getGamePiecesArrayByType("Algae");

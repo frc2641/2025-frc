@@ -71,17 +71,17 @@ public final class Constants {
 
     public static final class ElevatorConstants
     {
-      public static final double kS = 0.02; //guessed
-      public static final double kG = 0.9; //guessed
-      public static final double kV = 3.8; //guessed
-      public static final double kA = 0.17; //guessed
+      // public static final double kS = 0.02; //guessed
+      // public static final double kG = 0.9; //guessed
+      // public static final double kV = 3.8; //guessed
+      // public static final double kA = 0.17; //guessed
       
-      public static final double kGearing = 1; //motor gear ratio
-      public static final double kCarraigeMass = -1; //TODO ! ! ! in 
-      public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
+      // public static final double kGearing = 1; //motor gear ratio
+      // public static final double kCarraigeMass = -1; //TODO ! ! ! in 
+      // public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
 
-      public static final double maxHeight = Units.inchesToMeters(0);
-      public static final double minHeight = 0;
+      // public static final double maxHeight = Units.inchesToMeters(0);
+      // public static final double minHeight = 0;
 
       public static final int kMotorPort = 0;
       public static final int kEncoderAChannel = 0;
@@ -98,8 +98,8 @@ public final class Constants {
       public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
     
       public static final double kElevatorGearing = 7.75;
-      public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
-      public static final double kCarriageMass = 4.0; // kg
+      public static final double kElevatorDrumRadius = Units.inchesToMeters(1/2.0);
+      public static final double kCarriageMass = 15.8757; // kg
     /**idk what that is*/
       public static final double kSetpointMeters = 0.75;
 

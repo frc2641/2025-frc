@@ -3,7 +3,7 @@ package frc.team2641.robot2025.subsystems.superstructure;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.helpers.ArmPosition;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristIO;
 
@@ -33,7 +33,7 @@ public class Superstructure extends SubsystemBase {
 
   private Superstructure() {
     wrist = WristReal.getInstance();
-    elevator = ElevatorReal.getInstance();
+    elevator = Elevator.getInstance();
     pos = new ArmPosition(0, 0);
   }
 

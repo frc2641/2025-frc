@@ -20,16 +20,17 @@ import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
-// import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
+import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
 import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
-import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
-import frc.team2641.robot2025.subsystems.superstructure.wrist.WristIO;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
+// import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
+// import frc.team2641.robot2025.subsystems.superstructure.wrist.WristIO;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final WristReal wrist = WristReal.getInstance();
-  // private final Superstructure arm = Superstructure.getInstance();
+  // private final WristReal wrist = WristReal.getInstance();
+  private final Superstructure arm = Superstructure.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -122,8 +123,8 @@ public class RobotContainer {
       () -> robotSub.get());
         
     drivetrain.setDefaultCommand(driveCommand);
-    wrist.setDefaultCommand(new MoveWrist());
-    // arm.setDefaultCommand(new MoveArm());
+    // wrist.setDefaultCommand(new MoveWrist());
+    arm.setDefaultCommand(new MoveArm());
     
 
     NamedCommands.registerCommand("creep", new Creep(0));
@@ -161,5 +162,7 @@ public class RobotContainer {
     coralPoses.accept(coral);
 
     arena.simulationPeriodic();
+
+    ElevatorSimulation.getInstance().simulationPeriodic();
   }
 }

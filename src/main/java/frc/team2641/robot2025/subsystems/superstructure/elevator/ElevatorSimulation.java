@@ -8,6 +8,7 @@ import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -15,11 +16,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+// import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.simulation.PWMSim;
+// import edu.wpi.first.wpilibj.simulation.PWMSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -29,12 +30,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
 
   private static ElevatorSimulation instance;
-  public static ElevatorIO getInstance() {
+  public static ElevatorSimulation getInstance() {
       if (instance == null) {
         instance = new ElevatorSimulation();
       }
       return instance;
     }
+
   // This gearbox represents a gearbox containing 4 Vex 775pro motors.
   private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
 
@@ -69,8 +71,8 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
           0.01,
           0.0);
   private final EncoderSim m_encoderSim = new EncoderSim(m_encoder);
-  private final PWMSim m_motorSim = new PWMSim(m_motor);
-
+  // private final PWMSim m_motorSim = new PWMSim(m_motor);
+    private final TalonFXSimState m_motorSim = ElevatorReal.getInstance().getMotor().getSimState();
   // Create a Mechanism2d visualization of the elevator
   private final Mechanism2d m_mech2d = new Mechanism2d(20, 50);
   private final MechanismRoot2d m_mech2dRoot = m_mech2d.getRoot("Elevator Root", 10, 0);
@@ -91,7 +93,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
   public void simulationPeriodic() {
     // In this method, we update our simulation of what our elevator is doing
     // First, we set our "inputs" (voltages)
-    m_elevatorSim.setInput(m_motorSim.getSpeed() * RobotController.getBatteryVoltage());
+    m_elevatorSim.setInput(Constants.MotorSpeeds.elevatorSpeed * RobotController.getBatteryVoltage());
 
     // Next, we update it. The standard loop time is 20ms.
     m_elevatorSim.update(0.020);
@@ -114,13 +116,13 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     // With the setpoint value we run PID control like normal
     double pidOutput = m_controller.calculate(m_encoder.getDistance());
     double feedforwardOutput = m_feedforward.calculate(m_controller.getSetpoint().velocity);
-    m_motor.setVoltage(pidOutput + feedforwardOutput);
+    // m_motor(pidOutput + feedforwardOutput);
   }
 
   /** Stop the control loop and motor output. */
   public void stop() {
     m_controller.setGoal(0.0);
-    m_motor.set(0.0);
+    // m_motor.set(0.0);
   }
 
   /** Update telemetry, including the mechanism visualization. */
@@ -132,7 +134,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
   @Override
   public void close() {
     m_encoder.close();
-    m_motor.close();
+    // m_motor.close();
     m_mech2d.close();
   }
 
@@ -145,5 +147,5 @@ reachGoal(pos);
   @Override
   public double getPosition() {
     // TODO Auto-generated method stub
-return m_motorSim.getPosition();  }
+return m_elevatorSim.getPositionMeters();  }
 }

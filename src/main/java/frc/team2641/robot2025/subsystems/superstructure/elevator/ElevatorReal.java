@@ -15,15 +15,13 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   
 
   private static ElevatorReal instance;
-  public static ElevatorIO getInstance() {
-    if(Robot.isReal()) {
+  public static ElevatorReal getInstance() {
       if (instance == null) {
         instance = new ElevatorReal();
       }
       return instance;
     }
-    return ElevatorSimulation.getInstance();
-  }   
+      
 
   private ElevatorReal() {
     configMotors();
@@ -62,4 +60,8 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
       System.out.println("\n Stall detected - Elevator Motor Stopped \n");
     }
 }
+  
+  public TalonFX getMotor(){
+    return motor;
+  }
 }
