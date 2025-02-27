@@ -19,7 +19,7 @@ public class Climber extends SubsystemBase {
 
   private Climber() {
     // TODO: Set ID
-    climber = new TalonFX(Constants.CAN.climber);
+    // climber = new TalonFX(Constants.CAN.climber);
     configMotors();    
   }
 

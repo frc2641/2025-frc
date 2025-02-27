@@ -22,10 +22,13 @@ import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
 // import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
 import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
+import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
+import frc.team2641.robot2025.subsystems.superstructure.wrist.WristIO;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final WristReal wrist = WristReal.getInstance();
   // private final Superstructure arm = Superstructure.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
@@ -82,7 +85,7 @@ public class RobotContainer {
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
     driverGamepad.povUp().whileTrue(new Climb(true));
     driverGamepad.povDown().whileTrue(new Climb(false));
-    
+
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
       operatorGamepad.back().onTrue(new CoralAtHPstationSim(true));
@@ -119,7 +122,9 @@ public class RobotContainer {
       () -> robotSub.get());
         
     drivetrain.setDefaultCommand(driveCommand);
+    wrist.setDefaultCommand(new MoveWrist());
     // arm.setDefaultCommand(new MoveArm());
+    
 
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));

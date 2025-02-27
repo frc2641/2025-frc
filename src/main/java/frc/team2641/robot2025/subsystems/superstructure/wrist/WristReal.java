@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure;
+package frc.team2641.robot2025.subsystems.superstructure.wrist;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -7,31 +7,32 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
 
-public class Wrist extends SubsystemBase implements WristIO {
+public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
-  private static Wrist instance;
-  public static WristIO getInstance() {
-    if (Robot.isReal()) {
+  private static WristReal instance;
+  public static WristReal getInstance() {
       if (instance == null) {
-        instance = new Wrist();
+        instance = new WristReal();
       }
       return instance;
     }
-    return WristSim.getInstance();
-  }   
+  
 
-  private Wrist() {
+  private WristReal() {
     configMotors();
   }
 
   public void stop() {
     motor.stopMotor();
   }
+
+  public void set(double speed) {
+    motor.set(speed);
+  }
   
   public void setPosition(double pos){
-    motor.setPosition(pos);
-    
+    motor.setPosition(pos); 
   }
 
   public double getPosition(){
@@ -55,7 +56,7 @@ public class Wrist extends SubsystemBase implements WristIO {
   @Override
   public void periodic() {
     if((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude())<0.1)&&(motor.getTorqueCurrent().getValue().baseUnitMagnitude()>30)){
-      stop();
+      // stop();
       System.out.println("\n Stall detected - Wrist Motor Stopped \n");
     }
   }

@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure;
+package frc.team2641.robot2025.subsystems.superstructure.wrist;
 
 public class WristSim implements WristIO {
 
@@ -20,6 +20,12 @@ public class WristSim implements WristIO {
     public double getPosition() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getPosition'");
+    }
+
+    @Override
+    public void set(double speed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'set'");
     }
 
     

@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure;
+package frc.team2641.robot2025.subsystems.superstructure.elevator;
 
 public interface ElevatorIO {
     

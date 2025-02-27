@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure;
+package frc.team2641.robot2025.subsystems.superstructure.elevator;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -8,24 +8,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
 
-public class Elevator extends SubsystemBase implements ElevatorIO {
+public class ElevatorReal extends SubsystemBase implements ElevatorIO {
     
   private TalonFX motor;
 
   
 
-  private static Elevator instance;
+  private static ElevatorReal instance;
   public static ElevatorIO getInstance() {
     if(Robot.isReal()) {
       if (instance == null) {
-        instance = new Elevator();
+        instance = new ElevatorReal();
       }
       return instance;
     }
-    return ElevatorSim.getInstance();
+    return ElevatorSimulation.getInstance();
   }   
 
-  private Elevator() {
+  private ElevatorReal() {
     configMotors();
   }
 
