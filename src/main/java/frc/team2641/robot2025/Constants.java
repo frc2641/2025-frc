@@ -38,7 +38,7 @@ public final class Constants {
   }
 
   public static final class CAN {
-    public static final int elevator = 13;
+    public static final int elevator = 18;
     public static final int intake1 = 14;
     public static final int intake2 = 15;
     public static final int wrist = 13;
@@ -52,7 +52,8 @@ public final class Constants {
     public static final double elevatorSpeed = 0;
     public static final double climbSpeed = 0.25;
     public static final double wristSpeed = 1;
-    public static final double intakeSpeed = 0;
+    public static final double intakeSpeed1 = .2;
+    public static final double intakeSpeed2 = .30;
   }
 
   public static final class IntakeGains {

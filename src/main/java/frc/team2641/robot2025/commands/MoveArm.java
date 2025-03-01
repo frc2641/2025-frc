@@ -1,6 +1,7 @@
 package frc.team2641.robot2025.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.helpers.ArmPosition;
@@ -20,8 +21,7 @@ public class MoveArm extends Command {
 
   @Override
   public void execute() {
-    System.out.print("Arm Position: ");
-    System.out.println(arm.getPosition());
+    
     if (!arm.isAuto) {
       double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(),0.05);
       double rightY= MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(),0.05);

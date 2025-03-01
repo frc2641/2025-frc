@@ -29,13 +29,13 @@ public class IntakeIOReal implements IntakeIO {
   }
 
   public void intake() {
-    intake1.set(Constants.MotorSpeeds.intakeSpeed);
-    intake2.set(Constants.MotorSpeeds.intakeSpeed);
+    intake1.set(Constants.MotorSpeeds.intakeSpeed1);
+    intake2.set(-Constants.MotorSpeeds.intakeSpeed2);
   }
 
   public void shoot() {
-    intake1.set(-Constants.MotorSpeeds.intakeSpeed);
-    intake2.set(-Constants.MotorSpeeds.intakeSpeed);
+    intake1.set(-Constants.MotorSpeeds.intakeSpeed1);
+    intake2.set(Constants.MotorSpeeds.intakeSpeed2);
   }
 
   public void spin() {

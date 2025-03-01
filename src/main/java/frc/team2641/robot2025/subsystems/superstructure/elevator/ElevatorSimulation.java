@@ -140,12 +140,11 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
 
   @Override
   public void setPosition(double pos) {
-    // TODO Auto-generated method stub
-reachGoal(pos);  
-}
+    reachGoal(pos);  
+  }
 
   @Override
   public double getPosition() {
-    // TODO Auto-generated method stub
-return m_elevatorSim.getPositionMeters();  }
+    return m_elevatorSim.getPositionMeters();
+  }
 }

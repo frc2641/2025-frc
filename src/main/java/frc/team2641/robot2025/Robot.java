@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 // import frc.team2641.robot2025.subsystems.Pneumatics;
@@ -29,6 +31,8 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
 
   // private static Pneumatics pneumatics;
+
+  private static Superstructure arm = Superstructure.getInstance();
 
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
@@ -137,6 +141,8 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit() {
     driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,3), new Rotation2d(0)));
+
+    robotContainer.elevSim = ElevatorSimulation.getInstance();
     // driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)));
 
     arena.resetFieldForAuto();

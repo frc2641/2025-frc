@@ -7,11 +7,10 @@ import edu.wpi.first.wpilibj2.command.Command;
   
 public class SetArmTarget extends Command {
   private ArmPosition pos;
-  private Superstructure arm;
+  private Superstructure arm = Superstructure.getInstance();
   
   public SetArmTarget(ArmPosition pos) {
     this.pos = pos;
-    arm = Superstructure.getInstance();
     addRequirements(arm);
   }
 
