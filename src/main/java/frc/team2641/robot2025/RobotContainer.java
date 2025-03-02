@@ -109,7 +109,7 @@ public class RobotContainer {
     robotPub = table.getBooleanTopic("robotRelative").publish();
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
-   
+
     reverseIntakePub = table.getBooleanTopic("reverseIntake").publish();
     reverseIntakePub.set(false);
     reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
@@ -121,16 +121,15 @@ public class RobotContainer {
       OperatorConstants.LEFT_X_DEADBAND),
       () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
-        
+
     drivetrain.setDefaultCommand(driveCommand);
     wrist.setDefaultCommand(new MoveWrist());
     // arm.setDefaultCommand(new MoveArm());
-    
 
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
     NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
-    
+
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
     SmartDashboard.putData("Auto", autoChooser);
   }
@@ -162,9 +161,7 @@ public class RobotContainer {
     coralPoses.accept(coral);
 
     arena.simulationPeriodic();
-    
     elevSim.simulationPeriodic();
-
     elevSim.updateTelemetry();
   }
 }

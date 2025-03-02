@@ -4,10 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Second;
-
 import com.pathplanner.lib.config.PIDConstants;
-
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -69,50 +66,49 @@ public final class Constants {
 
     public static final double elevMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond); 
     public static final double elevMaxAcceleration = Meters.of(6).per(Second).per(Second).in(MetersPerSecondPerSecond);
+  }
 
-    public static final class ElevatorConstants
-    {
-      // public static final double kS = 0.02; //guessed
-      // public static final double kG = 0.9; //guessed
-      // public static final double kV = 3.8; //guessed
-      // public static final double kA = 0.17; //guessed
-      
-      // public static final double kGearing = 1; //motor gear ratio
-      // public static final double kCarraigeMass = -1; //TODO ! ! ! in 
-      // public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
+  public static final class ElevatorConstants {
+    // public static final double kS = 0.02; //guessed
+    // public static final double kG = 0.9; //guessed
+    // public static final double kV = 3.8; //guessed
+    // public static final double kA = 0.17; //guessed
+    
+    // public static final double kGearing = 1; //motor gear ratio
+    // public static final double kCarraigeMass = -1; //TODO ! ! ! in 
+    // public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
 
-      // public static final double maxHeight = Units.inchesToMeters(0);
-      // public static final double minHeight = 0;
+    // public static final double maxHeight = Units.inchesToMeters(0);
+    // public static final double minHeight = 0;
 
-      public static final int kMotorPort = 0;
-      public static final int kEncoderAChannel = 0;
-      public static final int kEncoderBChannel = 1;
-      public static final int kJoystickPort = 0;
-    
-      public static final double kElevatorKp = 5;
-      public static final double kElevatorKi = 0;
-      public static final double kElevatorKd = 0;
-    
-      public static final double kElevatorkS = 0.0; // volts (V)
-      public static final double kElevatorkG = 0.762; // volts (V)
-      public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
-      public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
-    
-      public static final double kElevatorGearing = 7.75;
-      public static final double kElevatorDrumRadius = Units.inchesToMeters(1/2.0);
-      public static final double kCarriageMass = 15.8757; // kg
-    /**idk what that is*/
-      public static final double kSetpointMeters = 0.75;
+    public static final int kMotorPort = 0;
+    public static final int kEncoderAChannel = 0;
+    public static final int kEncoderBChannel = 1;
+    public static final int kJoystickPort = 0;
+  
+    public static final double kElevatorKp = 5;
+    public static final double kElevatorKi = 0;
+    public static final double kElevatorKd = 0;
+  
+    public static final double kElevatorkS = 0.0; // volts (V)
+    public static final double kElevatorkG = 0.762; // volts (V)
+    public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
+    public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
+  
+    public static final double kElevatorGearing = 7.75;
+    public static final double kElevatorDrumRadius = Units.inchesToMeters(1/2.0);
+    public static final double kCarriageMass = 15.8757; // kg
+  /**idk what that is*/
+    public static final double kSetpointMeters = 0.75;
 
-      // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
-      public static final double kMinElevatorHeightMeters = 0.0;
-      public static final double kMaxElevatorHeightMeters = 2.0574;
-    
-      // distance per pulse = (distance per revolution) / (pulses per revolution)
-      //  = (Pi * D) / ppr
-      public static final double kElevatorEncoderDistPerPulse =
-          2.0 * Math.PI * kElevatorDrumRadius / 4096;
-    }
+    // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
+    public static final double kMinElevatorHeightMeters = 0.0;
+    public static final double kMaxElevatorHeightMeters = 2.0574;
+  
+    // distance per pulse = (distance per revolution) / (pulses per revolution)
+    //  = (Pi * D) / ppr
+    public static final double kElevatorEncoderDistPerPulse =
+        2.0 * Math.PI * kElevatorDrumRadius / 4096;
   }
 
   public static final class ArmPositions {

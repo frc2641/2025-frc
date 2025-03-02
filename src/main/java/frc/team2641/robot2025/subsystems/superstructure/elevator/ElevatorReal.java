@@ -3,25 +3,17 @@ package frc.team2641.robot2025.subsystems.superstructure.elevator;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.Robot;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO {
-    
   private TalonFX motor;
-
-  
 
   private static ElevatorReal instance;
   public static ElevatorReal getInstance() {
-      if (instance == null) {
-        instance = new ElevatorReal();
-      }
-      return instance;
-    }
-      
+    if (instance == null) instance = new ElevatorReal();
+    return instance;
+  }
 
   private ElevatorReal() {
     configMotors();
@@ -31,11 +23,11 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
     motor.stopMotor();
   }
   
-  public void setPosition(double pos){
+  public void setPosition(double pos) {
     motor.setPosition(pos);
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return motor.getPosition().getValueAsDouble();
   }
 
@@ -59,9 +51,9 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
       stop();
       System.out.println("\n Stall detected - Elevator Motor Stopped \n");
     }
-}
+  }
   
-  public TalonFX getMotor(){
+  public TalonFX getMotor() {
     return motor;
   }
 }

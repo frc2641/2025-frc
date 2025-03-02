@@ -13,15 +13,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
-
-// import frc.team2641.robot2025.subsystems.Pneumatics;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-
 import swervelib.parser.SwerveParser;
 import org.ironmaple.simulation.*;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -30,16 +26,11 @@ public class Robot extends TimedRobot {
   private static Robot instance;
   private Command autoCommand;
 
-  // private static Pneumatics pneumatics;
-
-  private static Superstructure arm = Superstructure.getInstance();
-
   private static PowerDistribution pdh;
   private static PneumaticHub ph;
   public RobotContainer robotContainer;
-   Optional<SwerveDriveSimulation> driveSim;
 
-
+  private Optional<SwerveDriveSimulation> driveSim;
   private static SimulatedArena arena;
 
   private Timer disabledTimer;
@@ -56,7 +47,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // CameraServer.startAutomaticCapture(0);
     // CameraServer.startAutomaticCapture(1);
-    // pneumatics = Pneumatics.getInstance();
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
 
@@ -67,7 +57,6 @@ public class Robot extends TimedRobot {
       DriverStation.silenceJoystickConnectionWarning(true);
       arena = SimulatedArena.getInstance();
       driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
-
     }
   }
 
@@ -81,7 +70,6 @@ public class Robot extends TimedRobot {
     robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
-    // pneumatics.disable();
   }
 
   @Override
@@ -100,8 +88,6 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.schedule();
     }
-
-    // pneumatics.enable();
   }
 
   @Override
@@ -115,8 +101,6 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-
-    // pneumatics.enable();
   }
 
   @Override

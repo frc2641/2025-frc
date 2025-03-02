@@ -15,8 +15,7 @@ public class Drivetrain extends SwerveBase {
   private SwerveDrive swerveDrive;
 
   public static Drivetrain getInstance() {
-    if (instance == null)
-      instance = new Drivetrain();
+    if (instance == null) instance = new Drivetrain();
     return instance;
   }
 

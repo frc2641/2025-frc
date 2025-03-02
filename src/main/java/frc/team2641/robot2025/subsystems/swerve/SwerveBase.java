@@ -49,8 +49,7 @@ public class SwerveBase extends SubsystemBase {
   private static SwerveBase instance = null;
 
   public static SwerveBase getInstance() {
-    if (instance == null)
-      instance = new SwerveBase();
+    if (instance == null) instance = new SwerveBase();
     return instance;
   }
 

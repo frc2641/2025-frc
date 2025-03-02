@@ -5,19 +5,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.Robot;
 
 public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
   private static WristReal instance;
   public static WristReal getInstance() {
-      if (instance == null) {
-        instance = new WristReal();
-      }
-      return instance;
-    }
-  
+    if (instance == null) instance = new WristReal();
+    return instance;
+  }
 
   private WristReal() {
     configMotors();

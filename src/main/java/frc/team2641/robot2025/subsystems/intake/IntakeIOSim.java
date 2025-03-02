@@ -3,14 +3,12 @@ package frc.team2641.robot2025.subsystems.intake;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import java.util.Optional;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -26,16 +24,13 @@ public class IntakeIOSim implements IntakeIO {
 
   private static IntakeIOSim instance;
   public static IntakeIOSim getInstance() {
-    if (instance == null)
-      instance = new IntakeIOSim();
+    if (instance == null) instance = new IntakeIOSim();
     return instance;
   }
   
   public IntakeIOSim() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
-
-
     driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
 
     // Here, create the intake simulation with respect to the intake on your real robot
@@ -71,14 +66,12 @@ public class IntakeIOSim implements IntakeIO {
     );
 
     coralIntakeSim.setGamePiecesCount(1);
-
   }
 
   @Override
   public void intake() {
     aglaeIntakeSim.startIntake();
     coralIntakeSim.startIntake();
-
   }
 
   @Override
@@ -94,75 +87,62 @@ public class IntakeIOSim implements IntakeIO {
 
   @Override
   public void spin() {
-    if (spinSub.get()) 
-      {
-       outtake(); 
-      }
-    else 
-      intake();
+    if (spinSub.get()) outtake(); 
+    else intake();
   }
 
   public boolean preventDoubleGamePiece(){
-    if(coralIntakeSim.getGamePiecesAmount()>0){
+    if (coralIntakeSim.getGamePiecesAmount() > 0) {
       aglaeIntakeSim.stopIntake();
       return true;
-    }
-    else if (aglaeIntakeSim.getGamePiecesAmount()>0){
+    } else if (aglaeIntakeSim.getGamePiecesAmount() > 0) {
       coralIntakeSim.stopIntake();
       return true;
     }
     return false;
-    
   }
 
   private void outtake(){
-    if(coralIntakeSim.getGamePiecesAmount()>0){
+    if (coralIntakeSim.getGamePiecesAmount() > 0) {
       SimulatedArena.getInstance()
-  .addGamePieceProjectile(new ReefscapeCoralOnFly(
-      // Obtain robot position from drive simulation
-      driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
-      // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-      new Translation2d(0.35, 0.35),
-      // Obtain robot speed from drive simulation
-      driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-      // Obtain robot facing from drive simulation
-      driveSim.get().getSimulatedDriveTrainPose().getRotation(),
-      // The height at which the coral is ejected
-      Meters.of(1.28),
-      // The initial speed of the coral
-      MetersPerSecond.of(2),
-      // The coral is ejected at a 35-degree slope
-      Degrees.of(-35)));
-
-       coralIntakeSim.setGamePiecesCount(0);
-      }
-      else if (aglaeIntakeSim.getGamePiecesAmount()>0)
-      {
-        SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeCoralOnFly(
+          // Obtain robot position from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+          // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+          new Translation2d(0.35, 0.35),
+          // Obtain robot speed from drive simulation
+          driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          // Obtain robot facing from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+          // The height at which the coral is ejected
+          Meters.of(1.28),
+          // The initial speed of the coral
+          MetersPerSecond.of(2),
+          // The coral is ejected at a 35-degree slope
+          Degrees.of(-35)
+        )
+      );
+      coralIntakeSim.setGamePiecesCount(0);
+    } else if (aglaeIntakeSim.getGamePiecesAmount() > 0) {
+      SimulatedArena.getInstance()
         .addGamePieceProjectile(new ReefscapeAlgaeOnFly(
-            // Obtain robot position from drive simulation
-            driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
-            // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
-            new Translation2d(0.35, 0.35),
-            // Obtain robot speed from drive simulation
-            driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-            // Obtain robot facing from drive simulation
-            driveSim.get().getSimulatedDriveTrainPose().getRotation(),
-            // The height at which the coral is ejected
-            Meters.of(1.28),
-            // The initial speed of the coral
-            MetersPerSecond.of(2),
-            // The coral is ejected at a 35-degree slope
-            Degrees.of(-35)));
-            aglaeIntakeSim.setGamePiecesCount(0);
-        } 
-
+          // Obtain robot position from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+          // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+          new Translation2d(0.35, 0.35),
+          // Obtain robot speed from drive simulation
+          driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          // Obtain robot facing from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+          // The height at which the coral is ejected
+          Meters.of(1.28),
+          // The initial speed of the coral
+          MetersPerSecond.of(2),
+          // The coral is ejected at a 35-degree slope
+          Degrees.of(-35)
+        )
+      );
+      aglaeIntakeSim.setGamePiecesCount(0);
+    }
   }
-    
-  // @Override // Defined by IntakeIO
-  // public void shoot() {
-  //   // if there is a coral in the intake, it will be removed and return true; otherwise, returns false
-  //   if (intakeSimulation.obtainGamePieceFromIntake())
-  //     IntakeIOSim.launchCoral(); // notify the simulated flywheels to launch a coral
-  // }
 }
