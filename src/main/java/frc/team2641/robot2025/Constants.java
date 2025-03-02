@@ -35,27 +35,27 @@ public final class Constants {
   }
 
   public static final class CAN {
-    public static final int elevator = 18;
+    public static final int elevator = 13;
     public static final int intake1 = 14;
     public static final int intake2 = 15;
-    public static final int wrist = 13;
-    public static final int climber = 17; // elevator motor ID, set to 3 for testing
+    public static final int wrist = 16;
+    public static final int climber = 17;
 
     public static final int pdh = 20;
     public static final int ph = 21;
   }
 
   public static final class MotorSpeeds {
-    public static final double elevatorSpeed = 0;
+    public static final double elevatorSpeed = 0.25;
     public static final double climbSpeed = 0.25;
-    public static final double wristSpeed = 1;
+    public static final double wristSpeed = 0.25;
     public static final double intakeSpeed1 = .2;
-    public static final double intakeSpeed2 = .30;
+    public static final double intakeSpeed2 = .3;
   }
 
   public static final class IntakeGains {
     /** @see TO_DO is currently a random number to make stuff do stuff */
-    public static final PIDConstants wristGains = new PIDConstants(0, 0, 0);
+    public static final PIDConstants wristGains = new PIDConstants(25, 0, 0);
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
    /** @see TO_DO is currently a random number to make stuff do stuff */
     public static final PIDConstants elevatorGains = new PIDConstants(0, 0, 0);

@@ -7,11 +7,11 @@ import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 
 public class MoveWrist extends Command {
-  private WristReal supS;
+  private WristReal wrist;
 
   public MoveWrist() {
-    supS = WristReal.getInstance();
-    addRequirements(supS);
+    wrist = WristReal.getInstance();
+    addRequirements(wrist);
   }
 
   @Override
@@ -20,8 +20,9 @@ public class MoveWrist extends Command {
 
   @Override
   public void execute() {
-    double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(),0.05);
-    supS.set(leftY*Constants.MotorSpeeds.wristSpeed);
+    double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(), 0.05);
+    double output = wrist.getSetpoint() + leftY * Constants.MotorSpeeds.wristSpeed;
+    wrist.setPosition(output);
   }
 
   @Override
