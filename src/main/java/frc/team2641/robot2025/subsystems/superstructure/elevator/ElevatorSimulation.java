@@ -85,7 +85,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
   public void simulationPeriodic() {
     // In this method, we update our simulation of what our elevator is doing
     // First, we set our "inputs" (voltages)
-    m_elevatorSim.setInput(Constants.MotorSpeeds.elevatorSpeed * RobotController.getBatteryVoltage());
+    m_elevatorSim.setInput(Constants.ElevatorConstants.elevatorSpeed * RobotController.getBatteryVoltage());
 
     // Next, we update it. The standard loop time is 20ms.
     m_elevatorSim.update(0.020);
@@ -130,12 +130,16 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
   }
 
   @Override
-  public void setPosition(double pos) {
+  public void goTo(double pos) {
     reachGoal(pos);  
   }
 
   @Override
   public double getPosition() {
     return m_elevatorSim.getPositionMeters();
+  }
+
+  public double getSetpoint() {
+    return m_controller.getSetpoint().position;
   }
 }

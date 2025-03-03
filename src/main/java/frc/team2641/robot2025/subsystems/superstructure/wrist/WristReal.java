@@ -8,11 +8,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Constants.IntakeConstants;
 
 public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
-  private double setpoint = 2.5;
+  private double setpoint = IntakeConstants.wristInitPos;
+  private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
   private static WristReal instance;
   public static WristReal getInstance() {
@@ -21,9 +23,7 @@ public class WristReal extends SubsystemBase implements WristIO {
   }
 
   private WristReal() {
-    motor = new TalonFX(Constants.CAN.wrist);
-
-    configMotors();
+    configMotor();
   }
 
   public void stop() {
@@ -34,9 +34,7 @@ public class WristReal extends SubsystemBase implements WristIO {
     motor.set(speed);
   }
   
-  public void setPosition(double pos) {
-    System.out.println("new setpoint: " + pos);
-    // set position to 10 rotations
+  public void goTo(double pos) {
     setpoint = pos;
   }
 
@@ -44,7 +42,13 @@ public class WristReal extends SubsystemBase implements WristIO {
     return motor.getPosition().getValueAsDouble();
   }
 
-  private void configMotors() {
+  public double getSetpoint() {
+    return setpoint;
+  }
+
+  private void configMotor() {
+    motor = new TalonFX(Constants.CAN.wrist);
+
     TalonFXConfigurator configer = motor.getConfigurator();
 
     TalonFXConfiguration config = new TalonFXConfiguration();
@@ -52,32 +56,27 @@ public class WristReal extends SubsystemBase implements WristIO {
     configer.apply(config);
 
     Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = Constants.IntakeGains.wristGains.kP;
-    slot0Configs.kI = Constants.IntakeGains.wristGains.kI;
-    slot0Configs.kD = Constants.IntakeGains.wristGains.kD;
+    slot0Configs.kP = Constants.IntakeConstants.wristPID.kP;
+    slot0Configs.kI = Constants.IntakeConstants.wristPID.kI;
+    slot0Configs.kD = Constants.IntakeConstants.wristPID.kD;
     configer.apply(slot0Configs);
   }
-
-  public double getSetpoint() {
-    return setpoint;
-  }
   
-  final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
-
   @Override
   public void periodic() {
-    System.out.println("encoder raw: " + getPosition());
-    
-    if (setpoint < 1.25) setpoint = 1.25;
-    if (setpoint > 9.5) setpoint = 9.5;
+    if (setpoint < IntakeConstants.wristMinPos) setpoint = IntakeConstants.wristMinPos;
+    if (setpoint > IntakeConstants.wristMaxPos) setpoint = IntakeConstants.wristMaxPos;
 
-    System.out.println("setpoint: " + setpoint);
+    motor.setControl(posRequest.withPosition(setpoint));
 
-    motor.setControl(m_request.withPosition(setpoint));
-
-    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude())<0.1)&&(motor.getTorqueCurrent().getValue().baseUnitMagnitude()>30)){
+    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < 0.1) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > 30)){
       // stop();
-      System.out.println("\n Stall detected - Wrist Motor Stopped \n");
+      System.out.println("\n\n *** STALL DETECTED - WRIST *** \n\n");
     }
+    // TODO: Move setpoint retargeting to an else statement above
+  }
+
+  public TalonFX getMotor() {
+    return motor;
   }
 }

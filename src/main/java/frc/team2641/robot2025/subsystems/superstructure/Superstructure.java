@@ -42,8 +42,8 @@ public class Superstructure extends SubsystemBase {
   }
 
   public void move() {
-    wrist.setPosition(pos.getWrist());
-    elevator.setPosition(pos.getElev());
+    wrist.goTo(pos.getWrist());
+    elevator.goTo(pos.getElev());
   }
 
   public ArmPosition getPosition() {

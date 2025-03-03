@@ -9,7 +9,7 @@ public class WristSim implements WristIO {
 	}
 
 	@Override
-	public void setPosition(double pos) {
+	public void goTo(double pos) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
 	}
@@ -21,7 +21,13 @@ public class WristSim implements WristIO {
 	}
 
 	@Override
-	public void set(double speed) {
+	public double getSetpoint() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'set'");
+	}
+
+	@Override
+	public void stop() {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'set'");
 	}

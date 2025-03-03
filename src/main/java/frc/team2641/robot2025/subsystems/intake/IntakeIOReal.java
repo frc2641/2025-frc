@@ -7,48 +7,44 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.team2641.robot2025.Constants;
 
 public class IntakeIOReal implements IntakeIO {
-  private TalonFX intake1;
-  private TalonFX intake2;
+  private TalonFX leftIntake;
+  private TalonFX rightIntake;
   private BooleanSubscriber spinSub;
   
   private static IntakeIOReal instance;
   
   public static IntakeIO getInstance() {
-    if (instance == null)
-      instance = new IntakeIOReal();
+    if (instance == null) instance = new IntakeIOReal();
     return instance;
   }
 
   private IntakeIOReal() {
-    // TODO: Set ID
-    intake1 = new TalonFX(Constants.CAN.intake1);
-    intake2 = new TalonFX(Constants.CAN.intake2);
+    leftIntake = new TalonFX(Constants.CAN.leftIntake);
+    rightIntake = new TalonFX(Constants.CAN.rightIntake);
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
   }
 
   public void intake() {
-    intake1.set(Constants.MotorSpeeds.intakeSpeed1);
-    intake2.set(-Constants.MotorSpeeds.intakeSpeed2);
+    leftIntake.set(Constants.IntakeConstants.leftIntakeSpeed);
+    rightIntake.set(-Constants.IntakeConstants.rightIntakeSpeed);
   }
 
   public void shoot() {
-    intake1.set(-Constants.MotorSpeeds.intakeSpeed1);
-    intake2.set(Constants.MotorSpeeds.intakeSpeed2);
+    leftIntake.set(-Constants.IntakeConstants.leftIntakeSpeed);
+    rightIntake.set(Constants.IntakeConstants.rightIntakeSpeed);
   }
 
   public void spin() {
-    if(spinSub.get())
-      shoot();
-    else 
-      intake();
+    if (spinSub.get()) shoot();
+    else intake();
   }
 
   @Override
   public void stop() {
-    intake1.stopMotor();
-    intake2.stopMotor();
+    leftIntake.stopMotor();
+    rightIntake.stopMotor();
   }
 
   @Override

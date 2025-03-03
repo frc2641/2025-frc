@@ -21,8 +21,8 @@ public class MoveWrist extends Command {
   @Override
   public void execute() {
     double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(), 0.05);
-    double output = wrist.getSetpoint() + leftY * Constants.MotorSpeeds.wristSpeed;
-    wrist.setPosition(output);
+    double output = wrist.getSetpoint() + leftY * Constants.IntakeConstants.wristSpeed;
+    wrist.goTo(output);
   }
 
   @Override

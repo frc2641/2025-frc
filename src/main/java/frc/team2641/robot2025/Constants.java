@@ -1,9 +1,5 @@
 package frc.team2641.robot2025;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Second;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -36,8 +32,8 @@ public final class Constants {
 
   public static final class CAN {
     public static final int elevator = 13;
-    public static final int intake1 = 14;
-    public static final int intake2 = 15;
+    public static final int leftIntake = 14;
+    public static final int rightIntake = 15;
     public static final int wrist = 16;
     public static final int climber = 17;
 
@@ -46,29 +42,34 @@ public final class Constants {
   }
 
   public static final class MotorSpeeds {
-    public static final double elevatorSpeed = 0.25;
     public static final double climbSpeed = 0.25;
-    public static final double wristSpeed = 0.25;
-    public static final double intakeSpeed1 = .2;
-    public static final double intakeSpeed2 = .3;
   }
 
-  public static final class IntakeGains {
-    /** @see TO_DO is currently a random number to make stuff do stuff */
-    public static final PIDConstants wristGains = new PIDConstants(25, 0, 0);
+  public static final class IntakeConstants {
+    public static final double wristSpeed = 0.25;
+    public static final double leftIntakeSpeed = 0.2;
+    public static final double rightIntakeSpeed = 0.3;
+
+    public static final PIDConstants wristPID = new PIDConstants(25, 0, 0);
+
+    // TODO: Use rate limiter
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
-   /** @see TO_DO is currently a random number to make stuff do stuff */
-    public static final PIDConstants elevatorGains = new PIDConstants(0, 0, 0);
-    public static final SlewRateLimiter elevatorRateLimiter = new SlewRateLimiter(6);
 
-    public static final PIDConstants climbGains = new PIDConstants(6, 0, 0);
-    public static final SlewRateLimiter climbRateLimiter = new SlewRateLimiter(6);
-
-    public static final double elevMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond); 
-    public static final double elevMaxAcceleration = Meters.of(6).per(Second).per(Second).in(MetersPerSecondPerSecond);
+    public static final double wristInitPos = 2.5;
+    public static final double wristMaxPos = 1.25;
+    public static final double wristMinPos = 9.5;
   }
 
   public static final class ElevatorConstants {
+    public static final double elevatorSpeed = 0.25;
+
+    public static final PIDConstants PID = new PIDConstants(0, 0, 0);
+
+    // TODO: Find elevator range
+    public static final double initPos = 0;
+    public static final double maxPos = 0;
+    public static final double minPos = 0;
+
     // public static final double kS = 0.02; //guessed
     // public static final double kG = 0.9; //guessed
     // public static final double kV = 3.8; //guessed
@@ -98,7 +99,7 @@ public final class Constants {
     public static final double kElevatorGearing = 7.75;
     public static final double kElevatorDrumRadius = Units.inchesToMeters(1/2.0);
     public static final double kCarriageMass = 15.8757; // kg
-  /**idk what that is*/
+
     public static final double kSetpointMeters = 0.75;
 
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
@@ -107,8 +108,7 @@ public final class Constants {
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr
-    public static final double kElevatorEncoderDistPerPulse =
-        2.0 * Math.PI * kElevatorDrumRadius / 4096;
+    public static final double kElevatorEncoderDistPerPulse = 2.0 * Math.PI * kElevatorDrumRadius / 4096;
   }
 
   public static final class ArmPositions {
