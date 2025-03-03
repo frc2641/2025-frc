@@ -21,6 +21,7 @@ import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.test.*;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -28,6 +29,7 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final WristReal wrist = WristReal.getInstance();
+  private final ElevatorReal elev = ElevatorReal.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -126,6 +128,8 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(driveCommand);
     wrist.setDefaultCommand(new MoveWrist());
+    elev.setDefaultCommand(new MoveElev());
+
     // arm.setDefaultCommand(new MoveArm());
 
     NamedCommands.registerCommand("creep", new Creep(0));

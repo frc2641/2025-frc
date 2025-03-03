@@ -13,7 +13,7 @@ import frc.team2641.robot2025.Constants.IntakeConstants;
 public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
-  private double setpoint = IntakeConstants.wristInitPos;
+  private double setpoint = Constants.IntakeConstants.wristInitPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
   private static WristReal instance;
@@ -68,6 +68,7 @@ public class WristReal extends SubsystemBase implements WristIO {
     if (setpoint > IntakeConstants.wristMaxPos) setpoint = IntakeConstants.wristMaxPos;
 
     motor.setControl(posRequest.withPosition(setpoint));
+    System.out.println("Wrist setpoint: " + setpoint);
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < 0.1) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > 30)){
       // stop();

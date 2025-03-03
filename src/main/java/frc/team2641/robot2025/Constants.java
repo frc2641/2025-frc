@@ -50,25 +50,25 @@ public final class Constants {
     public static final double leftIntakeSpeed = 0.2;
     public static final double rightIntakeSpeed = 0.3;
 
-    public static final PIDConstants wristPID = new PIDConstants(25, 0, 0);
+    public static final PIDConstants wristPID = new PIDConstants(20, 0, 0);
 
     // TODO: Use rate limiter
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
 
-    public static final double wristInitPos = 2.5;
-    public static final double wristMaxPos = 1.25;
-    public static final double wristMinPos = 9.5;
+    public static final double wristInitPos = 3;
+    public static final double wristMaxPos = 100;
+    public static final double wristMinPos = -100;
   }
 
   public static final class ElevatorConstants {
-    public static final double elevatorSpeed = 0.25;
+    public static final double elevatorSpeed = 0.3;
 
-    public static final PIDConstants PID = new PIDConstants(0, 0, 0);
+    public static final PIDConstants PID = new PIDConstants(3, 0, 0);
 
     // TODO: Find elevator range
     public static final double initPos = 0;
-    public static final double maxPos = 0;
-    public static final double minPos = 0;
+    public static final double maxPos = 1000;
+    public static final double minPos = -1000;
 
     // public static final double kS = 0.02; //guessed
     // public static final double kG = 0.9; //guessed
