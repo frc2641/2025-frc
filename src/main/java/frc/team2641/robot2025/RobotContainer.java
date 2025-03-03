@@ -20,8 +20,7 @@ import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
-// import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
-import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
+import frc.team2641.robot2025.commands.test.*;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -29,7 +28,6 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final WristReal wrist = WristReal.getInstance();
-  // private final Superstructure arm = Superstructure.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -74,18 +72,22 @@ public class RobotContainer {
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
-
-    operatorGamepad.a().onTrue(SuperStructureSequences.l1());
-    operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
-    operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
-    operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
-    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
-    operatorGamepad.rightBumper().onTrue(SuperStructureSequences.processor());
-    operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
-    operatorGamepad.leftTrigger().whileTrue(new RunIntake());
-    operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
     driverGamepad.povUp().whileTrue(new Climb(true));
     driverGamepad.povDown().whileTrue(new Climb(false));
+
+    // operatorGamepad.a().onTrue(SuperStructureSequences.l1());
+    // operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
+    // operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
+    // operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
+    // operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
+    // operatorGamepad.rightBumper().onTrue(SuperStructureSequences.processor());
+    // operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
+    operatorGamepad.leftTrigger().whileTrue(new RunIntake());
+    operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
+    operatorGamepad.a().onTrue(new TestElevatorLow());
+    operatorGamepad.b().onTrue(new TestElevatorHigh());
+    operatorGamepad.x().onTrue(new TestWristLow());
+    operatorGamepad.y().onTrue(new TestWristHigh());
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
