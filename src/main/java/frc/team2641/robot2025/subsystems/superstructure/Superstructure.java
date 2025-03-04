@@ -56,7 +56,7 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Elev Pos ", pos.getElev());
-    SmartDashboard.putNumber("Arm Wrist Pos ", pos.getWrist());
+    SmartDashboard.putNumber("Arm Elev Target Pos ", pos.getElev());
+    SmartDashboard.putNumber("Arm Wrist Target Pos ", pos.getWrist());
   }
 }

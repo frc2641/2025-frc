@@ -52,7 +52,7 @@ public final class Constants {
   public static final class WristConstants {
     public static final double speed = 0.25;
 
-    public static final PIDConstants wristPID = new PIDConstants(20, 0, 0);
+    public static final PIDConstants wristPID = new PIDConstants(10, 0, 0);
 
     // TODO: Use rate limiter
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
@@ -79,7 +79,7 @@ public final class Constants {
 
     // TODO: Find elevator range
     public static final double initPos = -5;
-    public static final double maxPos = -100;
+    public static final double maxPos = -110;
     public static final double minPos = -5;
 
     public static final double stallV = 0.1;
@@ -112,7 +112,7 @@ public final class Constants {
     public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
   
     public static final double kElevatorGearing = 7.75;
-    public static final double kElevatorDrumRadius = Units.inchesToMeters(1/2.0);
+    public static final double kElevatorDrumRadius = Units.inchesToMeters(0.5);
     public static final double kCarriageMass = 15.8757; // kg
 
     public static final double kSetpointMeters = 0.75;

@@ -1,5 +1,7 @@
 package frc.team2641.robot2025.helpers;
 
+import frc.team2641.robot2025.Constants;
+
 public class ArmPosition {
 	private double wrist;
 	private double elev;
@@ -24,9 +26,9 @@ public class ArmPosition {
 	}
 
 	private void constrain() {
-		if (wrist > 0) wrist = 0;
-		if (wrist < 0) wrist = 0;
-		if (elev > 0) elev = 0;
-		if (elev < 0) elev = 0;
+		if (wrist > Constants.WristConstants.maxPos) wrist = Constants.WristConstants.maxPos;
+		if (wrist < Constants.WristConstants.minPos) wrist = Constants.WristConstants.minPos;
+		if (elev > Constants.ElevatorConstants.maxPos) elev = Constants.ElevatorConstants.maxPos;
+		if (elev < Constants.ElevatorConstants.minPos) elev = Constants.ElevatorConstants.minPos;
 	}
 }

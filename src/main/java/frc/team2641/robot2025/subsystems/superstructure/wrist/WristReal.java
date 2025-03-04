@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.WristConstants;
@@ -68,13 +69,15 @@ public class WristReal extends SubsystemBase implements WristIO {
     if (setpoint > WristConstants.maxPos) setpoint = WristConstants.maxPos;
 
     motor.setControl(posRequest.withPosition(setpoint));
-    System.out.println("Wrist setpoint: " + setpoint);
+    // System.out.println("Wrist setpoint: " + setpoint);
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < WristConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > WristConstants.stallI)){
       // stop();
       System.out.println("\n\n *** STALL DETECTED - WRIST *** \n\n");
     }
     // TODO: Move setpoint retargeting to an else statement above
+
+    SmartDashboard.putNumber("Arm Wrist Real Pos ", motor.getPosition().getValueAsDouble());    
   }
 
   public TalonFX getMotor() {

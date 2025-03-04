@@ -1,18 +1,4 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "Talon FX (v6)[11]/Rev Limit": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[1]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -24,6 +10,7 @@
       "/SmartDashboard/IMU": "Alerts",
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
+      "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/Swerve Drive": "Alerts"
     }
   },
@@ -36,37 +23,15 @@
         "Elevator Sim": {
           "Elevator Root": {
             "Elevator": {
-              "open": true
-            },
-            "open": true
-          },
-          "open": true
-        },
-        "MapleArenaSimulation": {
-          "open": true
-        },
-        "open": true
+              "open": false
+            }
+          }
+        }
       }
     }
   },
   "Plot": {
     "Plot <0>": {
-      "plots": [
-        {
-          "backgroundColor": [
-            0.0,
-            0.0,
-            0.0,
-            0.8500000238418579
-          ],
-          "height": 338
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <1>": {
       "plots": [
         {
           "backgroundColor": [
@@ -84,7 +49,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm Elev Pos "
+              "id": "NT:/SmartDashboard/Arm Elevator Real Pos "
             }
           ]
         }
