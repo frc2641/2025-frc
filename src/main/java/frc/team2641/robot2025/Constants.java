@@ -42,13 +42,13 @@ public final class Constants {
   }
 
   public static final class MotorSpeeds {
-    public static final double climbSpeed = 0.25;
+    public static final double climbSpeed = 0.5;
   }
 
   public static final class IntakeConstants {
     public static final double wristSpeed = 0.25;
-    public static final double leftIntakeSpeed = 0.2;
-    public static final double rightIntakeSpeed = 0.3;
+    public static final double leftIntakeSpeed = 0.4;
+    public static final double rightIntakeSpeed = 0.5;
 
     public static final PIDConstants wristPID = new PIDConstants(20, 0, 0);
 
@@ -66,9 +66,9 @@ public final class Constants {
     public static final PIDConstants PID = new PIDConstants(3, 0, 0);
 
     // TODO: Find elevator range
-    public static final double initPos = 0;
-    public static final double maxPos = 1000;
-    public static final double minPos = -1000;
+    public static final double initPos = -5;
+    public static final double maxPos = -100;
+    public static final double minPos = -5;
 
     // public static final double kS = 0.02; //guessed
     // public static final double kG = 0.9; //guessed

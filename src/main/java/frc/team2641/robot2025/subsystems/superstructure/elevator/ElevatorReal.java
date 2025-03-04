@@ -64,11 +64,12 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   
   @Override
   public void periodic() {
-    if (setpoint < ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
-    if (setpoint > ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
+    if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
+    if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
     motor.setControl(posRequest.withPosition(setpoint));
     System.out.println("Elevator setpoint: " + setpoint);
+    System.out.println(getPosition());
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < 0.1) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > 30)){
       // stop();
