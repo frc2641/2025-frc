@@ -7,13 +7,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   private TalonFX motor;
 
-  private double setpoint = Constants.ElevatorConstants.initPos;
+  private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
   private static ElevatorReal instance;
@@ -47,7 +47,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   }
 
   private void configMotor() {
-    motor = new TalonFX(Constants.CAN.elevator);
+    motor = new TalonFX(CANConstants.elevator);
 
     TalonFXConfigurator configer = motor.getConfigurator();
 
@@ -71,7 +71,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
     System.out.println("Elevator setpoint: " + setpoint);
     System.out.println(getPosition());
 
-    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < 0.1) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > 30)){
+    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)){
       // stop();
       System.out.println("\n\n *** STALL DETECTED - ELEVATOR *** \n\n");
     }

@@ -30,34 +30,46 @@ public final class Constants {
     public static final double TURN_CONSTANT = 6;
   }
 
-  public static final class CAN {
+  public static final class CANConstants {
     public static final int elevator = 13;
     public static final int leftIntake = 14;
     public static final int rightIntake = 15;
     public static final int wrist = 16;
-    public static final int climber = 17;
+    public static final int leftClimber = 17;
+    public static final int rightClimber = 18;
 
     public static final int pdh = 20;
-    public static final int ph = 21;
-  }
-
-  public static final class MotorSpeeds {
-    public static final double climbSpeed = 0.5;
   }
 
   public static final class IntakeConstants {
-    public static final double wristSpeed = 0.25;
-    public static final double leftIntakeSpeed = 0.4;
-    public static final double rightIntakeSpeed = 0.5;
+    public static final double leftSpeed = 0.4;
+    public static final double rightSpeed = 0.5;
+
+    public static final double stallV = 0.1;
+    public static final double stallI = 30;
+  }
+
+  public static final class WristConstants {
+    public static final double speed = 0.25;
 
     public static final PIDConstants wristPID = new PIDConstants(20, 0, 0);
 
     // TODO: Use rate limiter
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
 
-    public static final double wristInitPos = 3;
-    public static final double wristMaxPos = 100;
-    public static final double wristMinPos = -100;
+    public static final double initPos = 3;
+    public static final double maxPos = 100;
+    public static final double minPos = -100;
+
+    public static final double stallV = 0.1;
+    public static final double stallI = 30;
+  }
+
+  public static final class ClimberConstants {
+    public static final double climberSpeed = 0.25;
+
+    public static final double stallV = 0.1;
+    public static final double stallI = 30;
   }
 
   public static final class ElevatorConstants {
@@ -69,6 +81,9 @@ public final class Constants {
     public static final double initPos = -5;
     public static final double maxPos = -100;
     public static final double minPos = -5;
+
+    public static final double stallV = 0.1;
+    public static final double stallI = 30;
 
     // public static final double kS = 0.02; //guessed
     // public static final double kG = 0.9; //guessed

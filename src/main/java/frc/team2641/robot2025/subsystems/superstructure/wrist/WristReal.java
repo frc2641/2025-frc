@@ -7,13 +7,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.Constants.IntakeConstants;
+import frc.team2641.robot2025.Constants.CANConstants;
+import frc.team2641.robot2025.Constants.WristConstants;
 
 public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
-  private double setpoint = Constants.IntakeConstants.wristInitPos;
+  private double setpoint = WristConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
   private static WristReal instance;
@@ -47,7 +47,7 @@ public class WristReal extends SubsystemBase implements WristIO {
   }
 
   private void configMotor() {
-    motor = new TalonFX(Constants.CAN.wrist);
+    motor = new TalonFX(CANConstants.wrist);
 
     TalonFXConfigurator configer = motor.getConfigurator();
 
@@ -56,21 +56,21 @@ public class WristReal extends SubsystemBase implements WristIO {
     configer.apply(config);
 
     Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = Constants.IntakeConstants.wristPID.kP;
-    slot0Configs.kI = Constants.IntakeConstants.wristPID.kI;
-    slot0Configs.kD = Constants.IntakeConstants.wristPID.kD;
+    slot0Configs.kP = WristConstants.wristPID.kP;
+    slot0Configs.kI = WristConstants.wristPID.kI;
+    slot0Configs.kD = WristConstants.wristPID.kD;
     configer.apply(slot0Configs);
   }
   
   @Override
   public void periodic() {
-    if (setpoint < IntakeConstants.wristMinPos) setpoint = IntakeConstants.wristMinPos;
-    if (setpoint > IntakeConstants.wristMaxPos) setpoint = IntakeConstants.wristMaxPos;
+    if (setpoint < WristConstants.minPos) setpoint = WristConstants.minPos;
+    if (setpoint > WristConstants.maxPos) setpoint = WristConstants.maxPos;
 
     motor.setControl(posRequest.withPosition(setpoint));
     System.out.println("Wrist setpoint: " + setpoint);
 
-    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < 0.1) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > 30)){
+    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < WristConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > WristConstants.stallI)){
       // stop();
       System.out.println("\n\n *** STALL DETECTED - WRIST *** \n\n");
     }

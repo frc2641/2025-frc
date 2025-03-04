@@ -2,7 +2,7 @@ package frc.team2641.robot2025.commands.test;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
-import frc.team2641.robot2025.Constants.IntakeConstants;
+import frc.team2641.robot2025.Constants.WristConstants;
 
 public class TestWristLow extends Command {
   WristReal wrist = WristReal.getInstance();
@@ -13,7 +13,7 @@ public class TestWristLow extends Command {
 
   @Override
   public void initialize() {
-    wrist.goTo(IntakeConstants.wristMinPos);
+    wrist.goTo(WristConstants.minPos);
   }
 
   @Override
@@ -24,6 +24,6 @@ public class TestWristLow extends Command {
 
   @Override
   public boolean isFinished() {
-    return wrist.getPosition() <= IntakeConstants.wristMinPos;
+    return wrist.getPosition() <= WristConstants.minPos;
   }
 }
