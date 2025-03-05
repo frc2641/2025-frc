@@ -86,16 +86,10 @@ public final class Constants {
     public static final double stallI = 30;
 
     // public static final double kS = 0.02; //guessed
-    // public static final double kG = 0.9; //guessed
-    // public static final double kV = 3.8; //guessed
-    // public static final double kA = 0.17; //guessed
-    
-    // public static final double kGearing = 1; //motor gear ratio
-    // public static final double kCarraigeMass = -1; //TODO ! ! ! in 
-    // public static final double kDrumRadius = Units.inchesToMeters(-1); // TODO !!!
-
-    // public static final double maxHeight = Units.inchesToMeters(0);
-    // public static final double minHeight = 0;
+    // from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A30%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A60%2C%22u%22%3A%22in%22%7D
+    public static final double kElevatorkG = 0.09; 
+    public static final double kElevatorkV = 37.34; 
+    public static final double kElevatorkA = 0.01; 
 
     public static final int kMotorPort = 0;
     public static final int kEncoderAChannel = 0;
@@ -107,9 +101,9 @@ public final class Constants {
     public static final double kElevatorKd = 0;
   
     public static final double kElevatorkS = 0.0; // volts (V)
-    public static final double kElevatorkG = 0.762; // volts (V)
-    public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
-    public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
+    // public static final double kElevatorkG = 0.762; // volts (V)
+    // public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
+    // public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
   
     public static final double kElevatorGearing = 7.75;
     public static final double kElevatorDrumRadius = Units.inchesToMeters(0.5);

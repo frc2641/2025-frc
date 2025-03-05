@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.superStructure;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;

@@ -12,6 +12,13 @@
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/Swerve Drive": "Alerts"
+    },
+    "windows": {
+      "/SmartDashboard/Elevator Sim": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
@@ -26,14 +33,30 @@
               "open": false
             }
           }
-        }
+        },
+        "Simulated Elevator": {
+          "Elevator Root": {
+            "Elevator": {
+              "open": false
+            }
+          }
+        },
+        "open": true
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   },
   "Plot": {
     "Plot <0>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "backgroundColor": [
             0.0,
             0.0,
@@ -49,14 +72,20 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Arm Elevator Real Pos "
+              "id": "NT:/SmartDashboard/Elevator simulated Position"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Elevator simulated setPoint"
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     }
   }
 }

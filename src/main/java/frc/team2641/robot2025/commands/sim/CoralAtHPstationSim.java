@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.sim;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;

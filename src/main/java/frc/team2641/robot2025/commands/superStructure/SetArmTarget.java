@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.superStructure;
 
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.helpers.ArmPosition;

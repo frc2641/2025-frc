@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
+
   private static ElevatorSimulation instance;
   public static ElevatorSimulation getInstance() {
     if (instance == null) {
@@ -78,7 +79,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
 
     // Publish Mechanism2d to SmartDashboard
     // To view the Elevator visualization, select Network Tables -> SmartDashboard -> Elevator Sim
-    SmartDashboard.putData("Elevator Sim", m_mech2d);
+    
   }
 
   /** Advance the simulation. */
@@ -94,6 +95,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     m_encoderSim.setDistance(m_elevatorSim.getPositionMeters());
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
+
   }
 
   /**
@@ -107,7 +109,8 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     // With the setpoint value we run PID control like normal
     double pidOutput = m_controller.calculate(m_encoder.getDistance());
     double feedforwardOutput = m_feedforward.calculate(m_controller.getSetpoint().velocity);
-    // m_motor(pidOutput + feedforwardOutput);
+    
+    m_motorSim.setSupplyVoltage(pidOutput + feedforwardOutput);
   }
 
   /** Stop the control loop and motor output. */
@@ -120,6 +123,10 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
   public void updateTelemetry() {
     // Update elevator visualization with position
     m_elevatorMech2d.setLength(m_encoder.getDistance());
+
+    SmartDashboard.putData("Elevator Sim", m_mech2d);
+    SmartDashboard.putNumber("Elevator simulated setPoint", getSetpoint());
+    SmartDashboard.putNumber("Elevator simulated Position", getPosition());
   }
 
   @Override
