@@ -25,7 +25,7 @@ import frc.team2641.robot2025.commands.superStructure.MoveElev;
 import frc.team2641.robot2025.commands.superStructure.MoveWrist;
 import frc.team2641.robot2025.commands.test.*;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulationEditted;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
@@ -58,7 +58,7 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
-   ElevatorSimulation elevSim;
+   ElevatorSimulationEditted elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
     .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)

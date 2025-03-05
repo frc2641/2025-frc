@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulationEditted;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import java.io.File;
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class Robot extends TimedRobot {
   public void simulationInit() {
     driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,3), new Rotation2d(0)));
 
-    robotContainer.elevSim = ElevatorSimulation.getInstance();
+    robotContainer.elevSim = ElevatorSimulationEditted.getInstance();
     // driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)));
 
     arena.resetFieldForAuto();

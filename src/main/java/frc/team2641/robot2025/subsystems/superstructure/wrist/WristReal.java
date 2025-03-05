@@ -16,7 +16,7 @@ public class WristReal extends SubsystemBase implements WristIO {
 
   private double setpoint = WristConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
-
+  private boolean stalled;
   private static WristReal instance;
   public static WristReal getInstance() {
     if (instance == null) instance = new WristReal();
@@ -73,11 +73,16 @@ public class WristReal extends SubsystemBase implements WristIO {
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < WristConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > WristConstants.stallI)){
       // stop();
-      System.out.println("\n\n *** STALL DETECTED - WRIST *** \n\n");
+      stalled = true;
     }
+    else
+
+  stalled = false;    
     // TODO: Move setpoint retargeting to an else statement above
 
-    SmartDashboard.putNumber("Arm Wrist Real Pos ", motor.getPosition().getValueAsDouble());    
+    SmartDashboard.putNumber("Arm Wrist Real Pos ", motor.getPosition().getValueAsDouble()); 
+    SmartDashboard.putBoolean("Wrist Stall", stalled);
+   
   }
 
   public TalonFX getMotor() {

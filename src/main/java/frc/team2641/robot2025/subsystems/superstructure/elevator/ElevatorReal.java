@@ -13,7 +13,7 @@ import frc.team2641.robot2025.Constants.ElevatorConstants;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   private TalonFX motor;
-
+  private boolean stalled;
   private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
@@ -73,11 +73,14 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)){
       // stop();
-      System.out.println("\n\n *** STALL DETECTED - ELEVATOR *** \n\n");
+      stalled = true;
     }
+    else
+    stalled = false;
     // TODO: Move setpoint retargeting to an else statement above
 
     SmartDashboard.putNumber("Arm Elevator Real Pos ", motor.getPosition().getValueAsDouble());
+    SmartDashboard.putBoolean("Elevator Stall", stalled);
   }
   
   public TalonFX getMotor() {
