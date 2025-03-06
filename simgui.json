@@ -4,6 +4,7 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto": "String Chooser",
+      "/SmartDashboard/Elevator Sim": "Mechanism2d",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/IMU": "Alerts",
@@ -13,13 +14,10 @@
       "/SmartDashboard/Swerve Drive": "Alerts"
     },
     "windows": {
-      "/SmartDashboard/Field": {
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875
+      "/SmartDashboard/Elevator Sim": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -30,10 +28,9 @@
           "Elevator Root": {
             "Elevator": {
               "open": false
-            },
-            "open": false
+            }
           },
-          "open": false
+          "open": true
         },
         "Simulated Elevator": {
           "Elevator Root": {
@@ -44,6 +41,40 @@
         },
         "open": true
       }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 582,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Elev Height"
+            }
+          ]
+        }
+      ]
     }
   }
 }

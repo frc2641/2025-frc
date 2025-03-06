@@ -24,8 +24,9 @@ import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
 import frc.team2641.robot2025.commands.superStructure.MoveElev;
 import frc.team2641.robot2025.commands.superStructure.MoveWrist;
 import frc.team2641.robot2025.commands.test.*;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulationEditted;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
@@ -58,7 +59,8 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
-   ElevatorSimulationEditted elevSim;
+   ElevatorSimulation elevSim;
+  // ElevatorIO elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
     .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
@@ -69,6 +71,8 @@ public class RobotContainer {
     .publish();
 
   public RobotContainer() {
+    
+
     driverGamepad.a().whileTrue(new AutoAngle(1, false));
     driverGamepad.b().whileTrue(new AutoAngle(2, false));
     driverGamepad.x().whileTrue(new AutoAngle(3, false));

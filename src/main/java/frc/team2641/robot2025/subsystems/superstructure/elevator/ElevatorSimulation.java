@@ -21,8 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
+public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, ElevatorIO {
 
   private static ElevatorSimulation instance;
   public static ElevatorSimulation getInstance() {
@@ -32,8 +33,10 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     return instance;
   }
 
-  // This gearbox represents a gearbox containing 4 Vex 775pro motors.
-  private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
+
+
+/** gearbox containing the KrakenX60 */  
+private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
 
   // Standard classes for controlling our elevator
   private final ProfiledPIDController m_controller =
@@ -42,14 +45,17 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
           Constants.ElevatorConstants.kElevatorKi,
           Constants.ElevatorConstants.kElevatorKd,
           new TrapezoidProfile.Constraints(2.45, 2.45));
+
   ElevatorFeedforward m_feedforward =
       new ElevatorFeedforward(
           Constants.ElevatorConstants.kElevatorkS,
           Constants.ElevatorConstants.kElevatorkG,
           Constants.ElevatorConstants.kElevatorkV,
           Constants.ElevatorConstants.kElevatorkA);
-  private final Encoder m_encoder =
-      new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
+
+
+
+  private final Encoder m_encoder = new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
   private final PWMSparkMax m_motor = new PWMSparkMax(Constants.ElevatorConstants.kMotorPort);
 
   // Simulation classes help us simulate what's going on, including gravity.
@@ -65,6 +71,8 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
           0,
           0.01,
           0.0);
+
+
   private final EncoderSim m_encoderSim = new EncoderSim(m_encoder);
   private final PWMSim m_motorSim = new PWMSim(m_motor);
 
@@ -76,12 +84,16 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
           new MechanismLigament2d("Elevator", m_elevatorSim.getPositionMeters(), 90));
 
   /** Subsystem constructor. */
-  public ElevatorSimulation() {
+  public ElevatorSimulation() {    
+
     m_encoder.setDistancePerPulse(Constants.ElevatorConstants.kElevatorEncoderDistPerPulse);
 
     // Publish Mechanism2d to SmartDashboard
     // To view the Elevator visualization, select Network Tables -> SmartDashboard -> Elevator Sim
-    SmartDashboard.putData("Elevator Sim", m_mech2d);
+
+    
+    putOnSD();
+
   }
 
   /** Advance the simulation. */
@@ -99,6 +111,9 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
 
+        // SmartDashboard.putData("Elevator Sim", m_mech2d);
+        // SmartDashboard.putNumber("Elev Height", getPosition());
+
         
   }
 
@@ -114,6 +129,7 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
     double pidOutput = m_controller.calculate(m_encoder.getDistance());
     double feedforwardOutput = m_feedforward.calculate(m_controller.getSetpoint().velocity);
     m_motor.setVoltage(pidOutput + feedforwardOutput);
+    
   }
 
   /** Stop the control loop and motor output. */
@@ -137,7 +153,10 @@ public class ElevatorSimulation implements AutoCloseable, ElevatorIO {
 
   @Override
   public void goTo(double pos) {
-reachGoal(pos);
+    System.out.println("levle not cleared ig");
+    reachGoal(pos);
+    // simulationPeriodic();
+    // updateTelemetry();
   }
 
   @Override
@@ -148,5 +167,10 @@ reachGoal(pos);
   @Override
   public double getSetpoint() {
     return m_controller.getGoal().position;
+  }
+
+  public static void putOnSD(){
+    if(instance!=null)
+    SmartDashboard.putData("Elevator Sim", instance.m_mech2d);
   }
 }

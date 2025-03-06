@@ -16,13 +16,17 @@ public class MoveElev extends Command {
 
   @Override
   public void initialize() {
+
   }
 
   @Override
   public void execute() {
     double rightY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
     double output = elev.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed;
-    elev.goTo(output);
+    // elev.goTo(output);
+    if(rightY>0.5)
+    elev.goTo(0);
+    else elev.goTo(10);
   }
 
   @Override
