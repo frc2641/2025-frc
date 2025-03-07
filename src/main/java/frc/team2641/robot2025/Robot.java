@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
+import frc.team2641.robot2025.commands.superStructure.MoveElev;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import java.io.File;
@@ -62,6 +63,8 @@ public class Robot extends TimedRobot {
       driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
 
       elevSim = ElevatorSimulation.getInstance();
+
+      new MoveElev().schedule();
     }
   }
 
@@ -150,9 +153,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
+    elevSim.simulationPeriodic();
+    elevSim.updateTelemetry();
     robotContainer.updateSimulation();
-
-    // elevSim.simulationPeriodic();  
 }
 
   public static PneumaticHub getPH() {

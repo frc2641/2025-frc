@@ -23,20 +23,16 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, ElevatorIO {
+public class ElevatorSimulation extends Elevator implements AutoCloseable, ElevatorIO {
 
   private static ElevatorSimulation instance;
-  public static ElevatorSimulation getInstance() {
-    if (instance == null) {
+  public static ElevatorSimulation getInstance(){
+    if (instance == null)
       instance = new ElevatorSimulation();
-    }
     return instance;
   }
-
-
-
-/** gearbox containing the KrakenX60 */  
-private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
+  // This gearbox represents a gearbox containing 4 Vex 775pro motors.
+  private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
 
   // Standard classes for controlling our elevator
   private final ProfiledPIDController m_controller =
@@ -45,16 +41,12 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
           Constants.ElevatorConstants.kElevatorKi,
           Constants.ElevatorConstants.kElevatorKd,
           new TrapezoidProfile.Constraints(2.45, 2.45));
-
   ElevatorFeedforward m_feedforward =
       new ElevatorFeedforward(
           Constants.ElevatorConstants.kElevatorkS,
           Constants.ElevatorConstants.kElevatorkG,
           Constants.ElevatorConstants.kElevatorkV,
           Constants.ElevatorConstants.kElevatorkA);
-
-
-
   private final Encoder m_encoder = new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
   private final PWMSparkMax m_motor = new PWMSparkMax(Constants.ElevatorConstants.kMotorPort);
 
@@ -71,8 +63,6 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
           0,
           0.01,
           0.0);
-
-
   private final EncoderSim m_encoderSim = new EncoderSim(m_encoder);
   private final PWMSim m_motorSim = new PWMSim(m_motor);
 
@@ -82,18 +72,15 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
   private final MechanismLigament2d m_elevatorMech2d =
       m_mech2dRoot.append(
           new MechanismLigament2d("Elevator", m_elevatorSim.getPositionMeters(), 90));
-
+  
   /** Subsystem constructor. */
-  public ElevatorSimulation() {    
-
+  public ElevatorSimulation() {
     m_encoder.setDistancePerPulse(Constants.ElevatorConstants.kElevatorEncoderDistPerPulse);
 
     // Publish Mechanism2d to SmartDashboard
     // To view the Elevator visualization, select Network Tables -> SmartDashboard -> Elevator Sim
-
-    
-    putOnSD();
-
+    SmartDashboard.putData("Elevator Sim", m_mech2d);
+    SmartDashboard.putBoolean("Initialized ElevatorSimulation", true);
   }
 
   /** Advance the simulation. */
@@ -110,11 +97,6 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
-
-        // SmartDashboard.putData("Elevator Sim", m_mech2d);
-        // SmartDashboard.putNumber("Elev Height", getPosition());
-
-        
   }
 
   /**
@@ -122,13 +104,17 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
    *
    * @param goal the position to maintain
    */
-  public void reachGoal(double goal) {
+  @Override
+  public void goTo(double goal) {
+    System.out.println("go to");
+    
     m_controller.setGoal(goal);
 
     // With the setpoint value we run PID control like normal
     double pidOutput = m_controller.calculate(m_encoder.getDistance());
     double feedforwardOutput = m_feedforward.calculate(m_controller.getSetpoint().velocity);
     m_motor.setVoltage(pidOutput + feedforwardOutput);
+
     
   }
 
@@ -142,6 +128,8 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
   public void updateTelemetry() {
     // Update elevator visualization with position
     m_elevatorMech2d.setLength(m_encoder.getDistance());
+
+    SmartDashboard.putNumber("goal", getSetpoint());
   }
 
   @Override
@@ -150,27 +138,15 @@ private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
     m_motor.close();
     m_mech2d.close();
   }
-
-  @Override
-  public void goTo(double pos) {
-    System.out.println("levle not cleared ig");
-    reachGoal(pos);
-    // simulationPeriodic();
-    // updateTelemetry();
-  }
-
-  @Override
-  public double getPosition() {
-    return m_encoderSim.getDistance();
-  }
-
-  @Override
-  public double getSetpoint() {
+@Override
+  public double getSetpoint(){
     return m_controller.getGoal().position;
   }
 
-  public static void putOnSD(){
-    if(instance!=null)
-    SmartDashboard.putData("Elevator Sim", instance.m_mech2d);
+  @Override
+  /** might be the wrong value, not super important */
+  public double getPosition()
+  {
+    return m_encoder.getDistance();
   }
 }

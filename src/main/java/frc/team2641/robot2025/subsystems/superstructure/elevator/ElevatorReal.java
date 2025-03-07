@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
 
-public class ElevatorReal extends SubsystemBase implements ElevatorIO {
+public class ElevatorReal extends Elevator implements ElevatorIO {
   private TalonFX motor;
   private boolean stalled;
   private double setpoint = ElevatorConstants.initPos;

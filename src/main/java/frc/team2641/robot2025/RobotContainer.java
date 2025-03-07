@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +26,7 @@ import frc.team2641.robot2025.commands.superStructure.MoveElev;
 import frc.team2641.robot2025.commands.superStructure.MoveWrist;
 import frc.team2641.robot2025.commands.test.*;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -33,9 +34,10 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final WristReal wrist = WristReal.getInstance();
-  private final ElevatorReal elev = ElevatorReal.getInstance();
+  private final Elevator elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
+  Joystick joy = new Joystick(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -93,8 +95,8 @@ public class RobotContainer {
     // operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    operatorGamepad.a().onTrue(new TestElevatorLow());
-    operatorGamepad.b().onTrue(new TestElevatorHigh());
+    // operatorGamepad.a().onTrue(new TestElevatorLow());
+    // operatorGamepad.b().onTrue(new TestElevatorHigh());
     operatorGamepad.x().onTrue(new TestWristLow());
     operatorGamepad.y().onTrue(new TestWristHigh());
 
@@ -157,10 +159,14 @@ public class RobotContainer {
 
   public double getOpLeftStickY() {
     return operatorGamepad.getLeftY();
+    
+    
   }
 
   public double getOpRightStickY() {
-    return operatorGamepad.getRightY();
+    SmartDashboard.putNumber("getOpLeftJoyStickY", joy.getY());
+    // return operatorGamepad.getRightY();
+    return joy.getY();
   }
 
   public void updateSimulation() {
@@ -174,7 +180,6 @@ public class RobotContainer {
     coralPoses.accept(coral);
 
     arena.simulationPeriodic();
-    elevSim.simulationPeriodic();
-    elevSim.updateTelemetry();
+    
   }
 }
