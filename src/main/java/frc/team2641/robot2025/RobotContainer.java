@@ -37,7 +37,6 @@ public class RobotContainer {
   private final Elevator elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
-  Joystick joy = new Joystick(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -164,9 +163,8 @@ public class RobotContainer {
   }
 
   public double getOpRightStickY() {
-    SmartDashboard.putNumber("getOpLeftJoyStickY", joy.getY());
-    // return operatorGamepad.getRightY();
-    return joy.getY();
+    return operatorGamepad.getRightY();
+
   }
 
   public void updateSimulation() {
