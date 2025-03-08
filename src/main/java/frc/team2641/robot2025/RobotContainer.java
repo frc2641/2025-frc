@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +33,7 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
   private final WristReal wrist = WristReal.getInstance();
-  private final Elevator elev = Elevator.getInstance();
+  private final ElevatorIO elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -157,14 +156,13 @@ public class RobotContainer {
   }
 
   public double getOpLeftStickY() {
+    SmartDashboard.putNumber("getOpLeftStickY", operatorGamepad.getLeftY());
     return operatorGamepad.getLeftY();
-    
-    
   }
 
   public double getOpRightStickY() {
+    SmartDashboard.putNumber("getOpRightStickY", operatorGamepad.getRightY());
     return operatorGamepad.getRightY();
-
   }
 
   public void updateSimulation() {

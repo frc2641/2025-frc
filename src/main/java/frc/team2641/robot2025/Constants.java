@@ -78,9 +78,10 @@ public final class Constants {
     public static final PIDConstants PID = new PIDConstants(3, 0, 0);
 
     // TODO: Find elevator range
-    public static final double initPos = -5;
-    public static final double maxPos = -110;
-    public static final double minPos = -5;
+    public static final double elevConvert =  Math.PI * Units.inchesToMeters(1.0/12 * 0.5); // gearbox * shaft diameter 
+    public static final double initPos = 0 * elevConvert;
+    public static final double maxPos = 80 * elevConvert;
+    public static final double minPos = 0;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;

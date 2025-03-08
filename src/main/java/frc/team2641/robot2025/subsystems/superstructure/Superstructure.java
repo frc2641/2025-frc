@@ -10,7 +10,7 @@ import frc.team2641.robot2025.subsystems.superstructure.wrist.WristIO;
 
 public class Superstructure extends SubsystemBase {
   private WristIO wrist;
-  private Elevator elevator;
+  private ElevatorIO elevator;
 
   private ArmPosition pos;
   public boolean isAuto = false;

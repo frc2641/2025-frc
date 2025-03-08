@@ -1,7 +1,6 @@
 package frc.team2641.robot2025.commands.superStructure;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
@@ -9,7 +8,7 @@ import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 
 public class MoveElev extends Command {
-  private Elevator elev;
+  private ElevatorIO elev;
 
 
   public MoveElev() {
@@ -24,7 +23,10 @@ public class MoveElev extends Command {
   @Override
   public void execute() {
     double rightY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
-    double output = elev.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed;
+    double output = elev.getSetpoint() + -1 * rightY * Constants.ElevatorConstants.elevatorSpeed;
+
+    // output = new ArmPosition(0, output).getElev();
+    
     elev.goTo(output);
 
   }

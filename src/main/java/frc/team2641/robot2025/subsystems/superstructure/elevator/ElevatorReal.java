@@ -7,11 +7,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
 
-public class ElevatorReal extends Elevator implements ElevatorIO {
+public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   private TalonFX motor;
   private boolean stalled;
   private double setpoint = ElevatorConstants.initPos;
@@ -39,9 +41,10 @@ public class ElevatorReal extends Elevator implements ElevatorIO {
   public void goTo(double pos) {
     setpoint = pos;
   }
-
+  
+  @Override
   public double getPosition() {
-    return motor.getPosition().getValueAsDouble();
+    return motor.getPosition().getValueAsDouble()*Constants.ElevatorConstants.elevConvert;
   }
 
   public double getSetpoint() {
@@ -69,7 +72,7 @@ public class ElevatorReal extends Elevator implements ElevatorIO {
     if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
-    motor.setControl(posRequest.withPosition(setpoint));
+    motor.setControl(posRequest.withPosition(setpoint/Constants.ElevatorConstants.elevConvert));
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)){
       // stop();
@@ -85,5 +88,10 @@ public class ElevatorReal extends Elevator implements ElevatorIO {
   
   public TalonFX getMotor() {
     return motor;
+  }
+
+  @Override
+  public void setDefaultCommand(Command command) {
+super.setDefaultCommand(command);
   }
 }

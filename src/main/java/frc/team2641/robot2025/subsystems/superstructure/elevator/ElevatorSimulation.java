@@ -21,9 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSimulation extends Elevator implements AutoCloseable, ElevatorIO {
+public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, ElevatorIO {
 
   private static ElevatorSimulation instance;
   public static ElevatorSimulation getInstance(){
@@ -40,7 +41,7 @@ public class ElevatorSimulation extends Elevator implements AutoCloseable, Eleva
           Constants.ElevatorConstants.kElevatorKp,
           Constants.ElevatorConstants.kElevatorKi,
           Constants.ElevatorConstants.kElevatorKd,
-          new TrapezoidProfile.Constraints(2.45, 2.45));
+          new TrapezoidProfile.Constraints(2.45, 2.45)); 
   ElevatorFeedforward m_feedforward =
       new ElevatorFeedforward(
           Constants.ElevatorConstants.kElevatorkS,
@@ -106,8 +107,7 @@ public class ElevatorSimulation extends Elevator implements AutoCloseable, Eleva
    */
   @Override
   public void goTo(double goal) {
-    System.out.println("go to");
-    
+        
     m_controller.setGoal(goal);
 
     // With the setpoint value we run PID control like normal
@@ -148,5 +148,10 @@ public class ElevatorSimulation extends Elevator implements AutoCloseable, Eleva
   public double getPosition()
   {
     return m_encoder.getDistance();
+  }
+
+  @Override
+  public void setDefaultCommand(Command command) {
+super.setDefaultCommand(command);
   }
 }
