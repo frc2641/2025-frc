@@ -17,11 +17,13 @@ import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class IntakeIOSim implements IntakeIO {
   private final IntakeSimulation coralIntakeSim;
   private final IntakeSimulation aglaeIntakeSim;
+  private final ElevatorSimulation elevSim;
 
   private Optional<SwerveDriveSimulation> driveSim;
   private BooleanSubscriber spinSub;
@@ -40,30 +42,33 @@ public class IntakeIOSim implements IntakeIO {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
     driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
+    elevSim = ElevatorSimulation.getInstance();
     
 
     // Here, create the intake simulation with respect to the intake on your real robot
      
-    this.aglaeIntakeSim = new IntakeSimulation(
-      // Specify the type of game pieces that the intake can collect
+    this.aglaeIntakeSim =IntakeSimulation.OverTheBumperIntake(
       "Algae",
-      // Specify the drivetrain to which this intake is attached
-      driveSim.get(), 
-      // Our intake has a custom shape of a triangle (shape is specified in chassis frame-of-reference)
-      triangle,
-      // The intake can hold up to 1 note
+      driveSim.get(),
+      // Width of the intake
+      Meters.of(0.7),
+      // The extension length of the intake beyond the robot's frame (when activated)
+      Meters.of(0.2),
+      // The intake is mounted on the back side of the chassis
+      IntakeSimulation.IntakeSide.FRONT,
       1);
 
     // Here, create the intake simulation with respect to the intake on your real robot
-    this.coralIntakeSim = new IntakeSimulation(
-      // Specify the type of game pieces that the intake can collect
+    this.coralIntakeSim = IntakeSimulation.OverTheBumperIntake(
       "Coral",
-      // Specify the drivetrain to which this intake is attached
-      driveSim.get(), 
-      // Our intake has a custom shape of a triangle (shape is specified in chassis frame-of-reference)
-      triangle,
-      // The intake can hold up to 1 note
-      1);
+      driveSim.get(),
+      // Width of the intake
+      Meters.of(0.7),
+      // The extension length of the intake beyond the robot's frame (when activated)
+      Meters.of(0.2),
+      // The intake is mounted on the back side of the chassis
+      IntakeSimulation.IntakeSide.FRONT,
+      1); 
 
     coralIntakeSim.setGamePiecesCount(1);
   }
@@ -115,7 +120,8 @@ public class IntakeIOSim implements IntakeIO {
           // Obtain robot facing from drive simulation
           driveSim.get().getSimulatedDriveTrainPose().getRotation(),
           // The height at which the coral is ejected
-          Meters.of(1.28),
+          // Meters.of(1.28),
+          Meters.of(elevSim.getPosition()),
           // The initial speed of the coral
           MetersPerSecond.of(2),
           // The coral is ejected at a 35-degree slope
@@ -135,7 +141,8 @@ public class IntakeIOSim implements IntakeIO {
           // Obtain robot facing from drive simulation
           driveSim.get().getSimulatedDriveTrainPose().getRotation(),
           // The height at which the coral is ejected
-          Meters.of(1.28),
+          // Meters.of(1.28),
+          Meters.of(elevSim.getPosition()),
           // The initial speed of the coral
           MetersPerSecond.of(2),
           // The coral is ejected at a 35-degree slope
