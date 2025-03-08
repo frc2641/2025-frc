@@ -1,11 +1,9 @@
 package frc.team2641.robot2025.subsystems.superstructure.elevator;
 
-import frc.team2641.robot2025.Constants.ElevatorConstants;
 import frc.team2641.robot2025.Robot;
 
 public class Elevator  {
 
-  private static double setpoint;
   public static ElevatorIO getInstance() {
     if (!Robot.isSimulation()) {
       // throw new Error("elev likey to live");

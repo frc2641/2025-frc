@@ -41,7 +41,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   public void goTo(double pos) {
     setpoint = pos;
   }
-  
+
   @Override
   public double getPosition() {
     return motor.getPosition().getValueAsDouble()*Constants.ElevatorConstants.elevConvert;
@@ -69,8 +69,8 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
   
   @Override
   public void periodic() {
-    if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
-    if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
+    // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
+    // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
     motor.setControl(posRequest.withPosition(setpoint/Constants.ElevatorConstants.elevConvert));
 

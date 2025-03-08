@@ -4,6 +4,9 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.Optional;
+
+import org.dyn4j.geometry.Triangle;
+import org.dyn4j.geometry.Vector2;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -13,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class IntakeIOSim implements IntakeIO {
@@ -21,6 +25,10 @@ public class IntakeIOSim implements IntakeIO {
 
   private Optional<SwerveDriveSimulation> driveSim;
   private BooleanSubscriber spinSub;
+  private final Triangle triangle = new Triangle(
+    new Vector2(0, 0), 
+    new Vector2(0.2, 0), 
+    new Vector2(0, 0.2));
 
   private static IntakeIOSim instance;
   public static IntakeIOSim getInstance() {
@@ -32,38 +40,30 @@ public class IntakeIOSim implements IntakeIO {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
     driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
+    
 
     // Here, create the intake simulation with respect to the intake on your real robot
-    this.aglaeIntakeSim = IntakeSimulation.OverTheBumperIntake(
+     
+    this.aglaeIntakeSim = new IntakeSimulation(
       // Specify the type of game pieces that the intake can collect
       "Algae",
       // Specify the drivetrain to which this intake is attached
-      driveSim.get(),
-      // Width of the intake
-      Meters.of(0.7),
-      // The extension length of the intake beyond the robot's frame (when activated)
-      Meters.of(0.2),
-      // The intake is mounted on the back side of the chassis
-      IntakeSimulation.IntakeSide.FRONT,
+      driveSim.get(), 
+      // Our intake has a custom shape of a triangle (shape is specified in chassis frame-of-reference)
+      triangle,
       // The intake can hold up to 1 note
-      1
-    );
+      1);
 
     // Here, create the intake simulation with respect to the intake on your real robot
-    this.coralIntakeSim = IntakeSimulation.OverTheBumperIntake(
+    this.coralIntakeSim = new IntakeSimulation(
       // Specify the type of game pieces that the intake can collect
       "Coral",
       // Specify the drivetrain to which this intake is attached
-      driveSim.get(),
-      // Width of the intake
-      Meters.of(0.7),
-      // The extension length of the intake beyond the robot's frame (when activated)
-      Meters.of(0.2),
-      // The intake is mounted on the back side of the chassis
-      IntakeSimulation.IntakeSide.FRONT,
+      driveSim.get(), 
+      // Our intake has a custom shape of a triangle (shape is specified in chassis frame-of-reference)
+      triangle,
       // The intake can hold up to 1 note
-      1
-    );
+      1);
 
     coralIntakeSim.setGamePiecesCount(1);
   }
@@ -144,5 +144,9 @@ public class IntakeIOSim implements IntakeIO {
       );
       aglaeIntakeSim.setGamePiecesCount(0);
     }
+  }
+
+  public void setHeight(){
+    
   }
 }

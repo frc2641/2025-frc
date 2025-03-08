@@ -28,7 +28,7 @@ public class ArmPosition {
 	private void constrain() {
 		if (wrist > Constants.WristConstants.maxPos) wrist = Constants.WristConstants.maxPos;
 		if (wrist < Constants.WristConstants.minPos) wrist = Constants.WristConstants.minPos;
-		if (elev > Constants.ElevatorConstants.maxPos) elev = Constants.ElevatorConstants.maxPos;
-		if (elev < Constants.ElevatorConstants.minPos) elev = Constants.ElevatorConstants.minPos;
+		if (elev > Constants.ElevatorConstants.kMaxElevatorHeightMeters) elev = Constants.ElevatorConstants.kMaxElevatorHeightMeters;
+		if (elev < Constants.ElevatorConstants.kMinElevatorHeightMeters) elev = Constants.ElevatorConstants.kMinElevatorHeightMeters;
 	}
 }

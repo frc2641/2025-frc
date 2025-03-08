@@ -79,14 +79,11 @@ public final class Constants {
 
     // TODO: Find elevator range
     public static final double elevConvert =  Math.PI * Units.inchesToMeters(1.0/12 * 0.5); // gearbox * shaft diameter 
-    public static final double initPos = 0 * elevConvert;
-    public static final double maxPos = 80 * elevConvert;
-    public static final double minPos = 0;
+    public static final double initPos = 0;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
 
-    // public static final double kS = 0.02; //guessed
     // from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A30%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A60%2C%22u%22%3A%22in%22%7D
     public static final double kElevatorkG = 0.09; 
     public static final double kElevatorkV = 37.34; 
@@ -106,7 +103,8 @@ public final class Constants {
     // public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
     // public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
   
-    public static final double kElevatorGearing = 7.75;
+    public static final double kElevatorGearing = 12
+    ;
     public static final double kElevatorDrumRadius = Units.inchesToMeters(0.5);
     public static final double kCarriageMass = 15.8757; // kg
 
@@ -115,6 +113,8 @@ public final class Constants {
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
     public static final double kMinElevatorHeightMeters = 0.0;
     public static final double kMaxElevatorHeightMeters = 2.0574;
+    public static final double kMinElevatorHeightRotations = 0.0;
+    public static final double kMaxElevatorHeightRotations = 80;
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr

@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
+import frc.team2641.robot2025.helpers.ArmPosition;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 
@@ -25,7 +26,7 @@ public class MoveElev extends Command {
     double rightY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
     double output = elev.getSetpoint() + -1 * rightY * Constants.ElevatorConstants.elevatorSpeed;
 
-    // output = new ArmPosition(0, output).getElev();
+    output = new ArmPosition(0, output).getElev();
     
     elev.goTo(output);
 

@@ -6,6 +6,7 @@ package frc.team2641.robot2025.subsystems.superstructure.elevator;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
@@ -128,7 +129,6 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
   public void updateTelemetry() {
     // Update elevator visualization with position
     m_elevatorMech2d.setLength(m_encoder.getDistance());
-
     SmartDashboard.putNumber("goal", getSetpoint());
   }
 
@@ -154,4 +154,6 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
   public void setDefaultCommand(Command command) {
 super.setDefaultCommand(command);
   }
+
+  
 }

@@ -13,7 +13,7 @@ public class TestElevatorLow extends Command {
 
   @Override
   public void initialize() {
-    elevator.goTo(ElevatorConstants.minPos);
+    elevator.goTo(ElevatorConstants.kMinElevatorHeightMeters);
   }
 
   @Override
@@ -24,6 +24,6 @@ public class TestElevatorLow extends Command {
 
   @Override
   public boolean isFinished() {
-    return elevator.getPosition() <= ElevatorConstants.minPos;
+    return elevator.getPosition() <= ElevatorConstants.kMinElevatorHeightMeters;
   }
 }

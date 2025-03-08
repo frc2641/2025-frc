@@ -13,7 +13,7 @@ public class TestElevatorHigh extends Command {
 
   @Override
   public void initialize() {
-    elevator.goTo(ElevatorConstants.maxPos);
+    elevator.goTo(ElevatorConstants.kMaxElevatorHeightMeters);
   }
 
   @Override
@@ -24,6 +24,6 @@ public class TestElevatorHigh extends Command {
 
   @Override
   public boolean isFinished() {
-    return elevator.getPosition() >= ElevatorConstants.maxPos;
+    return elevator.getPosition() >= ElevatorConstants.kMaxElevatorHeightMeters;
   }
 }
