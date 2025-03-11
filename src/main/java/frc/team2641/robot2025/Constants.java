@@ -78,7 +78,7 @@ public final class Constants {
     public static final PIDConstants PID = new PIDConstants(3, 0, 0);
 
     // TODO: Find elevator range
-    public static final double elevConvert = ( 2 * 1.0/12 * Units.inchesToMeters(2) * Math.PI ) / 0.584; // gearbox * sprocket diameter 
+    public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
     public static final double initPos = 0;
 
     public static final double stallV = 0.1;

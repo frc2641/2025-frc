@@ -1,5 +1,6 @@
 package frc.team2641.robot2025.subsystems.superstructure.elevator;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -64,6 +65,12 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO {
     slot0Configs.kP = ElevatorConstants.PID.kP;
     slot0Configs.kI = ElevatorConstants.PID.kI;
     slot0Configs.kD = ElevatorConstants.PID.kD;
+// motion magic, start
+//     MotionMagicConfigs motionMagicConfigs = configer.;  
+// motionMagicConfigs.MotionMagicCruiseVelocity = 80; // Target cruise velocity of 80 rps
+// motionMagicConfigs.MotionMagicAcceleration = 160; // Target acceleration of 160 rps/s (0.5 seconds)
+// motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+
     configer.apply(slot0Configs);
   }
   

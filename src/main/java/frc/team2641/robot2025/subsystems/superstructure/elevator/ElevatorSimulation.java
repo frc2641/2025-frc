@@ -9,9 +9,13 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Robot;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -33,6 +37,11 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
       instance = new ElevatorSimulation();
     return instance;
   }
+
+  private final Pose3d elevPose;
+  private final StructPublisher<Pose3d> publisher;
+  // private final 
+
   // This gearbox represents a gearbox containing 4 Vex 775pro motors.
   private final DCMotor m_elevatorGearbox = DCMotor.getKrakenX60(1);
 
@@ -75,7 +84,7 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
       m_mech2dRoot.append(
           new MechanismLigament2d("Elevator", m_elevatorSim.getPositionMeters(), 90));
   
-  /** Subsystem constructor. */
+  /**         Subsystem constructor.        */
   public ElevatorSimulation() {
     m_encoder.setDistancePerPulse(Constants.ElevatorConstants.kElevatorEncoderDistPerPulse);
 
@@ -83,6 +92,10 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
     // To view the Elevator visualization, select Network Tables -> SmartDashboard -> Elevator Sim
     SmartDashboard.putData("Elevator Sim", m_mech2d);
     SmartDashboard.putBoolean("Initialized ElevatorSimulation", true);
+
+    elevPose = new Pose3d(Drivetrain.getInstance().getPose());
+publisher = NetworkTableInstance.getDefault()
+  .getStructTopic("ElevatorPose", Pose3d.struct).publish();
   }
 
   /** Advance the simulation. */
@@ -99,6 +112,8 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
+
+        publisher.set(elevPose);
   }
 
   /**
@@ -155,5 +170,5 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
 super.setDefaultCommand(command);
   }
 
-  
+
 }
