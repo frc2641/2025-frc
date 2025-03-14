@@ -2,6 +2,7 @@ package frc.team2641.robot2025.commands.superStructure;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.helpers.ArmPosition;
 import frc.team2641.robot2025.subsystems.superstructure.Superstructure;
@@ -23,7 +24,7 @@ public class MoveArm extends Command {
     if (!arm.isAuto) {
       double leftY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(), 0.05);
       double rightY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
-      arm.setPosition(new ArmPosition(arm.getPosition().getWrist() + 30 * leftY, arm.getPosition().getElev() + 30 * rightY));
+      arm.setPosition(new ArmPosition(arm.getPosition().getWrist() + Constants.WristConstants.speed * leftY, arm.getPosition().getElev() + Constants.ElevatorConstants.elevatorSpeed * rightY));
     }
 
     arm.move();

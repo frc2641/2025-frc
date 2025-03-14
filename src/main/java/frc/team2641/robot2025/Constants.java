@@ -35,15 +35,15 @@ public final class Constants {
     public static final int leftIntake = 14;
     public static final int rightIntake = 15;
     public static final int wrist = 16;
-    public static final int leftClimber = 17;
-    public static final int rightClimber = 18;
+    public static final int rightClimber = 17;
+    public static final int leftClimber = 18;
 
     public static final int pdh = 20;
   }
 
   public static final class IntakeConstants {
-    public static final double leftSpeed = 0.4;
-    public static final double rightSpeed = 0.5;
+    public static final double speed = 0.4;
+    
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
@@ -57,7 +57,7 @@ public final class Constants {
     // TODO: Use rate limiter
     public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
 
-    public static final double initPos = 3;
+    public static final double initPos = 0;
     public static final double maxPos = 100;
     public static final double minPos = -100;
 
@@ -66,16 +66,17 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double climberSpeed = 0.25;
+    public static final double climberSpeed = 1;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
   }
 
   public static final class ElevatorConstants {
-    public static final double elevatorSpeed = 0.3;
+    public static final double elevatorSpeed = 0.05;
 
     public static final PIDConstants PID = new PIDConstants(3, 0, 0);
+    public static final SlewRateLimiter SLR = new SlewRateLimiter(1); // m/s
 
     // TODO: Find elevator range
     public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
@@ -112,9 +113,7 @@ public final class Constants {
 
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
     public static final double kMinElevatorHeightMeters = 0.0;
-    public static final double kMaxElevatorHeightMeters = 2.0574;
-    public static final double kMinElevatorHeightRotations = 0.0;
-    public static final double kMaxElevatorHeightRotations = 80;
+    public static final double kMaxElevatorHeightMeters = 2.1;
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr

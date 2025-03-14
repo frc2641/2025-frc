@@ -14,4 +14,5 @@ public interface ElevatorIO extends Subsystem  {
 	double getSetpoint();
 	void stop();
 	void setDefaultCommand(Command command);
+	void set(double speed);
 }

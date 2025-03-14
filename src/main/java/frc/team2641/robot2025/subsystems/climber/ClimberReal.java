@@ -3,7 +3,6 @@ package frc.team2641.robot2025.subsystems.climber;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,13 +25,16 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
 
   public void stop() {
     rightMotor.stopMotor();
+    leftMotor.stopMotor();
   }
 
   public void extend() {
     rightMotor.set(ClimberConstants.climberSpeed);
+    leftMotor.set(ClimberConstants.climberSpeed);
   }
 
   public void retract() {
+    rightMotor.set(-ClimberConstants.climberSpeed);
     leftMotor.set(-ClimberConstants.climberSpeed);
   }
   
@@ -48,12 +50,17 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
     TalonFXConfigurator rightConfiger = leftMotor.getConfigurator();
 
     TalonFXConfiguration config = new TalonFXConfiguration();
-    config.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    config.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     config.withOpenLoopRamps(new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(0.5));
+
+    // TODO numbers are untested
+    // config.CurrentLimits.SupplyCurrentLimit = 40;
+    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
+    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
+    // config.CurrentLimits.StatorCurrentLimit = 60;
+
     leftConfiger.apply(config);
     rightConfiger.apply(config);
-
-    leftMotor.setControl(new Follower(rightMotor.getDeviceID(), true));
   }
   
   @Override

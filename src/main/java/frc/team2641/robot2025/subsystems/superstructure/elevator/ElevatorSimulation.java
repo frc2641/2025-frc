@@ -14,7 +14,6 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -171,4 +170,5 @@ super.setDefaultCommand(command);
   }
 
 
+  public void set(double speed) {}
 }

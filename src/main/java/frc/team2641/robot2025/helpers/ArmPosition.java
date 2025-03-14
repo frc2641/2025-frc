@@ -7,7 +7,7 @@ public class ArmPosition {
 	private double elev;
 
 	/**@param notice <h1><b><i>Wrist THEN elev</b></i></h1> */
-	public ArmPosition(double wrist, double elev){
+	public ArmPosition(double wrist, double elev) {
 		this.wrist = wrist;
 		this.elev = elev;
 		constrain();

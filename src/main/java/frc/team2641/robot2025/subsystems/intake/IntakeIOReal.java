@@ -11,8 +11,7 @@ import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
 public class IntakeIOReal implements IntakeIO {
-  private TalonFX leftMotor;
-  private TalonFX rightMotor;
+  private TalonFX motor;
   private BooleanSubscriber spinSub;
   
   private static IntakeIOReal instance;
@@ -29,52 +28,44 @@ public class IntakeIOReal implements IntakeIO {
     spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
   }
 
-  public void intake() {
-    rightMotor.set(-IntakeConstants.rightSpeed);
-    leftMotor.set(IntakeConstants.leftSpeed);
-  }
-
-  public void shoot() {
-    rightMotor.set(IntakeConstants.rightSpeed);
-    leftMotor.set(-IntakeConstants.leftSpeed);
-  }
-
+  @Override
   public void spin() {
-    if (spinSub.get()) shoot();
-    else intake();
+    if (spinSub.get())  
+      motor.set(IntakeConstants.speed);
+    else 
+      motor.set(IntakeConstants.speed);
   }
 
   @Override
   public void stop() {
-    rightMotor.stopMotor();
-    leftMotor.stopMotor();
+    motor.stopMotor();
   }
 
   private void configMotor() {
-    leftMotor = new TalonFX(CANConstants.leftIntake);
-    rightMotor = new TalonFX(CANConstants.rightIntake);
+    motor = new TalonFX(CANConstants.rightIntake);
     
-    TalonFXConfigurator leftConfiger = leftMotor.getConfigurator();
-    TalonFXConfigurator rightConfiger = leftMotor.getConfigurator();
+    TalonFXConfigurator configer = motor.getConfigurator();
 
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
-    leftConfiger.apply(config);
-    rightConfiger.apply(config);
+
+        // TODO numbers are untested
+    // config.CurrentLimits.SupplyCurrentLimit = 40;
+    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
+    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
+    // config.CurrentLimits.StatorCurrentLimit = 60;
+
+    configer.apply(config);
   }
 
   @Override
   public void periodic() {
-    if ((Math.abs(leftMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) && (leftMotor.getTorqueCurrent().getValue().baseUnitMagnitude() > IntakeConstants.stallI)){
-      System.out.println("\n\n *** STALL DETECTED - LEFT INTAKE *** \n\n");
-    }
-
-    if ((Math.abs(rightMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) && (rightMotor.getTorqueCurrent().getValue().baseUnitMagnitude() > IntakeConstants.stallI)){
-      System.out.println("\n\n *** STALL DETECTED - RIGHT INTAKE *** \n\n");
+    if (Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
+      System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
     }
   }
 
   public TalonFX getMotor() {
-    return rightMotor;
+    return motor;
   }
 }

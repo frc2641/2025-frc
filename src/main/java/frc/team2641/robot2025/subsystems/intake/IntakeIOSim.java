@@ -5,8 +5,6 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.Optional;
 
-import org.dyn4j.geometry.Triangle;
-import org.dyn4j.geometry.Vector2;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -16,7 +14,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
@@ -27,10 +24,7 @@ public class IntakeIOSim implements IntakeIO {
 
   private Optional<SwerveDriveSimulation> driveSim;
   private BooleanSubscriber spinSub;
-  private final Triangle triangle = new Triangle(
-    new Vector2(0, 0), 
-    new Vector2(0.2, 0), 
-    new Vector2(0, 0.2));
+  
 
   private static IntakeIOSim instance;
   public static IntakeIOSim getInstance() {
@@ -73,24 +67,19 @@ public class IntakeIOSim implements IntakeIO {
     coralIntakeSim.setGamePiecesCount(1);
   }
 
-  @Override
+  
   public void intake() {
     aglaeIntakeSim.startIntake();
     coralIntakeSim.startIntake();
   }
 
-  @Override
+  
   public void stop() {
     // TODO Auto-generated method stub
     aglaeIntakeSim.stopIntake(); // Retracts the intake into the chassis frame, disabling game piece collection
     coralIntakeSim.stopIntake();
   }
 
-  @Override
-  public void shoot() {
-  }
-
-  @Override
   public void spin() {
     if (spinSub.get()) outtake(); 
     else intake();

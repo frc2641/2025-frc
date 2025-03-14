@@ -20,6 +20,7 @@ public class Drivetrain extends SwerveBase {
   }
 
   public Drivetrain() {
+    super();
     this.swerveDrive = super.getSwerveDrive();
   }
 

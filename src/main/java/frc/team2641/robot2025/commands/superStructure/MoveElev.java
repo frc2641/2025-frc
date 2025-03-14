@@ -11,7 +11,6 @@ import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 public class MoveElev extends Command {
   private ElevatorIO elev;
 
-
   public MoveElev() {
     elev = Elevator.getInstance();
     addRequirements(elev);
@@ -25,12 +24,11 @@ public class MoveElev extends Command {
   public void execute() {
     double rightY = MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
 
-    double output = elev.getSetpoint() + -1 * rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
+    double output = elev.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
+    // double output = rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
 
     output = new ArmPosition(0, output).getElev();
-    
     elev.goTo(output);
-
   }
 
   @Override

@@ -3,7 +3,6 @@ package frc.team2641.robot2025.subsystems.superstructure.wrist;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,7 +14,6 @@ public class WristReal extends SubsystemBase implements WristIO {
   private TalonFX motor;
 
   private double setpoint = WristConstants.initPos;
-  private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
   private boolean stalled;
   private static WristReal instance;
   public static WristReal getInstance() {
@@ -54,7 +52,16 @@ public class WristReal extends SubsystemBase implements WristIO {
 
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+
+        // TODO numbers are untested
+    // config.CurrentLimits.SupplyCurrentLimit = 40;
+    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
+    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
+    // config.CurrentLimits.StatorCurrentLimit = 60;
+
     configer.apply(config);
+
+    motor.setPosition(0);
 
     Slot0Configs slot0Configs = new Slot0Configs();
     slot0Configs.kP = WristConstants.wristPID.kP;
@@ -68,7 +75,7 @@ public class WristReal extends SubsystemBase implements WristIO {
     if (setpoint < WristConstants.minPos) setpoint = WristConstants.minPos;
     if (setpoint > WristConstants.maxPos) setpoint = WristConstants.maxPos;
 
-    motor.setControl(posRequest.withPosition(setpoint));
+    // motor.setControl(posRequest.withPosition(setpoint));
     // System.out.println("Wrist setpoint: " + setpoint);
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < WristConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > WristConstants.stallI)){
