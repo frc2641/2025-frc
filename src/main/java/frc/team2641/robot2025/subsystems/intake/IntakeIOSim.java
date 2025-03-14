@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
+import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class IntakeIOSim implements IntakeIO {

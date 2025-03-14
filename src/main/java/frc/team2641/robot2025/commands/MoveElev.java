@@ -1,12 +1,12 @@
-package frc.team2641.robot2025.commands.superStructure;
+package frc.team2641.robot2025.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
-import frc.team2641.robot2025.helpers.ArmPosition;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
+import frc.team2641.robot2025.helpers.ElevatorContrain;
+import frc.team2641.robot2025.subsystems.elevator.Elevator;
+import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
 
 public class MoveElev extends Command {
   private ElevatorIO elev;
@@ -27,7 +27,7 @@ public class MoveElev extends Command {
     double output = elev.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
     // double output = rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
 
-    output = new ArmPosition(0, output).getElev();
+    output = new ElevatorContrain(output).get();
     elev.goTo(output);
   }
 

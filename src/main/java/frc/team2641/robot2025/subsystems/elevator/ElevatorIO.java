@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure.elevator;
+package frc.team2641.robot2025.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;

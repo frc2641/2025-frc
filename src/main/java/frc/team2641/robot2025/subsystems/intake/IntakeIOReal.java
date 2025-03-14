@@ -42,7 +42,7 @@ public class IntakeIOReal implements IntakeIO {
   }
 
   private void configMotor() {
-    motor = new TalonFX(CANConstants.rightIntake);
+    motor = new TalonFX(CANConstants.intake);
     
     TalonFXConfigurator configer = motor.getConfigurator();
 

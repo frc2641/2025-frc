@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.superstructure.elevator;
+package frc.team2641.robot2025.subsystems.elevator;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
-import frc.team2641.robot2025.helpers.ArmPosition;
+import frc.team2641.robot2025.helpers.ElevatorContrain;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoCloseable {
   private TalonFX motor;
@@ -120,7 +120,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
-    double value = new ArmPosition(0,Constants.ElevatorConstants.SLR.calculate(setpoint)).getElev();
+    double value = new ElevatorContrain(Constants.ElevatorConstants.SLR.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
 

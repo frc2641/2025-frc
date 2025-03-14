@@ -21,18 +21,13 @@ import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
-import frc.team2641.robot2025.commands.superStructure.MoveElev;
-import frc.team2641.robot2025.commands.superStructure.MoveWrist;
-import frc.team2641.robot2025.commands.test.*;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorSimulation;
-import frc.team2641.robot2025.subsystems.superstructure.wrist.WristReal;
+import frc.team2641.robot2025.subsystems.elevator.Elevator;
+import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
+import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final WristReal wrist = WristReal.getInstance();
   private final ElevatorIO elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
@@ -59,8 +54,7 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
-   ElevatorSimulation elevSim;
-  // ElevatorIO elevSim;
+  ElevatorSimulation elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
     .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
@@ -71,8 +65,6 @@ public class RobotContainer {
     .publish();
 
   public RobotContainer() {
-    
-
     driverGamepad.a().whileTrue(new AutoAngle(1, false));
     driverGamepad.b().whileTrue(new AutoAngle(2, false));
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
@@ -93,10 +85,6 @@ public class RobotContainer {
     // operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    // operatorGamepad.a().onTrue(new TestElevatorLow());
-    // operatorGamepad.b().onTrue(new TestElevatorHigh());
-    operatorGamepad.x().onTrue(new TestWristLow());
-    operatorGamepad.y().onTrue(new TestWristHigh());
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
@@ -126,18 +114,13 @@ public class RobotContainer {
     reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
-      OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
-      OperatorConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
       () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
 
     drivetrain.setDefaultCommand(driveCommand);
-    wrist.setDefaultCommand(new MoveWrist());
     elev.setDefaultCommand(new MoveElev());
-
-    // arm.setDefaultCommand(new MoveArm());
 
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
@@ -176,6 +159,5 @@ public class RobotContainer {
     coralPoses.accept(coral);
 
     arena.simulationPeriodic();
-    
   }
 }
