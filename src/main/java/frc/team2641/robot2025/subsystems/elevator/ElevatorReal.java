@@ -120,11 +120,11 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
-    double value = new ElevatorContrain(Constants.ElevatorConstants.SLR.calculate(setpoint)).get();
+    double value = new ElevatorContrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
 
-    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)){
+    if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)) {
       // stop();
       stalled = true;
     }
@@ -134,6 +134,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
 
     SmartDashboard.putNumber("Arm Elevator Real Pos ", getPosition());
     SmartDashboard.putBoolean("Elevator Stall", stalled);
+    SmartDashboard.putNumber("Current", motor.getTorqueCurrent().getValue().baseUnitMagnitude());
   }
   
   public TalonFX getMotor() {

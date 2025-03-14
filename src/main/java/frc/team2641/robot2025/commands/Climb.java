@@ -1,10 +1,10 @@
 package frc.team2641.robot2025.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2025.subsystems.climber.ClimberReal;
+import frc.team2641.robot2025.subsystems.climber.ClimberNeo;
 
 public class Climb extends Command {
-  private ClimberReal climber = ClimberReal.getInstance();
+  private ClimberNeo climber = ClimberNeo.getInstance();
   private boolean forwards;
 
   public Climb(boolean forwards) {

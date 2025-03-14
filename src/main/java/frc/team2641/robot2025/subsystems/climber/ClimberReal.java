@@ -24,18 +24,21 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
   }
 
   public void stop() {
-    rightMotor.stopMotor();
-    leftMotor.stopMotor();
+    double val = ClimberConstants.SRL.calculate(0);
+    rightMotor.set(val);
+    leftMotor.set(val);
   }
 
   public void extend() {
-    rightMotor.set(ClimberConstants.climberSpeed);
-    leftMotor.set(ClimberConstants.climberSpeed);
+    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
+    rightMotor.set(val);
+    leftMotor.set(val);
   }
 
   public void retract() {
-    rightMotor.set(-ClimberConstants.climberSpeed);
-    leftMotor.set(-ClimberConstants.climberSpeed);
+    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
+    rightMotor.set(-val);
+    leftMotor.set(-val);
   }
   
   public double getPosition() {
