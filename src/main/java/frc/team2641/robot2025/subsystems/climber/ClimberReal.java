@@ -1,17 +1,23 @@
 package frc.team2641.robot2025.subsystems.climber;
 
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+
+import edu.wpi.first.networktables.BooleanSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
 
 public class ClimberReal extends SubsystemBase implements ClimberIO {
-  private TalonFX leftMotor;
-  private TalonFX rightMotor;
+  private SparkMax motor;
 
   private static ClimberReal instance;
   public static ClimberReal getInstance() {
@@ -21,63 +27,48 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
 
   private ClimberReal() {
     configMotor();
+        motor.getEncoder().setPosition(0);
   }
 
   public void stop() {
-    double val = ClimberConstants.SRL.calculate(0);
-    rightMotor.set(val);
-    leftMotor.set(val);
+    motor.stopMotor();
   }
 
+
   public void extend() {
-    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
-    rightMotor.set(val);
-    leftMotor.set(val);
+    
   }
 
   public void retract() {
-    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
-    rightMotor.set(-val);
-    leftMotor.set(-val);
+    motor.set(-ClimberConstants.climberSpeed);
   }
-  
+
   public double getPosition() {
-    return rightMotor.getPosition().getValueAsDouble();
+    return motor.getAbsoluteEncoder().getPosition();
   }
 
   private void configMotor() {
-    leftMotor = new TalonFX(CANConstants.leftClimber);
-    rightMotor = new TalonFX(CANConstants.rightClimber);
+    motor = new SparkMax(CANConstants.climber, MotorType.kBrushless);
 
-    TalonFXConfigurator leftConfiger = leftMotor.getConfigurator();
-    TalonFXConfigurator rightConfiger = leftMotor.getConfigurator();
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
+        .smartCurrentLimit(20)
+        .idleMode(IdleMode.kBrake);
 
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    config.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
-    config.withOpenLoopRamps(new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(0.5));
-
-    // TODO numbers are untested
-    // config.CurrentLimits.SupplyCurrentLimit = 40;
-    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
-    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
-    // config.CurrentLimits.StatorCurrentLimit = 60;
-
-    leftConfiger.apply(config);
-    rightConfiger.apply(config);
+    // Persist parameters to retain configuration in the event of a power cycle
+    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
+
   
   @Override
   public void periodic() {
-    if ((Math.abs(leftMotor.getVelocity().getValue().baseUnitMagnitude()) < ClimberConstants.stallV) && (leftMotor.getTorqueCurrent().getValue().baseUnitMagnitude() > ClimberConstants.stallI)){
-      System.out.println("\n\n *** STALL DETECTED - LEFT CLIMBER *** \n\n");
-    }
-
-    if ((Math.abs(rightMotor.getVelocity().getValue().baseUnitMagnitude()) < ClimberConstants.stallV) && (rightMotor.getTorqueCurrent().getValue().baseUnitMagnitude() > ClimberConstants.stallI)){
+    if ((Math.abs(motor.getAbsoluteEncoder().getVelocity()) < ClimberConstants.stallV) && (motor.getOutputCurrent() > ClimberConstants.stallI)){
       System.out.println("\n\n *** STALL DETECTED - RIGHT CLIMBER *** \n\n");
+      stop();
     }
   }
 
-  public TalonFX getMotor() {
-    return rightMotor;
+  public SparkMax getMotor() {
+    return motor;
   }
 }

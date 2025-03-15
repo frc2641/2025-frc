@@ -5,7 +5,7 @@ import frc.team2641.robot2025.Robot;
 
 public class Climber extends SubsystemBase {
   public static ClimberIO getInstance() {
-    if (!Robot.isSimulation()) return ClimberReal.getInstance();
+    if (!Robot.isSimulation()) return Climber.getInstance();
     return ClimberSim.getInstance();
   }
 }

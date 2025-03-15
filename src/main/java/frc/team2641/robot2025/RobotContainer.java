@@ -49,6 +49,9 @@ public class RobotContainer {
 
   BooleanPublisher reverseIntakePub;
   BooleanSubscriber reverseIntakeSub;
+
+  BooleanPublisher winchOnPub;
+  BooleanSubscriber winchOnSub;
   
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
@@ -75,6 +78,8 @@ public class RobotContainer {
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
     driverGamepad.povUp().whileTrue(new Climb(true));
     driverGamepad.povDown().whileTrue(new Climb(false));
+    driverGamepad.povLeft().whileTrue(new Wrap(true));
+    driverGamepad.povRight().whileTrue(new Wrap(false));
 
     // operatorGamepad.a().onTrue(SuperStructureSequences.l1());
     // operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
@@ -108,6 +113,10 @@ public class RobotContainer {
     robotPub = table.getBooleanTopic("robotRelative").publish();
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
+
+    winchOnPub = table.getBooleanTopic("winchOn").publish();
+    winchOnPub.set(true);
+    winchOnSub = table.getBooleanTopic("winchOn").subscribe(true);
 
     reverseIntakePub = table.getBooleanTopic("reverseIntake").publish();
     reverseIntakePub.set(false);

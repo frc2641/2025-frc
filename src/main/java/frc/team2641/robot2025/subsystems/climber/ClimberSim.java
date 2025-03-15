@@ -8,11 +8,6 @@ public class ClimberSim implements ClimberIO {
 		return instance;
 	}
 
-	@Override
-	public double getPosition() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getPosition'");
-	}
 
 	@Override
 	public void extend() {

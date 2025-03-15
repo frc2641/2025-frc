@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -132,9 +133,10 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     stalled = false;
     // TODO: Move setpoint retargeting to an else statement above
 
-    SmartDashboard.putNumber("Arm Elevator Real Pos ", getPosition());
+    SmartDashboard.putNumber("Arm Elevator Real Pos", getPosition());
     SmartDashboard.putBoolean("Elevator Stall", stalled);
     SmartDashboard.putNumber("Current", motor.getTorqueCurrent().getValue().baseUnitMagnitude());
+    SmartDashboard.putNumber("Setpoint", setpoint);
   }
   
   public TalonFX getMotor() {

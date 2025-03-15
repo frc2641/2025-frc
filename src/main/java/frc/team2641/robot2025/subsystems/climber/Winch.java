@@ -6,53 +6,48 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
 
-public class ClimberNeo extends SubsystemBase implements ClimberIO {
+public class Winch extends SubsystemBase implements ClimberIO {
   private SparkMax motor;
 
-  private static ClimberNeo instance;
-  public static ClimberNeo getInstance() {
-    if (instance == null) instance = new ClimberNeo();
+  private static Winch instance;
+  public static Winch getInstance() {
+    if (instance == null) instance = new Winch();
     return instance;
   }
 
-  private ClimberNeo() {
+  private Winch() {
     configMotor();
   }
 
   public void stop() {
-    double val = ClimberConstants.SRL.calculate(0);
-    motor.set(val);
+    motor.stopMotor();
   }
 
   public void extend() {
-    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
-    motor.set(val);
+    motor.set(ClimberConstants.winchSpeed);
   }
 
   public void retract() {
-    double val = ClimberConstants.SRL.calculate(ClimberConstants.climberSpeed);
-    motor.set(-val);
-  }
-  
-  public double getPosition() {
-    return motor.getAbsoluteEncoder().getPosition();
+    motor.set(-ClimberConstants.winchSpeed);
   }
 
   private void configMotor() {
-    motor = new SparkMax(CANConstants.climberNeo, MotorType.kBrushless);
+    motor = new SparkMax(CANConstants.winch, MotorType.kBrushless);
 
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .smartCurrentLimit(20)
         .idleMode(IdleMode.kBrake);
 
+
     // Persist parameters to retain configuration in the event of a power cycle
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+
   }
   
   @Override
@@ -60,6 +55,8 @@ public class ClimberNeo extends SubsystemBase implements ClimberIO {
     if ((Math.abs(motor.getAbsoluteEncoder().getVelocity()) < ClimberConstants.stallV) && (motor.getOutputCurrent() > ClimberConstants.stallI)){
       System.out.println("\n\n *** STALL DETECTED - RIGHT CLIMBER *** \n\n");
     }
+
+
   }
 
   public SparkMax getMotor() {

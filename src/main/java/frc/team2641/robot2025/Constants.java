@@ -32,9 +32,8 @@ public final class Constants {
   public static final class CANConstants {
     public static final int elevator = 13;
     public static final int intake = 14;
-    public static final int rightClimber = 15;
-    public static final int leftClimber = 16;
-    public static final int climberNeo = 17;
+    public static final int winch = 17;
+    public static final int climber = 18;
 
     public static final int pdh = 20;
   }
@@ -47,11 +46,12 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double climberSpeed = 0.25;
+    public static final double winchSpeed = 0.25;
+    public static final double climberSpeed = 0.20;
+
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
-    public static final SlewRateLimiter SRL = new SlewRateLimiter(175);
   }
 
   public static final class ElevatorConstants {
