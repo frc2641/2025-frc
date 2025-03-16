@@ -4,15 +4,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.networktables.BooleanSubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
 public class IntakeIOReal implements IntakeIO {
-  private TalonFX motor;
-  private BooleanSubscriber spinSub;
+  private TalonFX intakeMotor;
+  private TalonFX outtakeMotor;
   
   private static IntakeIOReal instance;
   
@@ -24,27 +22,21 @@ public class IntakeIOReal implements IntakeIO {
   private IntakeIOReal() {
     configMotor();
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-    spinSub = table.getBooleanTopic("reverseIntake").subscribe(false);
-  }
-
-  @Override
-  public void spin() {
-    if (spinSub.get())  
-      motor.set(IntakeConstants.speed);
-    else 
-      motor.set(IntakeConstants.speed);
   }
 
   @Override
   public void stop() {
-    motor.stopMotor();
+    intakeMotor.stopMotor();
+    outtakeMotor.stopMotor();
   }
 
   private void configMotor() {
-    motor = new TalonFX(CANConstants.intake);
+    intakeMotor = new TalonFX(CANConstants.intake);
+    outtakeMotor = new TalonFX(CANConstants.outtake);
+
     
-    TalonFXConfigurator configer = motor.getConfigurator();
+    TalonFXConfigurator configer1 = intakeMotor.getConfigurator();
+    TalonFXConfigurator configer2 = outtakeMotor.getConfigurator();
 
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
@@ -55,17 +47,29 @@ public class IntakeIOReal implements IntakeIO {
     // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
     // config.CurrentLimits.StatorCurrentLimit = 60;
 
-    configer.apply(config);
+    configer1.apply(config);
+    configer2.apply(config);
+
   }
 
   @Override
   public void periodic() {
-    if (Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
+    if (Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
       System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
     }
   }
 
   public TalonFX getMotor() {
-    return motor;
+    return intakeMotor;
+  }
+
+  @Override
+  public void firstSpin() {
+  intakeMotor.set(Constants.IntakeConstants.speedIn);
+  }
+
+  @Override
+  public void secondSpin() {
+  outtakeMotor.set(Constants.IntakeConstants.speedOut);
   }
 }

@@ -32,14 +32,16 @@ public final class Constants {
   public static final class CANConstants {
     public static final int elevator = 13;
     public static final int intake = 14;
-    public static final int winch = 15;
-    public static final int climber = 16;
+    public static final int outtake = 15;
+    public static final int winch = 16;
+    public static final int climber = 17;
 
     public static final int pdh = 20;
   }
 
   public static final class IntakeConstants {
-    public static final double speed = 0.4;
+    public static final double speedIn = 0.4;
+    public static final double speedOut = 0.4;
     
     public static final double stallV = 0.1;
     public static final double stallI = 30;

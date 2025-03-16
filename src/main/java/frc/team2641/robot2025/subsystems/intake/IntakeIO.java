@@ -4,5 +4,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public interface IntakeIO extends Subsystem {
 	public void stop();
-	public void spin();
+	public void firstSpin();
+	public void secondSpin();
 }

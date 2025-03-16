@@ -18,13 +18,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.ELEVNUM;
 import frc.team2641.robot2025.Constants.OperatorConstants;
-import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.climbing.Extend;
 import frc.team2641.robot2025.commands.climbing.Retract;
 import frc.team2641.robot2025.commands.elevator.MoveElev;
 import frc.team2641.robot2025.commands.elevator.SetElev;
 import frc.team2641.robot2025.commands.intake.RunIntake;
+import frc.team2641.robot2025.commands.intake.RunOuttake;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
 import frc.team2641.robot2025.subsystems.elevator.Elevator;
@@ -52,12 +52,6 @@ public class RobotContainer {
 
   BooleanPublisher robotPub;
   BooleanSubscriber robotSub;
-
-  BooleanPublisher reverseIntakePub;
-  BooleanSubscriber reverseIntakeSub;
-
-  BooleanPublisher winchOnPub;
-  BooleanSubscriber winchOnSub;
   
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
@@ -86,8 +80,8 @@ public class RobotContainer {
     driverGamepad.povDown().whileTrue(new Retract());
 
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
-    operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    
+    operatorGamepad.rightTrigger().whileTrue(new RunOuttake());
+
     operatorGamepad.a().onTrue(new SetElev(ELEVNUM.L1));
     operatorGamepad.b().onTrue(new SetElev(ELEVNUM.L2));
     operatorGamepad.x().onTrue(new SetElev(ELEVNUM.L3));
@@ -119,14 +113,6 @@ public class RobotContainer {
     robotPub = table.getBooleanTopic("robotRelative").publish();
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
-
-    winchOnPub = table.getBooleanTopic("winchOn").publish();
-    winchOnPub.set(true);
-    winchOnSub = table.getBooleanTopic("winchOn").subscribe(true);
-
-    reverseIntakePub = table.getBooleanTopic("reverseIntake").publish();
-    reverseIntakePub.set(false);
-    reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),

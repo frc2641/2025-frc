@@ -6,10 +6,10 @@ import frc.team2641.robot2025.subsystems.intake.Intake;
 import frc.team2641.robot2025.subsystems.intake.IntakeIO;
 import frc.team2641.robot2025.subsystems.intake.IntakeIOSim;
 
-public class RunIntake extends Command {
+public class RunOuttake extends Command {
   private IntakeIO intake;
 
-  public RunIntake() {
+  public RunOuttake() {
     this.intake = Intake.getInstance();
     addRequirements(intake);
   }

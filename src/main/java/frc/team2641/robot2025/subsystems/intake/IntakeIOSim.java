@@ -145,4 +145,16 @@ public class IntakeIOSim implements IntakeIO {
   public void setHeight(){
     
   }
+
+  @Override
+  public void firstSpin() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'firstSpin'");
+  }
+
+  @Override
+  public void secondSpin() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'secondSpin'");
+  }
 }
