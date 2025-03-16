@@ -16,9 +16,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.team2641.robot2025.Constants.ELEVNUM;
 import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
+import frc.team2641.robot2025.commands.climbing.Extend;
+import frc.team2641.robot2025.commands.climbing.Retract;
+import frc.team2641.robot2025.commands.elevator.MoveElev;
+import frc.team2641.robot2025.commands.elevator.SetElev;
+import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
 import frc.team2641.robot2025.subsystems.elevator.Elevator;
@@ -76,20 +82,20 @@ public class RobotContainer {
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
-    driverGamepad.povUp().whileTrue(new Climb(true));
-    driverGamepad.povDown().whileTrue(new Climb(false));
-    driverGamepad.povLeft().whileTrue(new Wrap(true));
-    driverGamepad.povRight().whileTrue(new Wrap(false));
+    driverGamepad.povUp().whileTrue(new Extend());
+    driverGamepad.povDown().whileTrue(new Retract());
 
-    // operatorGamepad.a().onTrue(SuperStructureSequences.l1());
-    // operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
-    // operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
-    // operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
-    // operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
-    // operatorGamepad.rightBumper().onTrue(SuperStructureSequences.processor());
-    // operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
+    
+    operatorGamepad.a().onTrue(new SetElev(ELEVNUM.L1));
+    operatorGamepad.b().onTrue(new SetElev(ELEVNUM.L2));
+    operatorGamepad.x().onTrue(new SetElev(ELEVNUM.L3));
+    operatorGamepad.y().onTrue(new SetElev(ELEVNUM.L4));
+    operatorGamepad.start().onTrue(new SetElev(ELEVNUM.HP));
+    operatorGamepad.back().onTrue(new SetElev(0));
+
+
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));

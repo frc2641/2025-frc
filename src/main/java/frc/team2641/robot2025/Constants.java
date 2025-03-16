@@ -32,8 +32,8 @@ public final class Constants {
   public static final class CANConstants {
     public static final int elevator = 13;
     public static final int intake = 14;
-    public static final int winch = 17;
-    public static final int climber = 18;
+    public static final int winch = 15;
+    public static final int climber = 16;
 
     public static final int pdh = 20;
   }
@@ -46,12 +46,13 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final double winchSpeed = 0.25;
-    public static final double climberSpeed = 0.20;
-
+    public static final double winchSpeed = 0.75;
+    public static final double climberSpeed = 0.2;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
+
+
   }
 
   public static final class ElevatorConstants {
@@ -102,13 +103,18 @@ public final class Constants {
     public static final double kElevatorEncoderDistPerPulse = 2.0 * Math.PI * kElevatorDrumRadius / 4096;
   }
 
-  public static final class ArmPositions {
+  public static final class ElevatorPositions {
     public static final double L1 = -1;
     public static final double L2 = -1;
     public static final double L3 = -1;
     public static final double L4 = -1;
-    public static final double humanPlayer = -1;
-    public static final double processor = -1;
-    public static final double algaeRemoval = -1;
-  } 
+    public static final double HP = -1;
+  }
+  public static enum ELEVNUM {
+    L1,
+    L2,
+    L3,
+    L4,
+    HP
+  }
 }

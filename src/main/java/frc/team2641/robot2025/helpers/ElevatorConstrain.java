@@ -2,10 +2,10 @@ package frc.team2641.robot2025.helpers;
 
 import frc.team2641.robot2025.Constants;
 
-public class ElevatorContrain {
+public class ElevatorConstrain {
 	private double setpoint;
 
-	public ElevatorContrain(double setpoint) {
+	public ElevatorConstrain(double setpoint) {
 		this.setpoint = setpoint;
 		constrain();
 	}

@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.commands;
+package frc.team2641.robot2025.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Robot;

@@ -1,5 +1,6 @@
 package frc.team2641.robot2025.subsystems.elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -15,4 +16,17 @@ public interface ElevatorIO extends Subsystem  {
 	void stop();
 	void setDefaultCommand(Command command);
 	void set(double speed);
+
+	
+	 boolean getAuto();
+	 void setAuto(boolean auto);
+	 default boolean atPosition()
+	 {
+		return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.05) == 0;
+	 }
+
+	 default void override(){
+		setAuto(false);
+	 }
+
 }

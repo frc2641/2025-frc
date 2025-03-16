@@ -14,10 +14,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
-import frc.team2641.robot2025.helpers.ElevatorContrain;
+import frc.team2641.robot2025.helpers.ElevatorConstrain;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoCloseable {
   private TalonFX motor;
+  private boolean auto;
   private boolean stalled;
   private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
@@ -121,7 +122,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
-    double value = new ElevatorContrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
+    double value = new ElevatorConstrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
 
@@ -154,4 +155,17 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     // m_motor.close();
     // m_mech2d.close();
   }
+
+  @Override
+  public boolean getAuto()
+  {
+    return auto;
+  }
+
+  @Override
+  public void setAuto(boolean auto){
+    this.auto = auto;
+  }
+
+  
 }
