@@ -16,7 +16,6 @@ public class Wrap extends Command {
   public Wrap(boolean forwards) {
     // Use addRequirements() here to declare subsystem dependencies.
     winch = Winch.getInstance();
-
     this.forwards = forwards;
 
     addRequirements(winch);

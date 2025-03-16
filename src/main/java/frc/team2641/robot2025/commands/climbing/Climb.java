@@ -25,21 +25,21 @@ public class Climb extends Command {
   @Override
   public void initialize() {
     if(forwards)
-    climber.extend();
-  else
+      climber.extend();
+    else
     climber.retract();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void   execute() {
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-climber.stop();
+    climber.stop();
   }
 
   // Returns true when the command should end.

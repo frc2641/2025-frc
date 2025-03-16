@@ -1,18 +1,14 @@
 package frc.team2641.robot2025.subsystems.climber;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.robot2025.Constants.CANConstants;
+import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
 
 public class Winch extends SubsystemBase implements ClimberIO {
-  private SparkMax motor;
+  private TalonFX motor;
 
   private static Winch instance;
   public static Winch getInstance() {
@@ -39,26 +35,18 @@ public class Winch extends SubsystemBase implements ClimberIO {
   }
 
   private void configMotor() {
-    motor = new SparkMax(CANConstants.winch, MotorType.kBrushless);
-    
-
-    SparkMaxConfig config = new SparkMaxConfig();
-    config
-        .smartCurrentLimit(40)
-        .idleMode(IdleMode.kBrake);
-
-    // Persist parameters to retain configuration in the event of a power cycle
-    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    motor = new TalonFX(Constants.CANConstants.winch);
+    motor.setNeutralMode(NeutralModeValue.Brake);
   }
   
   @Override
   public void periodic() {
-    if ((Math.abs(motor.getAbsoluteEncoder().getVelocity()) < ClimberConstants.stallV) && (motor.getOutputCurrent() > ClimberConstants.stallI)){
+    if ((Math.abs(motor.getVelocity().getValueAsDouble()) < ClimberConstants.stallV) && (motor.getTorqueCurrent().getValueAsDouble() > ClimberConstants.stallI)){
       System.out.println("\n\n *** STALL DETECTED - WINCH *** \n\n");
     }
   }
 
-  public SparkMax getMotor() {
+  public TalonFX getMotor() {
     return motor;
   }
 }

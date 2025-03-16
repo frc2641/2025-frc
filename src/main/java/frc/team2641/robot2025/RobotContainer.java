@@ -128,11 +128,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
 
     autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
-    SmartDashboard.putData("Auto", autoChooser);
+    // SmartDashboard.putData("Auto", autoChooser);
+    Autos.publishAll();
   }
 
   public Command getAutonomousCommand() {
-    return drivetrain.getAutonomousCommand(autoChooser.getSelected());
+    // return drivetrain.getAutonomousCommand(autoChooser.getSelected());
+    return Autos.getAutoCommand();
   }
 
   public void setMotorBrake(boolean brake) {
