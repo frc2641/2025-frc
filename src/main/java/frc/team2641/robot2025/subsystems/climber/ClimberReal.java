@@ -7,7 +7,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
@@ -42,26 +41,22 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
   }
 
   private void configMotor() {
-
     motor = new SparkMax(CANConstants.climber, MotorType.kBrushless);
 
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .smartCurrentLimit(20)
-        .idleMode(IdleMode.kBrake);
+        .idleMode(IdleMode.kCoast);
 
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  
   @Override
   public void periodic() {
     if ((Math.abs(motor.getAbsoluteEncoder().getVelocity()) < ClimberConstants.stallV) && (motor.getOutputCurrent() > ClimberConstants.stallI)){
       System.out.println("\n\n *** STALL DETECTED - CLIMBER *** \n\n");
       // stop();
     }
-    SmartDashboard.putNumber("Climber Encoder", motor.getEncoder().getPosition());
-
   }
 
   public SparkMax getMotor() {

@@ -5,38 +5,42 @@
 package frc.team2641.robot2025.commands.climbing;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2025.subsystems.climber.Winch;
+import frc.team2641.robot2025.subsystems.climber.ClimberReal;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Retract extends Command {
+public class Climb extends Command {
 
-  private Winch winch;
-  /** Creates a new Retract. */
-  public Retract() {
+  private ClimberReal climber;
+  private boolean forwards;
+  /** Creates a new Extend. */
+  public Climb(boolean forwards) {
     // Use addRequirements() here to declare subsystem dependencies.
-    winch = Winch.getInstance();
+    climber = ClimberReal.getInstance();
+    this.forwards = forwards;
 
-
-    addRequirements(winch);
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    if(forwards)
+    climber.extend();
+  else
+    climber.retract();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-      winch.retract();
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+climber.stop();
+  }
 
   // Returns true when the command should end.
   @Override

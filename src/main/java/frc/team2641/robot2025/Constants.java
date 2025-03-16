@@ -49,7 +49,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final double winchSpeed = 0.75;
-    public static final double climberSpeed = 0.2;
+    public static final double climberSpeed = 0.1;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;

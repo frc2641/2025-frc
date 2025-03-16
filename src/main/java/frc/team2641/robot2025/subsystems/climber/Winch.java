@@ -4,12 +4,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
@@ -33,12 +30,12 @@ public class Winch extends SubsystemBase implements ClimberIO {
 
   public void extend() {
     // motor.getClosedLoopController().setReference(0, ControlType.kPosition);
-    motor.set(ClimberConstants.winchSpeed);
+    motor.set(-ClimberConstants.winchSpeed);
 
   }
 
   public void retract() {
-    motor.set(-ClimberConstants.winchSpeed);
+    motor.set(ClimberConstants.winchSpeed);
   }
 
   private void configMotor() {
@@ -59,7 +56,6 @@ public class Winch extends SubsystemBase implements ClimberIO {
     if ((Math.abs(motor.getAbsoluteEncoder().getVelocity()) < ClimberConstants.stallV) && (motor.getOutputCurrent() > ClimberConstants.stallI)){
       System.out.println("\n\n *** STALL DETECTED - WINCH *** \n\n");
     }
-    SmartDashboard.putNumber("Winch Encoder", motor.getEncoder().getPosition());
   }
 
   public SparkMax getMotor() {

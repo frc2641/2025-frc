@@ -16,11 +16,12 @@ public class RunOuttake extends Command {
 
   @Override
   public void initialize() {
+    intake.secondSpin();
   }
 
   @Override
   public void execute() {
-    intake.firstSpin();
+    
     if (Robot.isSimulation()) {
       if (IntakeIOSim.getInstance().preventDoubleGamePiece()) end(false);
     }
