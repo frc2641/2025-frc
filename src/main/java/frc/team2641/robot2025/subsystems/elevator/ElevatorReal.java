@@ -1,13 +1,16 @@
 package frc.team2641.robot2025.subsystems.elevator;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +23,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
   private TalonFX motor;
   private boolean auto;
   private boolean stalled;
+  private final MotionMagicVoltage m_motmag = new MotionMagicVoltage(0);
   private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
@@ -37,10 +41,10 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
 
   ElevatorFeedforward m_feedforward =
       new ElevatorFeedforward(
-          Constants.ElevatorConstants.kElevatorkS,
-          Constants.ElevatorConstants.kElevatorkG,
-          Constants.ElevatorConstants.kElevatorkV,
-          Constants.ElevatorConstants.kElevatorkA);
+          Constants.ElevatorConstants.kS,
+          Constants.ElevatorConstants.kG,
+          Constants.ElevatorConstants.kV,
+          Constants.ElevatorConstants.kA);
           
   private final Encoder m_encoder = new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
    */
@@ -107,14 +111,17 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     slot0Configs.kP = ElevatorConstants.PID.kP;
     slot0Configs.kI = ElevatorConstants.PID.kI;
     slot0Configs.kD = ElevatorConstants.PID.kD;
+    slot0Configs.kS = ElevatorConstants.kS;
+    // slot0Configs.kA = ElevatorConstants.kA;
+    // slot0Configs.kG = ElevatorConstants.kG;
+    slot0Configs.kV = ElevatorConstants.kV;
 
     configer.apply(slot0Configs);
-    
-// motion magic, start
-//     MotionMagicConfigs motionMagicConfigs = configer.;  
-// motionMagicConfigs.MotionMagicCruiseVelocity = 80; // Target cruise velocity of 80 rps
-// motionMagicConfigs.MotionMagicAcceleration = 160; // Target acceleration of 160 rps/s (0.5 seconds)
-// motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)    
+    // set Motion Magic settings
+    MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
+    motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
+    motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
   }
   
   @Override
@@ -125,6 +132,9 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     double value = new ElevatorConstrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
+
+    m_motmag.Slot = 0;
+    motor.setControl(m_motmag.withPosition(200));
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)) {
       // stop();
@@ -165,6 +175,16 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
   @Override
   public void setAuto(boolean auto){
     this.auto = auto;
+  }
+
+  @Override
+  public boolean atPosition() {
+    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.005) == 0;
+  }
+
+  @Override
+  public void override() {
+    auto =false;
   }
 
   

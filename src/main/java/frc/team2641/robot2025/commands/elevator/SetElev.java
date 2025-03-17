@@ -13,12 +13,12 @@ import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetElev extends Command {
 
-  private ElevatorIO elev;
+  private ElevatorIO elev = Elevator.getInstance();
   private double setPoint;
   /** Creates a new SetElev. */
   public SetElev(double setPoint) {
     // Use addRequirements() here to declare subsystem dependencies.
-    elev = Elevator.getInstance();
+    
 
     this.setPoint = setPoint;
 

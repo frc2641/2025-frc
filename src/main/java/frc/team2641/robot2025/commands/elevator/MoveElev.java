@@ -24,7 +24,7 @@ public class MoveElev extends Command {
   public void execute() {
 
     if(!elev.getAuto()){
-    double rightY = -MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.05);
+    double rightY = -MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.06);
 
     double output = elev.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
     // double output = rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);

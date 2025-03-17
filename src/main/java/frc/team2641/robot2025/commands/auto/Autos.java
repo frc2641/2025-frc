@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,9 +24,9 @@ import frc.team2641.robot2025.commands.intake.RunOuttake;
 
 public class Autos {
     
-    public static final Pose2d startTopCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
     public static final Pose2d startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d startBotCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
 
     public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(35 * Math.PI / 180));
     public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(145 * Math.PI / 180));
@@ -43,35 +44,6 @@ public class Autos {
     public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(30 * Math.PI / 180));
     public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(30 * Math.PI / 180));
 
-    private static final ArrayList<SendableChooser<Pose2d>> reefs = getReefs();
-
-    private static ArrayList<SendableChooser<Pose2d>> getReefs(){
-        ArrayList<SendableChooser<Pose2d>> x = new ArrayList<SendableChooser<Pose2d>>();
-        x.add(reef1());
-        x.add(reef2());
-        x.add(reef3());
-        return x;
-    }
-
-    private static final ArrayList<SendableChooser<Pose2d>> HPs = getHPs();
-
-    private static ArrayList<SendableChooser<Pose2d>> getHPs(){
-        ArrayList<SendableChooser<Pose2d>> x = new ArrayList<SendableChooser<Pose2d>>();
-        x.add(humanPlayer1());
-        x.add(humanPlayer2());
-        x.add(humanPlayer3());
-        return x;
-    }
-
-    private static final ArrayList<SendableChooser<Constants.ELEVNUM>> levels = getLevels();
-
-    private static ArrayList<SendableChooser<Constants.ELEVNUM>> getLevels(){
-        ArrayList<SendableChooser<ELEVNUM>> x = new ArrayList<SendableChooser<ELEVNUM>>();
-        x.add(getLevel1());
-        x.add(getLevel2());
-        x.add(getLevel3());
-        return x;
-    }
 
     public static final PathConstraints constraints = new PathConstraints(
         3.0, 4.0,
@@ -185,10 +157,26 @@ public class Autos {
 
     public static SendableChooser<Pose2d> start() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+        
 
-        sc.addOption("top cage", startTopCage);
+
+        sc.addOption("top cage", startLeftCage);
         sc.addOption("middle cage", startMidCage);
-        sc.addOption("bottom cage", startBotCage);
+        sc.addOption("bottom cage", startRightCage);
+        switch (DriverStation.getLocation().getAsInt())
+        {
+            case 1:
+            sc.setDefaultOption("left cage", startLeftCage);
+            break;
+
+            case 2:
+            sc.setDefaultOption("middle cage", startMidCage);
+            break;
+
+            case 3:
+            sc.setDefaultOption("right cage", startRightCage);
+            break;
+        }
 
         return sc;
     }
@@ -295,16 +283,16 @@ public class Autos {
 }
 
     public static void publishAll(){
-        SmartDashboard.putData(reef1());
-        SmartDashboard.putData(reef2());
-        SmartDashboard.putData(reef3());
-        SmartDashboard.putData(humanPlayer1());
-        SmartDashboard.putData(humanPlayer2());
-        SmartDashboard.putData(humanPlayer3());
-        SmartDashboard.putData(getLevel1());
-        SmartDashboard.putData(getLevel2());
-        SmartDashboard.putData(getLevel3());
-        SmartDashboard.putData(start());
+        SmartDashboard.putData("1st coral pos", reef1());
+        SmartDashboard.putData("2nd coral pos", reef2());
+        SmartDashboard.putData("3rd coral pos", reef3());
+        SmartDashboard.putData("1st HP station", humanPlayer1());
+        SmartDashboard.putData("2nd HP station", humanPlayer2());
+        SmartDashboard.putData("3rd HP station", humanPlayer3());
+        SmartDashboard.putData("1st coral lvl", getLevel1());
+        SmartDashboard.putData("2nd coral lvl", getLevel2());
+        SmartDashboard.putData("3rd coral lvl", getLevel3());
+        SmartDashboard.putData("Start pos", start());
     }
 
 }

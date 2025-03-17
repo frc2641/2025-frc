@@ -20,13 +20,10 @@ public interface ElevatorIO extends Subsystem  {
 	
 	 boolean getAuto();
 	 void setAuto(boolean auto);
-	 default boolean atPosition()
-	 {
-		return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.05) == 0;
-	 }
+	  boolean atPosition();
+	
 
-	 default void override(){
-		setAuto(false);
-	 }
+	  void override();
+
 
 }

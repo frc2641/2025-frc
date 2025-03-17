@@ -10,6 +10,7 @@ public final class Constants {
   public static final double ROBOT_MASS = 47; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms spark max velocity lag
+  public static final double SNIPER_MODE = 0.15;
 
   public static final class AutoConstants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(1.25, 0, 0);
@@ -53,17 +54,16 @@ public final class Constants {
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
-
-
   }
 
   public static final class ElevatorConstants {
     public static final double elevatorSpeed = 0.05;
 
-    public static final PIDConstants PID = new PIDConstants(3.5, 0, 0);
-    public static final SlewRateLimiter SRL = new SlewRateLimiter(1.5); // m/s
+    public static final PIDConstants PID = new PIDConstants(9, 0, 0);
+    public static final SlewRateLimiter SRL = new SlewRateLimiter(1); // m/s
 
     // TODO: Find elevator range
+
     public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
     public static final double initPos = 0;
 
@@ -71,20 +71,17 @@ public final class Constants {
     public static final double stallI = 30;
 
     // from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A30%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A60%2C%22u%22%3A%22in%22%7D
-    public static final double kElevatorkG = 0.31; 
-    public static final double kElevatorkV = 9.33; 
-    public static final double kElevatorkA = 0.04; 
+    public static final double kG = 0.31; 
+    public static final double kV = 9.33; 
+    public static final double kA = 0.04; 
 
     public static final int kMotorPort = 0;
     public static final int kEncoderAChannel = 0;
     public static final int kEncoderBChannel = 1;
     public static final int kJoystickPort = 0;
+
   
-    public static final double kElevatorKp = 50;
-    public static final double kElevatorKi = 0;
-    public static final double kElevatorKd = 0;
-  
-    public static final double kElevatorkS = 0.1; // volts (V)
+    public static final double kS = 0; // volts (V)
     // public static final double kElevatorkG = 0.762; // volts (V)
     // public static final double kElevatorkV = 0.762; // volt per velocity (V/(m/s))
     // public static final double kElevatorkA = 0.0; // volt per acceleration (V/(m/s²))
@@ -98,7 +95,7 @@ public final class Constants {
 
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
     public static final double kMinElevatorHeightMeters = 0.0;
-    public static final double kMaxElevatorHeightMeters = 200.03;
+    public static final double kMaxElevatorHeightMeters = 2.35;
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr
@@ -106,11 +103,12 @@ public final class Constants {
   }
 
   public static final class ElevatorPositions {
-    public static final double L1 = -1;
-    public static final double L2 = -1;
-    public static final double L3 = -1;
-    public static final double L4 = -1;
-    public static final double HP = -1;
+    public static final double L1 = 0.6898161006834332;
+    public static final double L2 = 0.9260855653059362;
+    public static final double L3 = 1.45;
+    public static final double L4 = 2.2350001091175025;
+    public static final double HP = 0.3290514870627403;
+
   }
   public static enum ELEVNUM {
     L1,

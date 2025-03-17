@@ -4,6 +4,7 @@
 
 package frc.team2641.robot2025.subsystems.elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -48,16 +49,16 @@ public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, 
   // Standard classes for controlling our elevator
   private final ProfiledPIDController m_controller =
       new ProfiledPIDController(
-          Constants.ElevatorConstants.kElevatorKp,
-          Constants.ElevatorConstants.kElevatorKi,
-          Constants.ElevatorConstants.kElevatorKd,
+          Constants.ElevatorConstants.PID.kP,
+          Constants.ElevatorConstants.PID.kI,
+          Constants.ElevatorConstants.PID.kD,
           new TrapezoidProfile.Constraints(2.45, 2.45)); 
   ElevatorFeedforward m_feedforward =
       new ElevatorFeedforward(
-          Constants.ElevatorConstants.kElevatorkS,
-          Constants.ElevatorConstants.kElevatorkG,
-          Constants.ElevatorConstants.kElevatorkV,
-          Constants.ElevatorConstants.kElevatorkA);
+          Constants.ElevatorConstants.kS,
+          Constants.ElevatorConstants.kG,
+          Constants.ElevatorConstants.kV,
+          Constants.ElevatorConstants.kA);
   private final Encoder m_encoder = new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
   private final PWMSparkMax m_motor = new PWMSparkMax(Constants.ElevatorConstants.kMotorPort);
 
@@ -182,5 +183,15 @@ super.setDefaultCommand(command);
   @Override
   public void setAuto(boolean auto){
     this.auto = auto;
+  }
+
+  @Override
+  public boolean atPosition() {
+    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.005) == 0;
+  }
+
+  @Override
+  public void override() {
+auto = false;
   }
 }
