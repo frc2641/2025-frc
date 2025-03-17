@@ -120,7 +120,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
 
-    double value = new ArmPosition(0,Constants.ElevatorConstants.SLR.calculate(setpoint)).getElev();
+    double value = new ArmPosition(0,Constants.ElevatorConstants.SRL.calculate(setpoint)).getElev();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
 

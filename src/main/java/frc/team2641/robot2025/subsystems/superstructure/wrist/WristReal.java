@@ -3,6 +3,7 @@ package frc.team2641.robot2025.subsystems.superstructure.wrist;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +16,7 @@ public class WristReal extends SubsystemBase implements WristIO {
 
   private double setpoint = WristConstants.initPos;
   private boolean stalled;
+  private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
   private static WristReal instance;
   public static WristReal getInstance() {
     if (instance == null) instance = new WristReal();
@@ -75,7 +77,7 @@ public class WristReal extends SubsystemBase implements WristIO {
     if (setpoint < WristConstants.minPos) setpoint = WristConstants.minPos;
     if (setpoint > WristConstants.maxPos) setpoint = WristConstants.maxPos;
 
-    // motor.setControl(posRequest.withPosition(setpoint));
+    motor.setControl(posRequest.withPosition(setpoint));
     // System.out.println("Wrist setpoint: " + setpoint);
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < WristConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > WristConstants.stallI)){
