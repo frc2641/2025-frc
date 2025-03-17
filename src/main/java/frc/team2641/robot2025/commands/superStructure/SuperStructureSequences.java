@@ -10,7 +10,7 @@ public class SuperStructureSequences {
 	public static Command processor() {
 		return Commands.sequence(
 			new SetArmTarget(new ArmPosition(Constants.ArmPositions.processor.getWrist(), Superstructure.getInstance().getPosition().getElev())),
-			new MoveArm(),
+			// new MoveArm(),
 			new SetArmTarget(Superstructure.ArmTargets.PROCESSOR)
 		);
 	}
@@ -18,7 +18,7 @@ public class SuperStructureSequences {
 	public static Command l1() {
 		return Commands.sequence(
 			new SetArmTarget(new ArmPosition(Constants.ArmPositions.L1.getWrist(), Superstructure.getInstance().getPosition().getElev())),
-			new MoveArm(),
+			// new MoveArm(),
 			new SetArmTarget(Superstructure.ArmTargets.L1)
 		);
 	}

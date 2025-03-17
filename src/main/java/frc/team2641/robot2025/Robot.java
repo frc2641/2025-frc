@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -76,6 +77,7 @@ public class Robot extends TimedRobot {
     robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
+    setDriverRumble(false);
   }
 
   @Override
@@ -168,5 +170,10 @@ public class Robot extends TimedRobot {
 
   public static SimulatedArena getArena() {
     return arena;
+  }
+
+    public void setDriverRumble(boolean on){
+    
+    robotContainer.driverGamepad.setRumble(RumbleType.kBothRumble, on ? 1 : 0);
   }
 }

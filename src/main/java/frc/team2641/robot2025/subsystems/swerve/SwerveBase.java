@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.Constants.AutoConstants;
 import java.io.File;
 import java.io.IOException;
@@ -93,6 +94,8 @@ public class SwerveBase extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // couldn't find jerk in the docs
+    Robot.getInstance().setDriverRumble(Math.random() < 0.2);
   }
 
   @Override

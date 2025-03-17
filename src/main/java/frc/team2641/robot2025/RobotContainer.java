@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +26,7 @@ import frc.team2641.robot2025.commands.superStructure.MoveElev;
 import frc.team2641.robot2025.commands.superStructure.MoveWrist;
 import frc.team2641.robot2025.commands.superStructure.SetArmTarget;
 import frc.team2641.robot2025.commands.superStructure.SuperStructureSequences;
-import frc.team2641.robot2025.commands.test.*;
+import frc.team2641.robot2025.helpers.ArmPosition;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorIO;
 import frc.team2641.robot2025.subsystems.superstructure.Superstructure.ArmTargets;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.Elevator;
@@ -96,15 +97,12 @@ public class RobotContainer {
     operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
     operatorGamepad.x().onTrue(new SetArmTarget(ArmTargets.L3));
     operatorGamepad.y().onTrue(new SetArmTarget(ArmTargets.L4));
-    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
-    operatorGamepad.rightBumper().onTrue(SuperStructureSequences.processor());
-    operatorGamepad.povRight().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
+    operatorGamepad.start().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
+    operatorGamepad.back().onTrue(new SetArmTarget(new ArmPosition(0, 0)));
+    operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
+    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
-    // operatorGamepad.a().onTrue(new TestElevatorLow());
-    // operatorGamepad.b().onTrue(new TestElevatorHigh());
-    operatorGamepad.x().onTrue(new TestWristLow());
-    operatorGamepad.y().onTrue(new TestWristHigh());
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
@@ -190,4 +188,6 @@ public class RobotContainer {
     arena.simulationPeriodic();
     
   }
+
+
 }

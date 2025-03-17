@@ -43,7 +43,9 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double speed = 0.4;
+    public static final double rightIntake = 0.3;
+    public static final double leftIntake = 0.2;
+
     
 
     public static final double stallV = 0.1;
@@ -53,14 +55,14 @@ public final class Constants {
   public static final class WristConstants {
     public static final double speed = 0.25;
 
-    public static final PIDConstants wristPID = new PIDConstants(10, 0.01, 0.1);
+    public static final PIDConstants wristPID = new PIDConstants(8, 0.01, 0.1);
 
-    public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(6);
+    public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(3);
 
     public static final double initPos = 0;
     // TODO find wrist max/win pos
-    public static final double maxPos = 30;
-    public static final double minPos = -30;
+    public static final double maxPos = 0;
+    public static final double minPos = -8.49;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
