@@ -35,8 +35,8 @@ public class IntakeIOReal implements IntakeIO {
   }
 
   public void shoot() {
-    leftIntake.set(Constants.IntakeConstants.leftIntake);
-    rightIntake.set(-Constants.IntakeConstants.leftIntake);
+    leftIntake.set(Constants.IntakeConstants.outtake);
+    rightIntake.set(-Constants.IntakeConstants.outtake);
   }
 
   public void spin() {

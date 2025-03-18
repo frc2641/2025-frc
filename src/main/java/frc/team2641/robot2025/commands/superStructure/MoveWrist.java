@@ -20,7 +20,7 @@ public class MoveWrist extends Command {
 
   @Override
   public void execute() {
-    double leftY = -MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(), 0.05);
+    double leftY = -MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpLeftStickY(), 0.07);
     double output = wrist.getSetpoint() + leftY * WristConstants.speed;
     wrist.goTo(output);
   }

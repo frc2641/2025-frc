@@ -10,22 +10,23 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.Constants.ELEVNUM;
+import frc.team2641.robot2025.Constants.ArmPositions;
 import frc.team2641.robot2025.commands.Wait;
-import frc.team2641.robot2025.commands.elevator.SetElev;
-import frc.team2641.robot2025.commands.intake.RunIntake;
-import frc.team2641.robot2025.commands.intake.RunOuttake;
+import frc.team2641.robot2025.commands.superStructure.SetArmTarget;
+import frc.team2641.robot2025.helpers.ArmPosition;
+import frc.team2641.robot2025.commands.RunIntake;
+import frc.team2641.robot2025.commands.shifts.ReverseIntake;
 
 public class Autos {
     
-    public static final Pose2d startTopCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
     public static final Pose2d startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d startBotCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
 
     public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(35 * Math.PI / 180));
     public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(145 * Math.PI / 180));
@@ -63,10 +64,10 @@ public class Autos {
         return x;
     }
 
-    private static final ArrayList<SendableChooser<Constants.ELEVNUM>> levels = getLevels();
+    private static final ArrayList<SendableChooser<ArmPosition>> levels = getLevels();
 
-    private static ArrayList<SendableChooser<Constants.ELEVNUM>> getLevels(){
-        ArrayList<SendableChooser<ELEVNUM>> x = new ArrayList<SendableChooser<ELEVNUM>>();
+    private static ArrayList<SendableChooser<ArmPosition>> getLevels(){
+        ArrayList<SendableChooser<ArmPosition>> x = new ArrayList<SendableChooser<ArmPosition>>();
         x.add(getLevel1());
         x.add(getLevel2());
         x.add(getLevel3());
@@ -106,9 +107,9 @@ public class Autos {
         sc.addOption("G", reefG);
         sc.addOption("H", reefH);
         sc.addOption("I", reefI);
+        sc.setDefaultOption("J", reefJ);
         sc.addOption("K", reefK);
         sc.addOption("L", reefL);
-        sc.setDefaultOption("J", reefJ);
 
         return sc;
     }
@@ -127,8 +128,8 @@ public class Autos {
         sc.addOption("H", reefH);
         sc.addOption("I", reefI);
         sc.addOption("J", reefJ);
-        sc.addOption("L", reefL);
         sc.setDefaultOption("K", reefK);
+        sc.addOption("L", reefL);
 
         return sc;
     }
@@ -136,7 +137,7 @@ public class Autos {
     public static SendableChooser<Pose2d> reef3() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
 
-        sc.addOption("K", reefK);
+        sc.setDefaultOption("none", null);
         sc.addOption("A", reefA);
         sc.addOption("B", reefB);
         sc.addOption("C", reefC);
@@ -147,8 +148,8 @@ public class Autos {
         sc.addOption("H", reefH);
         sc.addOption("I", reefI);
         sc.addOption("J", reefJ);
+        sc.addOption("K", reefK);
         sc.addOption("L", reefL);
-        sc.setDefaultOption("none", null);
 
         return sc;
     }
@@ -156,9 +157,9 @@ public class Autos {
     public static SendableChooser<Pose2d> humanPlayer1() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
 
+        sc.addOption("none", null);
         sc.setDefaultOption("top",humanPlayerT);
         sc.addOption("bottom",humanPlayerB);
-        sc.addOption("none", null);
 
         return sc;
     }
@@ -166,9 +167,9 @@ public class Autos {
     public static SendableChooser<Pose2d> humanPlayer2() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
 
+        sc.addOption("none", null);
         sc.setDefaultOption("top",humanPlayerT);
         sc.addOption("bottom",humanPlayerB);
-        sc.addOption("none", null);
 
         return sc;
     }
@@ -176,19 +177,27 @@ public class Autos {
     public static SendableChooser<Pose2d> humanPlayer3() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
 
+        sc.setDefaultOption("none", null);  
         sc.addOption("top",humanPlayerT);
-        sc.addOption("bottom",humanPlayerB);
-        sc.setDefaultOption("none", null);    
+        sc.addOption("bottom",humanPlayerB);  
 
         return sc;
     }
 
     public static SendableChooser<Pose2d> start() {
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
-
-        sc.addOption("top cage", startTopCage);
+        
+        sc.addOption("left cage", startLeftCage);
         sc.addOption("middle cage", startMidCage);
-        sc.addOption("bottom cage", startBotCage);
+        sc.addOption("right cage", startRightCage);
+        switch (DriverStation.getLocation().getAsInt()){
+            case 1:
+            sc.setDefaultOption("left cage", startLeftCage);
+            case 2:
+            sc.setDefaultOption("middle cage", startMidCage);
+            case 3:
+            sc.setDefaultOption("right cage", startRightCage);
+        }
 
         return sc;
     }
@@ -217,34 +226,35 @@ public class Autos {
         return AutoBuilder.pathfindToPose(humanPlayer3().getSelected(), constraints);
     }
 
-    public static SendableChooser<Constants.ELEVNUM> getLevel1() {
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
+    public static SendableChooser<ArmPosition> getLevel1() {
+        SendableChooser<ArmPosition> sc = new SendableChooser<ArmPosition>();
         sc.addOption("none", null);
+        sc.addOption("L1", ArmPositions.L1);
+        sc.addOption("L2", ArmPositions.L2);
+        sc.addOption("L3", ArmPositions.L3);
+        sc.setDefaultOption("L4", ArmPositions.L4);
 
+        return sc;
+        
+    }
+
+    public static SendableChooser<ArmPosition> getLevel2() {
+        SendableChooser<ArmPosition> sc = new SendableChooser<ArmPosition>();
+        sc.addOption("none", null);
+        sc.addOption("L1", ArmPositions.L1);
+        sc.addOption("L2", ArmPositions.L2);
+        sc.addOption("L3", ArmPositions.L3);
+        sc.setDefaultOption("L4", ArmPositions.L4);
         return sc;
     }
 
-    public static SendableChooser<Constants.ELEVNUM> getLevel2() {
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
+    public static SendableChooser<ArmPosition> getLevel3(){
+        SendableChooser<ArmPosition> sc = new SendableChooser<ArmPosition>();
         sc.addOption("none", null);
-        return sc;
-    }
-
-    public static SendableChooser<Constants.ELEVNUM> getLevel3(){
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
-        sc.addOption("none", null);
+        sc.addOption("L1", ArmPositions.L1);
+        sc.addOption("L2", ArmPositions.L2);
+        sc.addOption("L3", ArmPositions.L3);
+        sc.setDefaultOption("L4", ArmPositions.L4);
 
         return sc;
     }
@@ -267,10 +277,11 @@ public class Autos {
         return x;
     }
 
-    public static Command elevAndShoot(ELEVNUM x){
+    public static Command elevAndShoot(ArmPosition x){
         Command results = Commands.none();
-        results.andThen(new SetElev(x));
-        results.andThen(new RunOuttake());
+        results.andThen(new SetArmTarget(x));
+        results.andThen(new RunIntake());
+        results.alongWith(new ReverseIntake());
         return results;
     }
 
@@ -294,17 +305,17 @@ public class Autos {
         return result;
 }
 
-    public static void publishAll(){
-        SmartDashboard.putData(reef1());
-        SmartDashboard.putData(reef2());
-        SmartDashboard.putData(reef3());
-        SmartDashboard.putData(humanPlayer1());
-        SmartDashboard.putData(humanPlayer2());
-        SmartDashboard.putData(humanPlayer3());
-        SmartDashboard.putData(getLevel1());
-        SmartDashboard.putData(getLevel2());
-        SmartDashboard.putData(getLevel3());
-        SmartDashboard.putData(start());
+    public static void publishAll() {
+        SmartDashboard.putData("Start pos", start());
+        SmartDashboard.putData("1st reef coral location", reef1());
+        SmartDashboard.putData("1st reef coral level", getLevel1());
+        SmartDashboard.putData("1st human player station", humanPlayer1());
+        SmartDashboard.putData("2nd reef coral location", reef2());
+        SmartDashboard.putData("2nd reef coral level", getLevel2());
+        SmartDashboard.putData("2nd human player station", humanPlayer2());
+        SmartDashboard.putData("3rd reef coral location", reef3());
+        SmartDashboard.putData("3rd reef coral level", getLevel3());
+        SmartDashboard.putData("3rd human player station", humanPlayer3());
     }
 
 }

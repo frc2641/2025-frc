@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.WristConstants;
 import frc.team2641.robot2025.subsystems.superstructure.elevator.ElevatorReal;
@@ -49,6 +48,10 @@ public class WristReal extends SubsystemBase implements WristIO {
     return setpoint;
   }
 
+  public void resetEncoder() {
+    motor.setPosition(0);
+  }
+
   private void configMotor() {
     motor = new TalonFX(CANConstants.wrist);
 
@@ -79,7 +82,8 @@ public class WristReal extends SubsystemBase implements WristIO {
     if (setpoint < WristConstants.minPos) setpoint = WristConstants.minPos;
     if (setpoint > WristConstants.maxPos) setpoint = WristConstants.maxPos;
 
-    double value = Constants.WristConstants.wristRateLimiter.calculate(setpoint);
+    double value = WristConstants.wristRateLimiter.calculate(setpoint);
+    
     motor.setControl(posRequest.withPosition(value));
     // System.out.println("Wrist setpoint: " + setpoint);
 
@@ -91,8 +95,8 @@ public class WristReal extends SubsystemBase implements WristIO {
 
   stalled = false;    
     // TODO: Move setpoint retargeting to an else statement above
-    if(ElevatorReal.getInstance().getSetpoint()< 0.216 && setpoint < 0)
-      setpoint = 0;
+    if(ElevatorReal.getInstance().getSetpoint()< 0.216 && setpoint < WristConstants.minPos + 4.08)
+      setpoint = -4.08;
     
 
     SmartDashboard.putNumber("Arm Wrist Real Pos ", motor.getPosition().getValueAsDouble()); 

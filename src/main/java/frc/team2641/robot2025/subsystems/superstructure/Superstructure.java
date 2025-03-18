@@ -22,7 +22,8 @@ public class Superstructure extends SubsystemBase {
     L4,
     HUMAN_PLAYER,
     PROCESSOR,
-    ALGAE_REMOVAL;
+    ALGAE_REMOVAL_LO,
+    ALGAE_REMOVAL_HI;
   }
 
   private static Superstructure instance;

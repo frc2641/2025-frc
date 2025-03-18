@@ -34,8 +34,11 @@ public class SetArmTarget extends Command {
       case PROCESSOR:
         this.pos = Constants.ArmPositions.processor;
         break;
-      case ALGAE_REMOVAL:
-        this.pos = Constants.ArmPositions.algaeRemoval;
+      case ALGAE_REMOVAL_LO:
+        this.pos = Constants.ArmPositions.algaeRemovalLow;
+        break;
+      case ALGAE_REMOVAL_HI:
+        this.pos = Constants.ArmPositions.algaeRemovalHigh;
         break;
       default:
         this.pos = new ArmPosition(0, 0);

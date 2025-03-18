@@ -5,4 +5,5 @@ public interface WristIO {
 	double getPosition();
 	double getSetpoint();
 	void stop();
+	void resetEncoder();
 }

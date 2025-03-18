@@ -79,6 +79,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
   }
 
   public double getSetpoint() {
+    // return setpoint;
     return setpoint;
   }
 

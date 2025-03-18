@@ -31,4 +31,7 @@ public class WristSim implements WristIO {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'set'");
 	}
+
+	@Override
+	public void resetEncoder() {}
 }

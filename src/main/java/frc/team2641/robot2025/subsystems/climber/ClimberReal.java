@@ -40,7 +40,9 @@ public class ClimberReal extends SubsystemBase implements ClimberIO {
     return motor.getAbsoluteEncoder().getPosition();
   }
 
-  private void configMotor() {
+  private void configMotor(
+    
+  ) {
     motor = new SparkMax(CANConstants.climber, MotorType.kBrushless);
 
     SparkMaxConfig config = new SparkMaxConfig();

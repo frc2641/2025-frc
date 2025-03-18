@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.*;
 import frc.team2641.robot2025.commands.auto.*;
+import frc.team2641.robot2025.commands.climbing.Climb;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
 import frc.team2641.robot2025.commands.superStructure.MoveElev;
@@ -92,6 +93,8 @@ public class RobotContainer {
     driverGamepad.povDown().whileTrue(new Climb(false));
     driverGamepad.povLeft().whileTrue(new Wrap(true));
     driverGamepad.povRight().whileTrue(new Wrap(false));
+    driverGamepad.povUp().whileTrue(new Climb(true));
+    driverGamepad.povDown().whileTrue(new Climb(false));
 
     operatorGamepad.a().onTrue(SuperStructureSequences.l1());
     operatorGamepad.b().onTrue(new SetArmTarget(ArmTargets.L2));
@@ -100,7 +103,8 @@ public class RobotContainer {
     operatorGamepad.start().onTrue(new SetArmTarget(ArmTargets.HUMAN_PLAYER));
     operatorGamepad.back().onTrue(new SetArmTarget(new ArmPosition(0, 0)));
     operatorGamepad.rightBumper().onTrue(new SetArmTarget(ArmTargets.PROCESSOR));
-    operatorGamepad.leftBumper().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL));
+    operatorGamepad.povUp().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL_LO));
+    operatorGamepad.povDown().onTrue(new SetArmTarget(ArmTargets.ALGAE_REMOVAL_HI));
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new ReverseIntake());
 
@@ -136,15 +140,15 @@ public class RobotContainer {
     reverseIntakeSub = table.getBooleanTopic("reverseIntake").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * 0.25 : -driverGamepad.getLeftY(),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPERMODE : -driverGamepad.getLeftY(),
       OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * 0.25 : -driverGamepad.getLeftX(),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPERMODE : -driverGamepad.getLeftX(),
       OperatorConstants.LEFT_X_DEADBAND),
       () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
 
     drivetrain.setDefaultCommand(driveCommand);
-    wrist.setDefaultCommand(new MoveWrist());
+    // wrist.setDefaultCommand(new MoveWrist());
     elev.setDefaultCommand(new MoveElev());
 
     // arm.setDefaultCommand(new MoveArm());

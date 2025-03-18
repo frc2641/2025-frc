@@ -11,6 +11,8 @@ public final class Constants {
   public static final double ROBOT_MASS = 47; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms spark max velocity lag
+  public static final double SNIPERMODE = 0.15
+  ;
 
   public static final class AutoConstants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(1.25, 0, 0);
@@ -36,15 +38,17 @@ public final class Constants {
     public static final int leftIntake = 14;
     public static final int rightIntake = 15;
     public static final int winch = 16;
-    public static final int wrist = 17;
-    public static final int climber = 18;
+    public static final int climber = 17;
+    /** <b>WARNING</b> - not yet set on pheonix tuner */
+    public static final int wrist = 18;
 
     public static final int pdh = 20;
   }
 
   public static final class IntakeConstants {
     public static final double rightIntake = 0.3;
-    public static final double leftIntake = 0.2;
+    public static final double leftIntake = 0.15;
+    public static final double outtake = 0.2;
 
     
 
@@ -53,15 +57,15 @@ public final class Constants {
   }
 
   public static final class WristConstants {
-    public static final double speed = 0.25;
+    public static final double speed = 0.2;
 
-    public static final PIDConstants wristPID = new PIDConstants(8, 0.01, 0.1);
+    public static final PIDConstants wristPID = new PIDConstants(16, 0.16, 1.6);
 
-    public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(3);
+    public static final SlewRateLimiter wristRateLimiter = new SlewRateLimiter(3.5);
 
     public static final double initPos = 0;
     // TODO find wrist max/win pos
-    public static final double maxPos = 0;
+    public static final double maxPos = 0.016;
     public static final double minPos = -8.49;
 
     public static final double stallV = 0.1;
@@ -80,7 +84,7 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static final double elevatorSpeed = 0.05;
 
-    public static final PIDConstants PID = new PIDConstants(3.5, 0, 0);
+    public static final PIDConstants PID = new PIDConstants(7, 0, 0);
     public static final SlewRateLimiter SRL = new SlewRateLimiter(1); // m/s
 
     public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
@@ -117,7 +121,7 @@ public final class Constants {
 
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
     public static final double kMinElevatorHeightMeters = 0.0;
-    public static final double kMaxElevatorHeightMeters = 2.35;
+    public static final double kMaxElevatorHeightMeters = 2.325;
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr
@@ -126,12 +130,13 @@ public final class Constants {
 
   public static final class ArmPositions {
     public static final ArmPosition L1 = new ArmPosition(0, 0.6898161006834332);
-    public static final ArmPosition L2 = new ArmPosition(0, 0.9260855653059362);
-    public static final ArmPosition L3 = new ArmPosition(0, 1.45);
+    public static final ArmPosition L2 = new ArmPosition(-7.73486328125, 1.0648138145825903);
+    public static final ArmPosition L3 = new ArmPosition(-7.73486328125, 1.6243970477180776);
     public static final ArmPosition L4 = new ArmPosition(0, 2.2350001091175025);
     public static final ArmPosition humanPlayer = new ArmPosition(0, 0.3290514870627403);
     public static final ArmPosition processor = new ArmPosition(0, -1);
-    public static final ArmPosition algaeRemoval = new ArmPosition(0, -1);
+    public static final ArmPosition algaeRemovalLow = new ArmPosition(0, -1);
+    public static final ArmPosition algaeRemovalHigh = new ArmPosition(0, -1);
   } 
 
 }
