@@ -59,7 +59,9 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static final double elevatorSpeed = 0.05;
 
-    public static final PIDConstants PID = new PIDConstants(9, 0, 0);
+    // public static final PIDConstants PID = new PIDConstants(8, 0.15, 0.2); // better values?
+    /** tried 2 and 4 with SRL, the chain would skip and elevator would not move past the L3 setpoint, despite taking joystick input and having a setpoint above it */
+    public static final PIDConstants PID = new PIDConstants(4, 0, 0);
     public static final SlewRateLimiter SRL = new SlewRateLimiter(1); // m/s
 
     // TODO: Find elevator range

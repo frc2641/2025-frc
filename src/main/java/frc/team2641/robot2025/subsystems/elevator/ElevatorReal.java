@@ -111,30 +111,32 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     slot0Configs.kP = ElevatorConstants.PID.kP;
     slot0Configs.kI = ElevatorConstants.PID.kI;
     slot0Configs.kD = ElevatorConstants.PID.kD;
-    slot0Configs.kS = ElevatorConstants.kS;
+    // slot0Configs.kS = ElevatorConstants.kS;
     // slot0Configs.kA = ElevatorConstants.kA;
     // slot0Configs.kG = ElevatorConstants.kG;
     slot0Configs.kV = ElevatorConstants.kV;
 
     configer.apply(slot0Configs);
-    // set Motion Magic settings
-    MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
-    motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
-    motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
+    // // set Motion Magic settings
+    // MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
+    // motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
+    // motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
+    // motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
   }
   
   @Override
   public void periodic() {
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
-
+    setpoint = new ElevatorConstrain(setpoint).get();
+    
     double value = new ElevatorConstrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
+    
 
-    m_motmag.Slot = 0;
-    motor.setControl(m_motmag.withPosition(200));
+    // m_motmag.Slot = 0;
+    // motor.setControl(m_motmag.withPosition(200));
 
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)) {
       // stop();
@@ -148,6 +150,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     SmartDashboard.putBoolean("Elevator Stall", stalled);
     SmartDashboard.putNumber("Current", motor.getTorqueCurrent().getValue().baseUnitMagnitude());
     SmartDashboard.putNumber("Setpoint", setpoint);
+    SmartDashboard.putBoolean("Elevator Auto", auto);
   }
   
   public TalonFX getMotor() {
