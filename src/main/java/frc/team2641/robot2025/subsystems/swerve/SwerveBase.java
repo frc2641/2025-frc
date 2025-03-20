@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -77,6 +78,9 @@ public class SwerveBase extends SubsystemBase {
     swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
     swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
     setupPathPlanner();
+
+    
+
   }
 
   public SwerveBase(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
@@ -93,6 +97,7 @@ public class SwerveBase extends SubsystemBase {
 
   @Override
   public void periodic() {
+
   }
 
   @Override

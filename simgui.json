@@ -2,6 +2,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/1st HP station": "String Chooser",
+      "/SmartDashboard/1st coral lvl": "String Chooser",
+      "/SmartDashboard/1st coral pos": "String Chooser",
+      "/SmartDashboard/2nd HP station": "String Chooser",
+      "/SmartDashboard/2nd coral lvl": "String Chooser",
+      "/SmartDashboard/2nd coral pos": "String Chooser",
+      "/SmartDashboard/3rd HP station": "String Chooser",
+      "/SmartDashboard/3rd coral lvl": "String Chooser",
+      "/SmartDashboard/3rd coral pos": "String Chooser",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto": "String Chooser",
       "/SmartDashboard/Elevator Sim": "Mechanism2d",
@@ -11,6 +20,7 @@
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/Start pos": "String Chooser",
       "/SmartDashboard/Swerve Drive": "Alerts"
     },
     "windows": {
@@ -57,7 +67,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 582,
+          "height": 962,
           "series": [
             {
               "color": [

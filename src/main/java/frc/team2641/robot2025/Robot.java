@@ -1,5 +1,6 @@
 package frc.team2641.robot2025;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -16,9 +19,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2641.robot2025.commands.elevator.MoveElev;
 import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
+import frc.team2641.robot2025.subsystems.swerve.SwerveBase;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+
+import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import org.ironmaple.simulation.*;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -47,8 +54,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // CameraServer.startAutomaticCapture(0);
-    // CameraServer.startAutomaticCapture(1);
+    CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture(1);
     robotContainer = new RobotContainer();
     disabledTimer = new Timer();
 
@@ -111,8 +118,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
-    
+// left joystick x > 0.1  
+    robotContainer.driverGamepad.setRumble(
+      RumbleType.kBothRumble,
+        robotContainer.sniperSub.get() ? 0 :
+       robotContainer.driverGamepad.getLeftX() > 0.4 && 
+        SwerveBase.getInstance().getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
+        ? rumble(true) :  
+        robotContainer.driverGamepad.getLeftY() > 0.4 && 
+        SwerveBase.getInstance().getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
+        ? rumble(true) : rumble( false ) 
+      );
+  }
+  private int rumble(boolean on){
+    SmartDashboard.putBoolean("Rumble", on);
+    return on ? 1 : 0;
   }
 
   @Override

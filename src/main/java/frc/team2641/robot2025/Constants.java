@@ -41,8 +41,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double speedIn = 0.4;
-    public static final double speedOut = 0.4;
+    public static final double speedIn = 0.2;
+    public static final double speedOut = 0.2;
     
     public static final double stallV = 0.1;
     public static final double stallI = 30;
@@ -72,10 +72,10 @@ public final class Constants {
     public static final double stallV = 0.1;
     public static final double stallI = 30;
 
-    // from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A30%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A60%2C%22u%22%3A%22in%22%7D
-    public static final double kG = 0.31; 
-    public static final double kV = 9.33; 
-    public static final double kA = 0.04; 
+// from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=80&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A6.58691%2C%22u%22%3A%22kg%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A2.35%2C%22u%22%3A%22m%22%7D
+    public static final double kG = 0.04; 
+    public static final double kV = 37.34; 
+    public static final double kA = 0.01; 
 
     public static final int kMotorPort = 0;
     public static final int kEncoderAChannel = 0;
@@ -91,7 +91,7 @@ public final class Constants {
     public static final double kElevatorGearing = 12
     ;
     public static final double kElevatorDrumRadius = Units.inchesToMeters(1);// or 1/2??? 
-    public static final double kCarriageMass = 15.8757; // kg
+    public static final double kCarriageMass = 6.58691; // kg
 
     public static final double kSetpointMeters = 0.75;
 
@@ -109,7 +109,7 @@ public final class Constants {
     public static final double L2 = 0.9260855653059362;
     public static final double L3 = 1.45;
     public static final double L4 = 2.2350001091175025;
-    public static final double HP = 0.3290514870627403;
+    public static final double HP = 0.3390514870627403;
 
   }
   public static enum ELEVNUM {

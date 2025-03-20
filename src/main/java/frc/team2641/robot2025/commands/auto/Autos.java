@@ -163,6 +163,7 @@ public class Autos {
         sc.addOption("top cage", startLeftCage);
         sc.addOption("middle cage", startMidCage);
         sc.addOption("bottom cage", startRightCage);
+        if(!DriverStation.getLocation().isEmpty())
         switch (DriverStation.getLocation().getAsInt())
         {
             case 1:
