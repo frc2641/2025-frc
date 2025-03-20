@@ -40,6 +40,7 @@ public class RobotContainer {
   CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  private final SendableChooser<Boolean> useFancyAuto = new SendableChooser<>();
 
   Command driveCommand;
   Command driveSim;
@@ -57,6 +58,7 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
+  private boolean simpleAuto;
   ElevatorSimulation elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
@@ -126,14 +128,22 @@ public class RobotContainer {
     NamedCommands.registerCommand("creep", new Creep(0));
     NamedCommands.registerCommand("creepAmp", new Creep(1));
     NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
+    NamedCommands.registerCommand("ElevL4", new SetElev(ELEVNUM.L4));
+    NamedCommands.registerCommand("ElevL3", new SetElev(ELEVNUM.L3));
+    NamedCommands.registerCommand("ElevL2", new SetElev(ELEVNUM.L2));
+    NamedCommands.registerCommand("ElevL1", new SetElev(ELEVNUM.L1));
+    NamedCommands.registerCommand("ElevHP", new SetElev(ELEVNUM.HP));
+    NamedCommands.registerCommand("Outtake", new RunOuttake());
+    NamedCommands.registerCommand("Intake", new RunIntake());
 
-    autoChooser.setDefaultOption("Shoot Creep", "Shoot Creep");
-    // SmartDashboard.putData("Auto", autoChooser);
-    Autos.publishAll();
+    /* One of these should always be commented out */
+    // Autos.publishAll();
+    simpleAuto();
   }
 
   public Command getAutonomousCommand() {
-    // return drivetrain.getAutonomousCommand(autoChooser.getSelected());
+    if (simpleAuto)
+      return drivetrain.getAutonomousCommand(autoChooser.getSelected());
     return Autos.getAutoCommand();
   }
 
@@ -162,5 +172,18 @@ public class RobotContainer {
     coralPoses.accept(coral);
 
     arena.simulationPeriodic();
+  }
+  private void simpleAuto(){
+
+    simpleAuto = true;
+
+    autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
+    autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
+    autoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
+    autoChooser.addOption("Left Cage to L Branch", "Left Cage to L Branch");
+    autoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
+    autoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
+
+    SmartDashboard.putData("Auto", autoChooser);
   }
 }
