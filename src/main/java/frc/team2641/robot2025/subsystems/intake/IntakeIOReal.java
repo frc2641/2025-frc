@@ -72,10 +72,12 @@ public class IntakeIOReal implements IntakeIO {
   @Override
   public void firstSpin() {
   intakeMotor.set(Constants.IntakeConstants.speedIn);
+  intakeMotor.set(-Constants.IntakeConstants.speedIn);
   }
 
   @Override
   public void secondSpin() {
   outtakeMotor.set(Constants.IntakeConstants.speedOut);
+  intakeMotor.set(Constants.IntakeConstants.speedOut);
   }
 }

@@ -259,15 +259,32 @@ public class Autos {
     public static Command elevAndShoot(ELEVNUM x){
         Command results = Commands.none();
         results.andThen(new SetElev(x));
-        results.andThen(new RunOuttake());
+        results.andThen(specialOuttake());
+        results.andThen(new SetElev(0));
         return results;
     }
 
     public static Command specialIntake(){
+
         Command result = Commands.none();
 
-        result.alongWith(new RunIntake());
-        result.alongWith(new Wait(2));
+        result.andThen(new SetElev(ELEVNUM.HP));
+        
+        result.andThen(Commands.race(
+            new RunIntake(),
+            new Wait(2)
+        ));
+
+        result.andThen(new SetElev(0));
+
+        return result;
+    }
+
+        public static Command specialOuttake(){
+            Command result = Commands.race(
+                new RunOuttake(),
+                new Wait(0.25)
+            );
 
         return result;
     }    

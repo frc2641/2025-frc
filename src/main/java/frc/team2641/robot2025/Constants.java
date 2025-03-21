@@ -50,7 +50,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final double winchSpeed = 0.75;
-    public static final double climberSpeed = 0.1;
+    public static final double climberSpeed = 0.2;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
@@ -61,7 +61,7 @@ public final class Constants {
 
     // public static final PIDConstants PID = new PIDConstants(8, 0.15, 0.2); // better values?
     /** tried 2 and 4 with SRL, the chain would skip and elevator would not move past the L3 setpoint, despite taking joystick input and having a setpoint above it */
-    public static final PIDConstants PID = new PIDConstants(4, 0, 0);
+    public static final PIDConstants PID = new PIDConstants(4, 0.005, 0);
     public static final SlewRateLimiter SRL = new SlewRateLimiter(1); // m/s
 
     // TODO: Find elevator range
@@ -97,7 +97,7 @@ public final class Constants {
 
     // Encoder is reset to measure 0 at the bottom, so minimum height is 0.
     public static final double kMinElevatorHeightMeters = 0.0;
-    public static final double kMaxElevatorHeightMeters = 2.35;
+    public static final double kMaxElevatorHeightMeters = 2.1;
   
     // distance per pulse = (distance per revolution) / (pulses per revolution)
     //  = (Pi * D) / ppr

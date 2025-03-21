@@ -182,7 +182,7 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
 
   @Override
   public boolean atPosition() {
-    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.005) == 0;
+    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.02) == 0;
   }
 
   @Override

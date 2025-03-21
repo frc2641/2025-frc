@@ -20,12 +20,9 @@ import frc.team2641.robot2025.commands.elevator.MoveElev;
 import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import frc.team2641.robot2025.subsystems.swerve.SwerveBase;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-
-import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import org.ironmaple.simulation.*;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;

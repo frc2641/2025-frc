@@ -40,7 +40,6 @@ public class RobotContainer {
   CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
-  private final SendableChooser<Boolean> useFancyAuto = new SendableChooser<>();
 
   Command driveCommand;
   Command driveSim;
@@ -58,7 +57,7 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
-  private boolean simpleAuto;
+  // private boolean simpleAuto;
   ElevatorSimulation elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
@@ -143,9 +142,9 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    if (simpleAuto)
+    // if (simpleAuto)
       return drivetrain.getAutonomousCommand(autoChooser.getSelected());
-    return Autos.getAutoCommand();
+    // return Autos.getAutoCommand();
   }
 
   public void setMotorBrake(boolean brake) {
@@ -174,17 +173,17 @@ public class RobotContainer {
 
     arena.simulationPeriodic();
   }
-  private void simpleAuto(){
 
-    simpleAuto = true;
+  private void simpleAuto() {
+    // simpleAuto = true;
 
     autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
     autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
-    autoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
+    autoChooser.addOption("Left Cage to K Branch", "Left Cage to J Branch");
     autoChooser.addOption("Left Cage to L Branch", "Left Cage to L Branch");
     autoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
     autoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
 
-    SmartDashboard.putData("Auto", autoChooser);
+    SmartDashboard.putData("Choose Auto", autoChooser);
   }
 }
