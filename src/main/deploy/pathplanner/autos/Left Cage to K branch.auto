@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevL2"
+            "name": "ElevL3"
           }
         },
         {
@@ -33,6 +33,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevDown"
           }
         }
       ]

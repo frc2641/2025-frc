@@ -1,11 +1,15 @@
 package frc.team2641.robot2025.commands.auto;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,9 +28,26 @@ import frc.team2641.robot2025.commands.intake.RunOuttake;
 
 public class Autos {
     
-    public static final Pose2d startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+    
+    
+    private static Pose2d startLeftCage;
+    private static Pose2d startMidCage;
+    private static Pose2d startRightCage;
+    
+    
+    private static void init(){
+        try {
+            startLeftCage =  PathPlannerPath.fromPathFile("Top First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Top First").getStartingHolonomicPose().get() : new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
+            startMidCage =  PathPlannerPath.fromPathFile("Middle First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Middle First").getStartingHolonomicPose().get() : new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
+            startRightCage =  PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().get() : new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+            
+        } catch (Exception e) {
+            startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
+            startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
+            startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+            e.printStackTrace();
+        }
+    }
 
     public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(35 * Math.PI / 180));
     public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(145 * Math.PI / 180));
@@ -156,6 +177,7 @@ public class Autos {
     }
 
     public static SendableChooser<Pose2d> start() {
+        init();
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
         
 

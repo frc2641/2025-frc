@@ -98,10 +98,8 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     config.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
 
     // TODO numbers are untested
-    // config.CurrentLimits.SupplyCurrentLimit = 40;
-    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
-    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
-    // config.CurrentLimits.StatorCurrentLimit = 60;
+    config.CurrentLimits.StatorCurrentLimit = 100;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     configer.apply(config);
 
@@ -111,9 +109,9 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     slot0Configs.kP = ElevatorConstants.PID.kP;
     slot0Configs.kI = ElevatorConstants.PID.kI;
     slot0Configs.kD = ElevatorConstants.PID.kD;
-    // slot0Configs.kS = ElevatorConstants.kS;
-    // slot0Configs.kA = ElevatorConstants.kA;
-    // slot0Configs.kG = ElevatorConstants.kG;
+    slot0Configs.kS = ElevatorConstants.kS;
+    slot0Configs.kA = ElevatorConstants.kA;
+    slot0Configs.kG = ElevatorConstants.kG;
     slot0Configs.kV = ElevatorConstants.kV;
 
     configer.apply(slot0Configs);

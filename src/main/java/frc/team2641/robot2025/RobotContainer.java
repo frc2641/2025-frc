@@ -92,6 +92,7 @@ public class RobotContainer {
     operatorGamepad.y().onTrue(new SetElev(ELEVNUM.L4));
     operatorGamepad.start().onTrue(new SetElev(ELEVNUM.HP));
     operatorGamepad.back().onTrue(new SetElev(0));
+    operatorGamepad.leftBumper().onTrue(new SetElev(elev.getPosition()));
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
@@ -133,6 +134,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ElevL2", new SetElev(ELEVNUM.L2));
     NamedCommands.registerCommand("ElevL1", new SetElev(ELEVNUM.L1));
     NamedCommands.registerCommand("ElevHP", new SetElev(ELEVNUM.HP));
+    NamedCommands.registerCommand("ElevDown", new SetElev(0));
     NamedCommands.registerCommand("Outtake", new RunOuttake());
     NamedCommands.registerCommand("Intake", new RunIntake());
 
@@ -144,6 +146,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // if (simpleAuto)
       return drivetrain.getAutonomousCommand(autoChooser.getSelected());
+      // TODO autobuilding autos are using incorrect start points.
     // return Autos.getAutoCommand();
   }
 
@@ -179,10 +182,11 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
     autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
-    autoChooser.addOption("Left Cage to K Branch", "Left Cage to J Branch");
-    autoChooser.addOption("Left Cage to L Branch", "Left Cage to L Branch");
+    autoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
+    autoChooser.addOption("Left Cage to K Branch", "Left Cage to K Branch");
     autoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
     autoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
+    autoChooser.addOption("just go forward", "Straight");
 
     SmartDashboard.putData("Choose Auto", autoChooser);
   }
