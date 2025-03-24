@@ -1,6 +1,7 @@
 package frc.team2641.robot2025;
 
 import org.ironmaple.simulation.SimulatedArena;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -25,6 +26,7 @@ import frc.team2641.robot2025.commands.elevator.MoveElev;
 import frc.team2641.robot2025.commands.elevator.SetElev;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
+import frc.team2641.robot2025.commands.intake.SuperSpin;
 import frc.team2641.robot2025.commands.shifts.*;
 import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
 import frc.team2641.robot2025.subsystems.elevator.Elevator;
@@ -57,7 +59,7 @@ public class RobotContainer {
   DoubleSubscriber angularVelocitySub;
 
   private SimulatedArena arena;
-  // private boolean simpleAuto;
+  private boolean simpleAuto;
   ElevatorSimulation elevSim;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
@@ -92,7 +94,9 @@ public class RobotContainer {
     operatorGamepad.y().onTrue(new SetElev(ELEVNUM.L4));
     operatorGamepad.start().onTrue(new SetElev(ELEVNUM.HP));
     operatorGamepad.back().onTrue(new SetElev(0));
-    operatorGamepad.leftBumper().onTrue(new SetElev(elev.getPosition()));
+
+    operatorGamepad.rightBumper().whileTrue(new SuperSpin());
+    
 
     if (Robot.isSimulation()){
       operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
@@ -118,8 +122,8 @@ public class RobotContainer {
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
     driveCommand = drivetrain.driveCommand(
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+      () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
+      () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
       () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
 
@@ -135,6 +139,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ElevL1", new SetElev(ELEVNUM.L1));
     NamedCommands.registerCommand("ElevHP", new SetElev(ELEVNUM.HP));
     NamedCommands.registerCommand("ElevDown", new SetElev(0));
+    NamedCommands.registerCommand("spin", new SuperSpin());
     NamedCommands.registerCommand("Outtake", new RunOuttake());
     NamedCommands.registerCommand("Intake", new RunIntake());
 
@@ -144,10 +149,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // if (simpleAuto)
+    if (simpleAuto)
       return drivetrain.getAutonomousCommand(autoChooser.getSelected());
       // TODO autobuilding autos are using incorrect start points.
-    // return Autos.getAutoCommand();
+    return Autos.getAutoCommand();
   }
 
   public void setMotorBrake(boolean brake) {
@@ -178,7 +183,7 @@ public class RobotContainer {
   }
 
   private void simpleAuto() {
-    // simpleAuto = true;
+    simpleAuto = true;
 
     autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
     autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");

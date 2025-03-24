@@ -15,8 +15,5 @@ public interface ElevatorIO extends Subsystem  {
 	void stop();
 	void setDefaultCommand(Command command);
 	void set(double speed);
-	boolean getAuto();
-	void setAuto(boolean auto);
 	boolean atPosition();
-	void override();
 }

@@ -22,4 +22,11 @@ public class ElevatorConstrain {
 		if (setpoint > Constants.ElevatorConstants.kMaxElevatorHeightMeters) setpoint = Constants.ElevatorConstants.kMaxElevatorHeightMeters;
 		if (setpoint < Constants.ElevatorConstants.kMinElevatorHeightMeters) setpoint = Constants.ElevatorConstants.kMinElevatorHeightMeters;
 	}
+
+	public static double constrain(double x){
+		double z = x;
+		if (z > Constants.ElevatorConstants.kMaxElevatorHeightMeters) z = Constants.ElevatorConstants.kMaxElevatorHeightMeters;
+		if (z < Constants.ElevatorConstants.kMinElevatorHeightMeters) z = Constants.ElevatorConstants.kMinElevatorHeightMeters;
+		return z;
+	}
 }

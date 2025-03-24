@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.commands.elevator.MoveElev;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
+// import frc.team2641.robot2025.commands.elevator.MoveElev;
+// import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import frc.team2641.robot2025.subsystems.swerve.SwerveBase;
 import java.io.File;
@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
   private static SimulatedArena arena;
 
   private Timer disabledTimer;
-  private ElevatorSimulation elevSim;
+  // private ElevatorSimulation elevSim;
 
   public Robot() {
     instance = this;
@@ -64,9 +64,9 @@ public class Robot extends TimedRobot {
       arena = SimulatedArena.getInstance();
       driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
 
-      elevSim = ElevatorSimulation.getInstance();
+      // elevSim = ElevatorSimulation.getInstance();
 
-      new MoveElev().schedule();
+      // new MoveElev().schedule();
     }
   }
 
@@ -151,7 +151,7 @@ public class Robot extends TimedRobot {
   public void simulationInit() {
     driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(3,3), new Rotation2d(0)));
 
-    robotContainer.elevSim = ElevatorSimulation.getInstance();
+    // robotContainer.elevSim = ElevatorSimulation.getInstance();
     // driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)));
 
     arena.resetFieldForAuto();
@@ -170,8 +170,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    elevSim.simulationPeriodic();
-    elevSim.updateTelemetry();
+    // elevSim.simulationPeriodic();
+    // elevSim.updateTelemetry();
     robotContainer.updateSimulation();
 }
 

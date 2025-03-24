@@ -11,12 +11,12 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
+// import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class IntakeIOSim implements IntakeIO {
   private final IntakeSimulation coralIntakeSim;
-  private final ElevatorSimulation elevSim;
+  // private final ElevatorSimulation elevSim;
 
   private Optional<SwerveDriveSimulation> driveSim;
   private BooleanSubscriber spinSub;
@@ -30,7 +30,7 @@ public class IntakeIOSim implements IntakeIO {
   
   public IntakeIOSim() {
     driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
-    elevSim = ElevatorSimulation.getInstance();
+    // elevSim = ElevatorSimulation.getInstance();
     
 
     // Here, create the intake simulation with respect to the intake on your real robot
@@ -57,7 +57,6 @@ public class IntakeIOSim implements IntakeIO {
 
   
   public void stop() {
-    // TODO Auto-generated method stub
     coralIntakeSim.stopIntake();
   }
 
@@ -80,7 +79,8 @@ public class IntakeIOSim implements IntakeIO {
           driveSim.get().getSimulatedDriveTrainPose().getRotation(),
           // The height at which the coral is ejected
           // Meters.of(1.28),
-          Meters.of(elevSim.getPosition()),
+          // Meters.of(elevSim.getPosition()),
+          Meters.of(0),
           // The initial speed of the coral
           MetersPerSecond.of(2),
           // The coral is ejected at a 35-degree slope
@@ -103,5 +103,32 @@ public class IntakeIOSim implements IntakeIO {
   @Override
   public void secondSpin() {
     outtake();
+  }
+
+  public void superSpin(){
+    if (coralIntakeSim.getGamePiecesAmount() > 0) {
+      SimulatedArena.getInstance()
+        .addGamePieceProjectile(new ReefscapeCoralOnFly(
+          // Obtain robot position from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
+          // The scoring mechanism is installed at (0.46, 0) (meters) on the robot
+          new Translation2d(0.35, 0.35),
+          // Obtain robot speed from drive simulation
+          driveSim.get().getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          // Obtain robot facing from drive simulation
+          driveSim.get().getSimulatedDriveTrainPose().getRotation(),
+          // The height at which the coral is ejected
+          // Meters.of(1.28),
+          Meters.of(0),
+          // Meters.of(elevSim.getPosition()),
+          // The initial speed of the coral
+          MetersPerSecond.of(-5),
+          // The coral is ejected at a 35-degree slope
+          Degrees.of(-35)
+        )
+      );
+      coralIntakeSim.setGamePiecesCount(0);
+    } 
+
   }
 }

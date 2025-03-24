@@ -11,19 +11,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ElevL3"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Outtake"
+                  "name": "spin"
                 }
               },
               {
@@ -33,12 +27,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevDown"
           }
         }
       ]

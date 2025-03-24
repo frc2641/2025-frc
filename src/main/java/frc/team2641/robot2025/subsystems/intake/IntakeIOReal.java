@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-// import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
@@ -71,17 +70,18 @@ public class IntakeIOReal implements IntakeIO {
 
   @Override
   public void firstSpin() {
-    // outtakeMotor.set(-Constants.IntakeConstants.speedOut);
-    outtakeMotor.set(-0.2);
-    // intakeMotor.set(Constants.IntakeConstants.speedIn);
-    intakeMotor.set(0.05);
+    intakeMotor.set(IntakeConstants.speedIn1);
+    outtakeMotor.set(IntakeConstants.speedIn2);
   }
 
   @Override
   public void secondSpin() {
-    outtakeMotor.set(0.1);
-    // outtakeMotor.set(Constants.IntakeConstants.speedOut);
-    intakeMotor.set(0.1);
-    // intakeMotor.set(Constants.IntakeConstants.speedOut);
+    outtakeMotor.set(IntakeConstants.speedOut);
+    intakeMotor.set(IntakeConstants.speedOut);
+  }
+
+  public void superSpin(){
+    outtakeMotor.set(IntakeConstants.superSpeed);
+    intakeMotor.set(IntakeConstants.superSpeed);
   }
 }

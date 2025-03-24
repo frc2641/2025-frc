@@ -6,4 +6,5 @@ public interface IntakeIO extends Subsystem {
 	public void stop();
 	public void firstSpin();
 	public void secondSpin();
+	public void superSpin();
 }

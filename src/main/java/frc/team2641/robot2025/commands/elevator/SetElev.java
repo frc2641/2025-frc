@@ -4,14 +4,14 @@
 
 package frc.team2641.robot2025.commands.elevator;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.subsystems.elevator.Elevator;
 import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
  import frc.team2641.robot2025.Constants.ElevatorPositions;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetElev extends Command {
+public class SetElev extends InstantCommand {
 
   private ElevatorIO elev = Elevator.getInstance();
   private double setPoint;
@@ -51,28 +51,13 @@ public class SetElev extends Command {
       setPoint = 0;
         break;
     }
+
+    addRequirements(elev);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elev.setAuto(true);
     elev.goTo(setPoint);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    elev.setAuto(false);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return elev.atPosition() && elev.getAuto();
   }
 }

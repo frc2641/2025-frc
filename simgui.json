@@ -13,6 +13,7 @@
       "/SmartDashboard/3rd coral pos": "String Chooser",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto": "String Chooser",
+      "/SmartDashboard/Choose Auto": "String Chooser",
       "/SmartDashboard/Elevator Sim": "Mechanism2d",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",

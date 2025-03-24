@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 // import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -21,7 +22,6 @@ import frc.team2641.robot2025.helpers.ElevatorConstrain;
 
 public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoCloseable {
   private TalonFX motor;
-  private boolean auto;
   private boolean stalled;
   // private final MotionMagicVoltage m_motmag = new MotionMagicVoltage(0);
   private double setpoint = ElevatorConstants.initPos;
@@ -79,7 +79,6 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
 
   }
 
-  @Override
   public double getPosition() {
     return motor.getPosition().getValueAsDouble() * Constants.ElevatorConstants.elevConvert;
   }
@@ -114,23 +113,32 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     slot0Configs.kG = ElevatorConstants.kG;
     slot0Configs.kV = ElevatorConstants.kV;
 
+    slot0Configs.GravityType = GravityTypeValue.Elevator_Static;
+
     configer.apply(slot0Configs);
+    
     // // set Motion Magic settings
     // MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
     // motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
     // motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
     // motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
   }
-  
-  @Override
+
   public void periodic() {
+      
+  }
+
+  public void periodicnot() {
+
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
-    setpoint = new ElevatorConstrain(setpoint).get();
-    
+    setpoint = ElevatorConstrain.constrain(setpoint);
+
+      if(atPosition()){    
     double value = new ElevatorConstrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
+      }
     
 
     // m_motmag.Slot = 0;
@@ -148,45 +156,27 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
     SmartDashboard.putBoolean("Elevator Stall", stalled);
     SmartDashboard.putNumber("Current", motor.getTorqueCurrent().getValue().baseUnitMagnitude());
     SmartDashboard.putNumber("Setpoint", setpoint);
-    SmartDashboard.putBoolean("Elevator Auto", auto);
   }
   
   public TalonFX getMotor() {
     return motor;
   }
 
-  @Override
   public void setDefaultCommand(Command command) {
     super.setDefaultCommand(command);
   }
 
-  @Override
   public void close() {
     // m_encoder.close();
     // m_motor.close();
     // m_mech2d.close();
   }
 
-  @Override
-  public boolean getAuto()
-  {
-    return auto;
-  }
 
-  @Override
-  public void setAuto(boolean auto){
-    this.auto = auto;
-  }
-
-  @Override
   public boolean atPosition() {
     return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.02) == 0;
   }
 
-  @Override
-  public void override() {
-    auto =false;
-  }
 
   
 }

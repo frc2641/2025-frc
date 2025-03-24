@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ElevatorSimulation extends SubsystemBase implements AutoCloseable, ElevatorIO {
 
   private static ElevatorSimulation instance;
-  private boolean auto;
   public static ElevatorSimulation getInstance(){
     if (instance == null)
       instance = new ElevatorSimulation();
@@ -175,23 +174,8 @@ super.setDefaultCommand(command);
   public void set(double speed) {}
 
   @Override
-  public boolean getAuto()
-  {
-    return auto;
-  }
-
-  @Override
-  public void setAuto(boolean auto){
-    this.auto = auto;
-  }
-
-  @Override
   public boolean atPosition() {
     return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.005) == 0;
   }
 
-  @Override
-  public void override() {
-auto = false;
-  }
 }
