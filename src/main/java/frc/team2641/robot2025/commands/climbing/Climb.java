@@ -5,17 +5,17 @@
 package frc.team2641.robot2025.commands.climbing;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2025.subsystems.climber.ClimberReal;
+import frc.team2641.robot2025.subsystems.Climber;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Climb extends Command {
 
-  private ClimberReal climber;
+  private Climber climber;
   private boolean forwards;
   /** Creates a new Extend. */
   public Climb(boolean forwards) {
     // Use addRequirements() here to declare subsystem dependencies.
-    climber = ClimberReal.getInstance();
+    climber = Climber.getInstance();
     this.forwards = forwards;
 
     addRequirements(climber);

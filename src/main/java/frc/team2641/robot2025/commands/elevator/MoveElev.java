@@ -5,11 +5,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.helpers.ElevatorConstrain;
-import frc.team2641.robot2025.subsystems.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
+import frc.team2641.robot2025.subsystems.Elevator;
 
 public class MoveElev extends Command {
-  private ElevatorIO elev;
+  private Elevator elev;
 
   public MoveElev() {
     elev = Elevator.getInstance();

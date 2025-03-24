@@ -5,7 +5,7 @@
 package frc.team2641.robot2025.commands.climbing;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2025.subsystems.climber.Winch;
+import frc.team2641.robot2025.subsystems.Winch;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Wrap extends Command {

@@ -6,14 +6,13 @@ package frc.team2641.robot2025.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team2641.robot2025.Constants;
-import frc.team2641.robot2025.subsystems.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
+import frc.team2641.robot2025.subsystems.Elevator;
  import frc.team2641.robot2025.Constants.ElevatorPositions;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetElev extends InstantCommand {
 
-  private ElevatorIO elev = Elevator.getInstance();
+  private Elevator elev = Elevator.getInstance();
   private double setPoint;
   /** Creates a new SetElev. */
   public SetElev(double setPoint) {

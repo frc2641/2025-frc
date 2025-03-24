@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.elevator;
+package frc.team2641.robot2025.subsystems;
 
 // import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -20,7 +20,7 @@ import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ElevatorConstants;
 import frc.team2641.robot2025.helpers.ElevatorConstrain;
 
-public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoCloseable {
+public class Elevator extends SubsystemBase implements AutoCloseable {
   private TalonFX motor;
   private boolean stalled;
   // private final MotionMagicVoltage m_motmag = new MotionMagicVoltage(0);
@@ -49,13 +49,13 @@ public class ElevatorReal extends SubsystemBase implements ElevatorIO, AutoClose
   private final Encoder m_encoder = new Encoder(Constants.ElevatorConstants.kEncoderAChannel, Constants.ElevatorConstants.kEncoderBChannel);
    */
 
-  private static ElevatorReal instance;
-  public static ElevatorReal getInstance() {
-    if (instance == null) instance = new ElevatorReal();
+  private static Elevator instance;
+  public static Elevator getInstance() {
+    if (instance == null) instance = new Elevator();
     return instance;
   }
 
-  private ElevatorReal() {
+  private Elevator() {
     configMotor();
     setpoint = getPosition();
   }

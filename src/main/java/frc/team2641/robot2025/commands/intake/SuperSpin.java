@@ -5,13 +5,12 @@
 package frc.team2641.robot2025.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2641.robot2025.subsystems.intake.Intake;
-import frc.team2641.robot2025.subsystems.intake.IntakeIO;
+import frc.team2641.robot2025.subsystems.Intake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SuperSpin extends Command {
   /** Creates a new SuperSpin. */
-  private IntakeIO intake = Intake.getInstance();
+  private Intake intake = Intake.getInstance();
 
 
   public SuperSpin(){

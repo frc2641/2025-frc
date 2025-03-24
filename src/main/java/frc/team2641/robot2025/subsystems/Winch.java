@@ -1,4 +1,4 @@
-package frc.team2641.robot2025.subsystems.climber;
+package frc.team2641.robot2025.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
 
-public class Winch extends SubsystemBase implements ClimberIO {
+public class Winch extends SubsystemBase {
   private TalonFX motor;
 
   private static Winch instance;

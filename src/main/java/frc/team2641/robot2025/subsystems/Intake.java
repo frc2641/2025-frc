@@ -1,30 +1,31 @@
-package frc.team2641.robot2025.subsystems.intake;
+package frc.team2641.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
-public class IntakeIOReal implements IntakeIO {
+public class Intake extends SubsystemBase {
   private TalonFX intakeMotor;
   private TalonFX outtakeMotor;
   
-  private static IntakeIOReal instance;
+  private static Intake instance;
   
-  public static IntakeIO getInstance() {
-    if (instance == null) instance = new IntakeIOReal();
+  public static Intake getInstance() {
+    if (instance == null) instance = new Intake();
     return instance;
   }
 
-  private IntakeIOReal() {
+  private Intake() {
     configMotor();
 
   }
 
-  @Override
   public void stop() {
     intakeMotor.stopMotor();
     outtakeMotor.stopMotor();
@@ -57,7 +58,6 @@ public class IntakeIOReal implements IntakeIO {
 
   }
 
-  @Override
   public void periodic() {
     if (Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
       System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
@@ -68,13 +68,11 @@ public class IntakeIOReal implements IntakeIO {
     return intakeMotor;
   }
 
-  @Override
   public void firstSpin() {
     intakeMotor.set(IntakeConstants.speedIn1);
     outtakeMotor.set(IntakeConstants.speedIn2);
   }
 
-  @Override
   public void secondSpin() {
     outtakeMotor.set(IntakeConstants.speedOut);
     intakeMotor.set(IntakeConstants.speedOut);

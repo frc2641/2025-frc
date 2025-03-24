@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // robotContainer.setMotorBrake(true);
+    robotContainer.setMotorBrake(true);
 
     if (autoCommand != null) {
       autoCommand.cancel();

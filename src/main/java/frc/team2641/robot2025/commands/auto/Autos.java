@@ -20,13 +20,11 @@ import frc.team2641.robot2025.commands.Wait;
 import frc.team2641.robot2025.commands.elevator.SetElev;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
-import frc.team2641.robot2025.subsystems.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.intake.Intake;
+import frc.team2641.robot2025.subsystems.Elevator;
+import frc.team2641.robot2025.subsystems.Intake;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class Autos {
-    
-    
     
     public static Pose2d startLeftCage;
     public static Pose2d startMidCage;

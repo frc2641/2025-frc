@@ -26,15 +26,12 @@ import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
 import frc.team2641.robot2025.commands.intake.SuperSpin;
 import frc.team2641.robot2025.commands.shifts.*;
-import frc.team2641.robot2025.commands.sim.CoralAtHPstationSim;
-import frc.team2641.robot2025.subsystems.elevator.Elevator;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorIO;
-import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
+import frc.team2641.robot2025.subsystems.*;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final ElevatorIO elev = Elevator.getInstance();
+  private final Elevator elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -56,7 +53,6 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
   
-  ElevatorSimulation elevSim;
 
   SendableChooser<Boolean> autoStyle;
 
@@ -95,12 +91,6 @@ public class RobotContainer {
 
     operatorGamepad.rightBumper().whileTrue(new SuperSpin());
     
-
-    if (Robot.isSimulation()){
-      operatorGamepad.start().onTrue(new CoralAtHPstationSim(false));
-      operatorGamepad.back().onTrue(new CoralAtHPstationSim(true));
-    }
-
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
