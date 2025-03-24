@@ -20,14 +20,19 @@ import frc.team2641.robot2025.commands.Wait;
 import frc.team2641.robot2025.commands.elevator.SetElev;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
+import frc.team2641.robot2025.subsystems.elevator.Elevator;
+import frc.team2641.robot2025.subsystems.intake.Intake;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class Autos {
     
     
     
-    private static Pose2d startLeftCage;
-    private static Pose2d startMidCage;
-    private static Pose2d startRightCage;
+    public static Pose2d startLeftCage;
+    public static Pose2d startMidCage;
+    public static Pose2d startRightCage;
+
+    private static final Drivetrain drive = Drivetrain.getInstance();
     
     
     private static void init(){
@@ -200,27 +205,51 @@ public class Autos {
     }
 
     public static Command startToReef() {
-        return AutoBuilder.pathfindToPose(reef1().getSelected(), constraints);
+        if(reef1().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(reef1().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static Command reefToHP1() {
-        return AutoBuilder.pathfindToPose(humanPlayer1().getSelected(), constraints);
+        if(humanPlayer1().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(humanPlayer1().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static Command hpToReef1() {
-        return AutoBuilder.pathfindToPose(reef2().getSelected(), constraints);
+        if(reef2().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(reef2().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static Command reefToHP2() {
-        return AutoBuilder.pathfindToPose(humanPlayer2().getSelected(), constraints);
+        if(humanPlayer2().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(humanPlayer2().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static Command hpToReef2() {
-        return AutoBuilder.pathfindToPose(reef3().getSelected(), constraints);
+        if(reef3().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(reef3().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static Command reefToHP3() {
-        return AutoBuilder.pathfindToPose(humanPlayer3().getSelected(), constraints);
+        if(humanPlayer3().getSelected() == null)
+            return new Wait(15);
+        Command c = AutoBuilder.pathfindToPose(humanPlayer3().getSelected(), constraints);
+        c.addRequirements(drive);
+        return c;
     }
 
     public static SendableChooser<Constants.ELEVNUM> getLevel1() {
@@ -255,67 +284,55 @@ public class Autos {
         return sc;
     }
 
-    public static Command[] getCommands(){
-        Command[] x = new Command[12];
-        x[0] = startToReef();
-        x[1] = elevAndShoot(getLevel1().getSelected());
-        x[2] = reefToHP1();
-        x[3] = specialIntake();
-        x[4] = hpToReef1();
-        x[5] = elevAndShoot(getLevel2().getSelected());
-        x[6] = reefToHP2();
-        x[7] = specialIntake();
-        x[8] = hpToReef2();
-        x[9] = elevAndShoot(getLevel3().getSelected());
-        x[10] = reefToHP3();
-        x[11] = specialIntake();
-
-        return x;
-    }
-
-    public static Command elevAndShoot(ELEVNUM x){
-        Command results = Commands.none();
-        results.andThen(new SetElev(x));
-        results.andThen(specialOuttake());
-        results.andThen(new SetElev(0));
-        return results;
-    }
-
-    public static Command specialIntake(){
-
-        Command result = Commands.none();
-
-        result.andThen(new SetElev(ELEVNUM.HP));
-        
-        result.andThen(Commands.race(
+    public static Command getAutoCommand(){
+        Command result = Commands.sequence(
+        startToReef(), 
+        new SetElev(getLevel1().getSelected()),
+        Commands.race(
+            new RunOuttake(),
+            new Wait(0.25)
+        ),
+        new SetElev(0),
+        reefToHP1(),
+        new SetElev(ELEVNUM.HP),
+        Commands.race(
             new RunIntake(),
             new Wait(2)
-        ));
-
-        result.andThen(new SetElev(0));
-
+        ),
+        hpToReef1(),
+         new SetElev(getLevel2().getSelected()),
+        Commands.race(
+            new RunOuttake(),
+            new Wait(0.25)
+        ),
+        new SetElev(0),
+        reefToHP2(),
+        new SetElev(ELEVNUM.HP),
+        Commands.race(
+            new RunIntake(),
+            new Wait(2)
+        ),
+        hpToReef2(),
+        new SetElev(getLevel1().getSelected()),
+       Commands.race(
+           new RunOuttake(),
+           new Wait(0.25)
+       ),
+        new SetElev(0),
+        reefToHP3(),
+        new SetElev(ELEVNUM.HP),
+        Commands.race(
+            new RunIntake(),
+            new Wait(2)
+        )
+        );
+        result.addRequirements(Intake.getInstance());
+        result.addRequirements(Elevator.getInstance());
+        result.addRequirements(Drivetrain.getInstance());
         return result;
     }
 
-        public static Command specialOuttake(){
-            Command result = Commands.race(
-                new RunOuttake(),
-                new Wait(0.25)
-            );
-
-        return result;
-    }    
-
-    public static Command getAutoCommand() {
-        Command result = Commands.none();
-        Command[] toAdd = getCommands();
-        for(Command x : toAdd){
-            if(x == null)
-                return result;
-            result.andThen(x);   
-        }
-        return result;
-}
+    
 
     public static void publishAll(){
         SmartDashboard.putData("1st coral pos", reef1());

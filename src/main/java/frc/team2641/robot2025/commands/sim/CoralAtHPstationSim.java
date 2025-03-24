@@ -3,12 +3,12 @@ package frc.team2641.robot2025.commands.sim;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team2641.robot2025.Robot;
 
 public class CoralAtHPstationSim extends InstantCommand {
   private double station;
@@ -26,7 +26,7 @@ public class CoralAtHPstationSim extends InstantCommand {
 
   @Override
   public void initialize() {
-    SimulatedArena.getInstance()
+    Robot.getArena()
       .addGamePieceProjectile(new ReefscapeCoralOnFly(
         // Obtain robot position from drive simulation
         new Translation2d(0.739,station),

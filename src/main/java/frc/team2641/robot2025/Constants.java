@@ -24,7 +24,7 @@ public final class Constants {
 
     public static final SlewRateLimiter leftX = new SlewRateLimiter(1);
     public static final SlewRateLimiter leftY = new SlewRateLimiter(1);
-    // public static final SlewRateLimiter rightX = new SlewRateLimiter(1);
+    public static final SlewRateLimiter rightX = new SlewRateLimiter(1);
   }
 
   public static class OperatorConstants {

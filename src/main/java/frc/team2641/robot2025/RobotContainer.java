@@ -1,7 +1,5 @@
 package frc.team2641.robot2025;
 
-import org.ironmaple.simulation.SimulatedArena;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -48,19 +46,19 @@ public class RobotContainer {
 
   BooleanPublisher alignmentPub;
   BooleanSubscriber alignmentSub;
-
+  
   BooleanPublisher sniperPub;
   BooleanSubscriber sniperSub;
-
+  
   BooleanPublisher robotPub;
   BooleanSubscriber robotSub;
   
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
-
-  private SimulatedArena arena;
-  private boolean simpleAuto;
+  
   ElevatorSimulation elevSim;
+
+  SendableChooser<Boolean> autoStyle;
 
   StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
     .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
@@ -104,7 +102,6 @@ public class RobotContainer {
     }
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-    if (Robot.isSimulation()) arena = Robot.getArena();
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
     alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
@@ -120,6 +117,8 @@ public class RobotContainer {
     robotPub = table.getBooleanTopic("robotRelative").publish();
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
+
+    autoStyle = new SendableChooser<Boolean>();
 
     driveCommand = drivetrain.driveCommand(
       () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
@@ -143,13 +142,19 @@ public class RobotContainer {
     NamedCommands.registerCommand("Outtake", new RunOuttake());
     NamedCommands.registerCommand("Intake", new RunIntake());
 
-    /* One of these should always be commented out */
-    // Autos.publishAll();
+    Autos.publishAll();
     simpleAuto();
+
+    autoStyle.addOption("Pathplanner autos", true);
+    autoStyle.setDefaultOption("Pathplanner autos", true);
+    autoStyle.addOption("Build your own", false);
+    // autoStyle.setDefaultOption("Build your own", false);
+    
+    SmartDashboard.putData("Auto Style Chooser", autoStyle);
   }
 
   public Command getAutonomousCommand() {
-    if (simpleAuto)
+    if (autoStyle.getSelected())
       return drivetrain.getAutonomousCommand(autoChooser.getSelected());
       // TODO autobuilding autos are using incorrect start points.
     return Autos.getAutoCommand();
@@ -171,19 +176,17 @@ public class RobotContainer {
 
   public void updateSimulation() {
     if (Robot.isReal()) return;
-    if (arena == null) arena = Robot.getArena();
     
-    Pose3d[] algae = arena.getGamePiecesArrayByType("Algae");
+    Pose3d[] algae = Robot.getArena().getGamePiecesArrayByType("Algae");
     algaePoses.accept(algae);
 
-    Pose3d[] coral = arena.getGamePiecesArrayByType("Coral");
+    Pose3d[] coral = Robot.getArena().getGamePiecesArrayByType("Coral");
     coralPoses.accept(coral);
 
-    arena.simulationPeriodic();
+    Robot.getArena().simulationPeriodic();
   }
 
   private void simpleAuto() {
-    simpleAuto = true;
 
     autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
     autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");

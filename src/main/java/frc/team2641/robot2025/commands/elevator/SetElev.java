@@ -25,7 +25,11 @@ public class SetElev extends InstantCommand {
     addRequirements(elev);
   }
 
-  public SetElev(Constants.ELEVNUM pos){
+  public SetElev(Constants.ELEVNUM pos)
+  {
+    setPoint = 0;
+
+    if( pos != null)
     switch (pos) {
       case L1:
         setPoint = ElevatorPositions.L1;

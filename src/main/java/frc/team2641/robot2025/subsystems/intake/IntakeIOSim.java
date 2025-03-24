@@ -6,11 +6,11 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.Optional;
 
 import org.ironmaple.simulation.IntakeSimulation;
-import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanSubscriber;
+import frc.team2641.robot2025.Robot;
 // import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
@@ -20,7 +20,6 @@ public class IntakeIOSim implements IntakeIO {
 
   private Optional<SwerveDriveSimulation> driveSim;
   private BooleanSubscriber spinSub;
-  
 
   private static IntakeIOSim instance;
   public static IntakeIOSim getInstance() {
@@ -67,7 +66,7 @@ public class IntakeIOSim implements IntakeIO {
 
   private void outtake(){
     if (coralIntakeSim.getGamePiecesAmount() > 0) {
-      SimulatedArena.getInstance()
+      Robot.getArena()
         .addGamePieceProjectile(new ReefscapeCoralOnFly(
           // Obtain robot position from drive simulation
           driveSim.get().getSimulatedDriveTrainPose().getTranslation(),
@@ -107,7 +106,7 @@ public class IntakeIOSim implements IntakeIO {
 
   public void superSpin(){
     if (coralIntakeSim.getGamePiecesAmount() > 0) {
-      SimulatedArena.getInstance()
+      Robot.getArena()
         .addGamePieceProjectile(new ReefscapeCoralOnFly(
           // Obtain robot position from drive simulation
           driveSim.get().getSimulatedDriveTrainPose().getTranslation(),

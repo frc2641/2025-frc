@@ -13,6 +13,7 @@
       "/SmartDashboard/3rd coral pos": "String Chooser",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto": "String Chooser",
+      "/SmartDashboard/Auto Style Chooser": "String Chooser",
       "/SmartDashboard/Choose Auto": "String Chooser",
       "/SmartDashboard/Elevator Sim": "Mechanism2d",
       "/SmartDashboard/Encoders": "Alerts",
@@ -56,6 +57,15 @@
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
     "visible": true
   },
   "Plot": {
