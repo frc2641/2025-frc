@@ -1,10 +1,6 @@
 package frc.team2641.robot2025;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -16,18 +12,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.team2641.robot2025.commands.elevator.MoveElev;
-// import frc.team2641.robot2025.subsystems.elevator.ElevatorSimulation;
-import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import frc.team2641.robot2025.subsystems.swerve.SwerveBase;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import swervelib.parser.SwerveParser;
-import org.ironmaple.simulation.*;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnField;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 
 public class Robot extends TimedRobot {
   private static Robot instance;
@@ -37,11 +25,7 @@ public class Robot extends TimedRobot {
   private static PneumaticHub ph;
   public RobotContainer robotContainer;
 
-   Optional<SwerveDriveSimulation> driveSim;
-  private static SimulatedArena arena;
-
   private Timer disabledTimer;
-  // private ElevatorSimulation elevSim;
 
   public Robot() {
     instance = this;
@@ -63,12 +47,6 @@ public class Robot extends TimedRobot {
 
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
-      arena = SimulatedArena.getInstance();
-      driveSim = Drivetrain.getInstance().getSwerveDrive().getMapleSimDrive();
-
-      // elevSim = ElevatorSimulation.getInstance();
-
-      // new MoveElev().schedule();
     }
   }
 
@@ -129,6 +107,7 @@ public class Robot extends TimedRobot {
         ? rumble(true) : rumble( false ) 
       );
   }
+
   private int rumble(boolean on){
     SmartDashboard.putBoolean("Rumble", on);
     return on ? 1 : 0;
@@ -151,30 +130,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
-    // driveSim.get().setSimulationWorldPose(new Pose2d());
-
-    // robotContainer.elevSim = ElevatorSimulation.getInstance();
-    driveSim.get().setSimulationWorldPose(new Pose2d(new Translation2d(2,2), new Rotation2d(0)));
-
-    
-    Pose3d[] coral = arena.getGamePiecesArrayByType("Coral");
-    Pose3d[] algae = arena.getGamePiecesArrayByType("Algae");
-    
-    robotContainer.coralPoses.accept(coral);
-    robotContainer.algaePoses.accept(algae);
-    arena.resetFieldForAuto();
-    arena.addGamePiece(new ReefscapeAlgaeOnField(new Translation2d(4,2)));  
-    
-    arena.addGamePiece(new ReefscapeCoralOnField(
-        new Pose2d(2, 2, Rotation2d.fromDegrees(90))
-      ));
   }
 
   @Override
   public void simulationPeriodic() {
-    // elevSim.simulationPeriodic();
-    // elevSim.updateTelemetry();
-    robotContainer.updateSimulation();
 }
 
   public static PneumaticHub getPH() {
@@ -183,9 +142,5 @@ public class Robot extends TimedRobot {
 
   public static PowerDistribution getPDH() {
     return pdh;
-  }
-
-  public static SimulatedArena getArena() {
-    return arena;
   }
 }

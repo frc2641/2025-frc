@@ -2,14 +2,12 @@ package frc.team2641.robot2025;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,16 +51,7 @@ public class RobotContainer {
   DoublePublisher angularVelocityPub;
   DoubleSubscriber angularVelocitySub;
   
-
   SendableChooser<Boolean> autoStyle;
-
-  StructArrayPublisher<Pose3d> algaePoses = NetworkTableInstance.getDefault()
-    .getStructArrayTopic("FieldElements/Alage", Pose3d.struct)
-    .publish();
-
-  StructArrayPublisher<Pose3d> coralPoses = NetworkTableInstance.getDefault()
-    .getStructArrayTopic("FieldElements/Coral", Pose3d.struct)
-    .publish();
 
   public RobotContainer() {
     driverGamepad.a().whileTrue(new AutoAngle(1, false));
@@ -110,10 +99,17 @@ public class RobotContainer {
 
     autoStyle = new SendableChooser<Boolean>();
 
+    // with SRL
+    // driveCommand = drivetrain.driveCommand(
+    //   () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
+    //   () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
+    //   () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
+    //   () -> robotSub.get());
+
     driveCommand = drivetrain.driveCommand(
-      () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
-      () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
-      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE : -driverGamepad.getRightX(),
       () -> robotSub.get());
 
     drivetrain.setDefaultCommand(driveCommand);
@@ -164,20 +160,7 @@ public class RobotContainer {
     return operatorGamepad.getRightY();
   }
 
-  public void updateSimulation() {
-    if (Robot.isReal()) return;
-    
-    Pose3d[] algae = Robot.getArena().getGamePiecesArrayByType("Algae");
-    algaePoses.accept(algae);
-
-    Pose3d[] coral = Robot.getArena().getGamePiecesArrayByType("Coral");
-    coralPoses.accept(coral);
-
-    Robot.getArena().simulationPeriodic();
-  }
-
   private void simpleAuto() {
-
     autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
     autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
     autoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");

@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
@@ -59,7 +60,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void periodic() {
-    if (Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
+    if (Robot.isReal() && Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
       System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
     }
   }
