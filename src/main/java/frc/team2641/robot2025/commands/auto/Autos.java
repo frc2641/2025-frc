@@ -1,24 +1,18 @@
 package frc.team2641.robot2025.commands.auto;
 
 import java.util.ArrayList;
-
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.team2641.robot2025.Alerts;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.ELEVNUM;
-import frc.team2641.robot2025.commands.Wait;
-import frc.team2641.robot2025.commands.elevator.SetElev;
+import frc.team2641.robot2025.commands.elevator.SetElevator;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
 import frc.team2641.robot2025.subsystems.Elevator;
@@ -26,325 +20,292 @@ import frc.team2641.robot2025.subsystems.Intake;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class Autos {
+	private static Pose2d startLeftCage;
+	private static Pose2d startMidCage;
+	private static Pose2d startRightCage;
+
+	private static PathPlannerPath topFirstPath;
+	private static PathPlannerPath middleFirstPath;
+	private static PathPlannerPath bottomFirstPath;
+
+	private static final SendableChooser<Autos.Mode> autoMode = new SendableChooser<Autos.Mode>();
+	private static final SendableChooser<String> simpleAutoChooser = new SendableChooser<String>();
+	private static final SendableChooser<Pose2d> start = new SendableChooser<Pose2d>();
+	private static final ArrayList<SendableChooser<Pose2d>> sources = new ArrayList<SendableChooser<Pose2d>>();
+	private static final ArrayList<SendableChooser<Pose2d>> destinations = new ArrayList<SendableChooser<Pose2d>>();
+	private static final ArrayList<SendableChooser<Constants.ELEVNUM>> levels = new ArrayList<SendableChooser<Constants.ELEVNUM>>();
+
+	private static final Drivetrain drivetrain = Drivetrain.getInstance();
+
+	public static void init() {
+		autoMode.setDefaultOption("Simple", Autos.Mode.SIMPLE);
+    autoMode.addOption("Build Your Own", Autos.Mode.BYO);
+		autoMode.addOption("Creep", Autos.Mode.CREEP);
+    autoMode.addOption("None", Autos.Mode.NONE);
+
+		autoMode.onChange((Mode mode) -> checkValidAuto());
     
-    public static Pose2d startLeftCage;
-    public static Pose2d startMidCage;
-    public static Pose2d startRightCage;
+    SmartDashboard.putData("Auto Mode", autoMode);
 
-    private static final Drivetrain drive = Drivetrain.getInstance();
-    
-    
-    private static void init(){
-        try {
-            startLeftCage =  PathPlannerPath.fromPathFile("Top First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Top First").getStartingHolonomicPose().get() : new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
-            startMidCage =  PathPlannerPath.fromPathFile("Middle First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Middle First").getStartingHolonomicPose().get() : new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
-            startRightCage =  PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().get() : new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
-            
-        } catch (Exception e) {
-            startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(270 * Math.PI / 180));
-            startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(270 * Math.PI / 180));
-            startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(270 * Math.PI / 180));
-            e.printStackTrace();
-        }
-    }
+		try {
+			topFirstPath = PathPlannerPath.fromPathFile("Top First");
+			middleFirstPath = PathPlannerPath.fromPathFile("Middle First");
+			bottomFirstPath = PathPlannerPath.fromPathFile("Bottom First");
+		} catch (Exception e) {
+			System.err.println("Could not load paths");
+			e.printStackTrace();
+		}
 
-    public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(125 * Math.PI / 180));
-    public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(235 * Math.PI / 180));
-     
-    public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(180 * Math.PI / 180));
-    public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(240 * Math.PI / 180));
-    public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(240 * Math.PI / 180));
-    public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(300 * Math.PI / 180));
-    public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(300 * Math.PI / 180));
-    public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(0 * Math.PI / 180));
-    public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(0 * Math.PI / 180));
-    public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(60 * Math.PI / 180));
-    public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(60 * Math.PI / 180));
-    public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(120 * Math.PI / 180));
-    public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(120 * Math.PI / 180));
+		try {
+			startLeftCage = topFirstPath.getStartingHolonomicPose().isPresent() ? topFirstPath.getStartingHolonomicPose().get() : new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
+			startMidCage = middleFirstPath.getStartingHolonomicPose().isPresent() ? middleFirstPath.getStartingHolonomicPose().get() : new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
+			startRightCage = bottomFirstPath.getStartingHolonomicPose().isPresent() ? bottomFirstPath.getStartingHolonomicPose().get() : new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+		} catch (Exception e) {
+			startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(270 * Math.PI / 180));
+			startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(270 * Math.PI / 180));
+			startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(270 * Math.PI / 180));
+			e.printStackTrace();
+		}
 
+		start.addOption("Left", startLeftCage);
+		start.addOption("Middle", startMidCage);
+		start.addOption("Right", startRightCage);
+		start.addOption("None", null);
+		if (!DriverStation.getLocation().isEmpty()) {
+			switch (DriverStation.getLocation().getAsInt()) {
+				case 1:
+					start.setDefaultOption("Left", startLeftCage);
+					drivetrain.resetOdometry(startLeftCage);
+					break;
+				case 2:
+					start.setDefaultOption("Middle", startMidCage);
+					drivetrain.resetOdometry(startMidCage);
+					break;
+				case 3:
+					start.setDefaultOption("Right", startRightCage);
+					drivetrain.resetOdometry(startRightCage);
+					break;
+			}
+		}
+		start.onChange((Pose2d pose) -> {
+			if (pose != null) drivetrain.resetOdometry(pose);
+			checkValidAuto();
+		});
 
-    public static final PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
-    public static PathPlannerPath toPath(ArrayList<Pose2d> poses) {
-        return new PathPlannerPath(
-            PathPlannerPath.waypointsFromPoses(poses),
-                            constraints,
-            null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-            new GoalEndState(0.0, poses.get(poses.size()-1).getRotation()) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        );
-    }
-    public static PathPlannerPath toPath(Pose2d first, Pose2d second){
-        ArrayList<Pose2d> x = new ArrayList<Pose2d>();
-        x.add(first);
-        x.add(second);
+		sources.add(null);
+		for (int i = 1; i < 3; i++) {
+			sources.add(new SendableChooser<Pose2d>());
+			initSource(sources.get(i));
+		}
 
-        return toPath(x);
-    }
+		for (int i = 0; i < 3; i++) {
+			destinations.add(new SendableChooser<Pose2d>());
+			initDestination(destinations.get(i));
+		}
 
-    public static SendableChooser<Pose2d> reef1() {
-        
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		for (int i = 0; i < 3; i++) {
+			levels.add(new SendableChooser<Constants.ELEVNUM>());
+			initLevel(levels.get(i));
+		}
 
-        sc.addOption("none", null);
-        sc.addOption("A", reefA);
-        sc.addOption("B", reefB);
-        sc.addOption("C", reefC);
-        sc.addOption("D", reefD);
-        sc.addOption("E", reefE);
-        sc.addOption("F", reefF);
-        sc.addOption("G", reefG);
-        sc.addOption("H", reefH);
-        sc.addOption("I", reefI);
-        sc.addOption("K", reefK);
-        sc.addOption("L", reefL);
-        sc.setDefaultOption("J", reefJ);
+		SmartDashboard.putData("Starting Pose", start);
 
-        return sc;
-    }
+		// CYCLE 1
+		// No source for Cycle 1
+		SmartDashboard.putData("Cycle 1 Node", destinations.get(0));
+		SmartDashboard.putData("Cycle 1 Level", levels.get(0));
 
-    public static SendableChooser<Pose2d> reef2() {
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		// CYCLE 2
+		SmartDashboard.putData("Cycle 2 Source", sources.get(1));
+		SmartDashboard.putData("Cycle 2 Node", destinations.get(1));
+		SmartDashboard.putData("Cycle 2 Level", levels.get(1));
 
-        sc.addOption("none", null);
-        sc.addOption("A", reefA);
-        sc.addOption("B", reefB);
-        sc.addOption("C", reefC);
-        sc.addOption("D", reefD);
-        sc.addOption("E", reefE);
-        sc.addOption("F", reefF);
-        sc.addOption("G", reefG);
-        sc.addOption("H", reefH);
-        sc.addOption("I", reefI);
-        sc.addOption("J", reefJ);
-        sc.addOption("L", reefL);
-        sc.setDefaultOption("K", reefK);
+		// CYCLE 3
+		SmartDashboard.putData("Cycle 3 Source", sources.get(2));
+		SmartDashboard.putData("Cycle 3 Node", destinations.get(2));
+		SmartDashboard.putData("Cycle 3 Level", levels.get(2));
 
-        return sc;
-    }
+		// SIMPLE AUTO
+		simpleAutoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
+    simpleAutoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
+    simpleAutoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
+    simpleAutoChooser.addOption("Left Cage to K Branch", "Left Cage to K Branch");
+    simpleAutoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
+    simpleAutoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
+    simpleAutoChooser.addOption("Just Go Forward", "Straight");
+    simpleAutoChooser.addOption("None", null);
 
-    public static SendableChooser<Pose2d> reef3() {
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		simpleAutoChooser.onChange((String auto) -> checkValidAuto());
 
-        sc.addOption("K", reefK);
-        sc.addOption("A", reefA);
-        sc.addOption("B", reefB);
-        sc.addOption("C", reefC);
-        sc.addOption("D", reefD);
-        sc.addOption("E", reefE);
-        sc.addOption("F", reefF);
-        sc.addOption("G", reefG);
-        sc.addOption("H", reefH);
-        sc.addOption("I", reefI);
-        sc.addOption("J", reefJ);
-        sc.addOption("L", reefL);
-        sc.setDefaultOption("none", null);
+    SmartDashboard.putData("Simple Auto Path", simpleAutoChooser);
+	}
 
-        return sc;
-    }
+	private static void initSource(SendableChooser<Pose2d> sc) {
+		sc.setDefaultOption("Left", HumanPlayerPoses.left);
+		sc.addOption("Right", HumanPlayerPoses.right);
+		sc.addOption("None", null);
 
-    public static SendableChooser<Pose2d> humanPlayer1() {
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		sc.onChange((Pose2d pose) -> checkValidAuto());
+	}
 
-        sc.setDefaultOption("top",humanPlayerT);
-        sc.addOption("bottom",humanPlayerB);
-        sc.addOption("none", null);
+	private static void initDestination(SendableChooser<Pose2d> sc) {
+		sc.addOption("None", null);
+		sc.addOption("A", ReefPoses.reefA);
+		sc.addOption("B", ReefPoses.reefB);
+		sc.addOption("C", ReefPoses.reefC);
+		sc.addOption("D", ReefPoses.reefD);
+		sc.addOption("E", ReefPoses.reefE);
+		sc.addOption("F", ReefPoses.reefF);
+		sc.addOption("G", ReefPoses.reefG);
+		sc.addOption("H", ReefPoses.reefH);
+		sc.addOption("I", ReefPoses.reefI);
+		sc.setDefaultOption("J", ReefPoses.reefJ);
+		sc.addOption("K", ReefPoses.reefK);
+		sc.addOption("L", ReefPoses.reefL);
 
-        return sc;
-    }
+		sc.onChange((Pose2d pose) -> checkValidAuto());
+	}
 
-    public static SendableChooser<Pose2d> humanPlayer2() {
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+	private static void initLevel(SendableChooser<Constants.ELEVNUM> sc) {
+		sc.addOption("L1", ELEVNUM.L1);
+		sc.addOption("L2", ELEVNUM.L2);
+		sc.addOption("L3", ELEVNUM.L3);
+		sc.setDefaultOption("L4", ELEVNUM.L4);
+		sc.addOption("None", null);
 
-        sc.setDefaultOption("top",humanPlayerT);
-        sc.addOption("bottom",humanPlayerB);
-        sc.addOption("none", null);
+		sc.onChange((Constants.ELEVNUM level) -> checkValidAuto());
+	}
 
-        return sc;
-    }
+	public static boolean checkValidAuto() {
+		boolean result = true;
 
-    public static SendableChooser<Pose2d> humanPlayer3() {
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		if (start.getSelected() == null) {
+			result = false;
+			Alerts.NoStartPose.set(true);
+		} else Alerts.NoStartPose.set(false);
 
-        sc.addOption("top",humanPlayerT);
-        sc.addOption("bottom",humanPlayerB);
-        sc.setDefaultOption("none", null);    
+		switch (autoMode.getSelected()) {
+			case BYO:
+				if (destinations.get(0).getSelected() == null || levels.get(0).getSelected() == null) result = false;
+				if (sources.get(1).getSelected() == null || destinations.get(1).getSelected() == null || levels.get(1).getSelected() == null) result = false;
+				if (sources.get(2).getSelected() == null || destinations.get(2).getSelected() == null || levels.get(2).getSelected() == null) result = false;
+				break;
+			case SIMPLE:
+				if (simpleAutoChooser.getSelected() == null) result = false;
+				break;
+			case CREEP:
+				break;
+			default:
+				Alerts.InvalidAuto.set(false);
+				Alerts.ValidAuto.set(false);
+				Alerts.AutoOff.set(true);
+				return true;
+		}
 
-        return sc;
-    }
+		if (!result) {
+			Alerts.InvalidAuto.set(true);
+			Alerts.ValidAuto.set(false);
+			Alerts.AutoOff.set(false);
+		} else {
+			Alerts.InvalidAuto.set(false);
+			Alerts.ValidAuto.set(true);
+			Alerts.AutoOff.set(false);
+		}
 
-    public static SendableChooser<Pose2d> start() {
-        init();
-        SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
+		return result;
+	}
 
-        sc.addOption("top cage", startLeftCage);
-        sc.addOption("middle cage", startMidCage);
-        sc.addOption("bottom cage", startRightCage);
-        if(!DriverStation.getLocation().isEmpty())
-        switch (DriverStation.getLocation().getAsInt())
-        {
-            case 1:
-            sc.setDefaultOption("left cage", startLeftCage);
-            break;
+	public static Command getAutoCommand() {
+		drivetrain.resetOdometry(start.getSelected());
 
-            case 2:
-            sc.setDefaultOption("middle cage", startMidCage);
-            break;
+		ArrayList<Command> sequence = new ArrayList<>();
 
-            case 3:
-            sc.setDefaultOption("right cage", startRightCage);
-            break;
-        }
+		if (checkValidAuto()) {
+			// CYCLE 1
+			// Cycle 1 does not have a source
 
-        return sc;
-    }
+			if (destinations.get(0).getSelected() != null) {
+				sequence.add(drivetrain.driveToPose(destinations.get(0).getSelected()));
+			}
 
-    public static Command startToReef() {
-        if(reef1().getSelected() == null)
-            return new Wait(15);
-        Command c = drive.driveToPose(reef1().getSelected());
-        c.addRequirements(drive);
-        return c;
-    }
+			if (levels.get(0).getSelected() != null) {
+				sequence.add(new SetElevator(levels.get(0).getSelected()));
+				sequence.add(new RunOuttake().withTimeout(0.5));
+			}
 
-    public static Command reefToHP1() {
-        if(humanPlayer1().getSelected() == null)
-            return new Wait(15);
-            Command c = drive.driveToPose(reef2().getSelected());
-            c.addRequirements(drive);
-        return c;
-    }
+			// CYCLE 2
+			if (sources.get(1).getSelected() != null) {
+				sequence.add(drivetrain.driveToPose(sources.get(1).getSelected()));
+				sequence.add(new RunIntake().withTimeout(1));
+			}
 
-    public static Command hpToReef1() {
-        if(reef2().getSelected() == null)
-            return new Wait(15);
-            Command c = drive.driveToPose(reef3().getSelected());
-            c.addRequirements(drive);
-        return c;
-    }
+			if (destinations.get(1).getSelected() != null) {
+				sequence.add(drivetrain.driveToPose(destinations.get(1).getSelected()));
+			}
 
-    public static Command reefToHP2() {
-        if(humanPlayer2().getSelected() == null)
-            return new Wait(15);
-            Command c = drive.driveToPose(humanPlayer1().getSelected());
-            c.addRequirements(drive);
-        return c;
-    }
+			if (levels.get(1).getSelected() != null) {
+				sequence.add(new SetElevator(levels.get(1).getSelected()));
+				sequence.add(new RunOuttake().withTimeout(0.5));
+			}
 
-    public static Command hpToReef2() {
-        if(reef3().getSelected() == null)
-            return new Wait(15);
-            Command c = drive.driveToPose(humanPlayer2().getSelected());
-            c.addRequirements(drive);
-        return c;
-    }
+			// CYCLE 3
+			if (sources.get(2).getSelected() != null) {
+				sequence.add(drivetrain.driveToPose(sources.get(2).getSelected()));
+				sequence.add(new RunIntake().withTimeout(1));
+			}
 
-    public static Command reefToHP3() {
-        if(humanPlayer3().getSelected() == null)
-            return new Wait(15);
-            Command c = drive.driveToPose(humanPlayer3().getSelected());
-            c.addRequirements(drive);
-        return c;
-    }
+			if (destinations.get(2).getSelected() != null) {
+				sequence.add(drivetrain.driveToPose(destinations.get(2).getSelected()));
+			}
 
-    public static SendableChooser<Constants.ELEVNUM> getLevel1() {
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
-        sc.addOption("none", null);
+			if (levels.get(2).getSelected() != null) {
+				sequence.add(new SetElevator(levels.get(2).getSelected()));
+				sequence.add(new RunOuttake().withTimeout(0.5));
+			}
 
-        return sc;
-    }
+			// END
+			sequence.add(new SetElevator(0));
+		} else {
+			sequence.add(drivetrain.getAutonomousCommand("Straight"));
+		}
 
-    public static SendableChooser<Constants.ELEVNUM> getLevel2() {
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
-        sc.addOption("none", null);
-        return sc;
-    }
+		Command result = Commands.sequence(sequence.toArray(new Command[0]));
 
-    public static SendableChooser<Constants.ELEVNUM> getLevel3(){
-        SendableChooser<Constants.ELEVNUM> sc = new SendableChooser<Constants.ELEVNUM>();
-        sc.addOption("L1", ELEVNUM.L1);
-        sc.addOption("L2", ELEVNUM.L2);
-        sc.addOption("L3", ELEVNUM.L3);
-        sc.setDefaultOption("L4", ELEVNUM.L4);
-        sc.addOption("none", null);
+		// REQUIREMENTS
+		result.addRequirements(Intake.getInstance());
+		result.addRequirements(Elevator.getInstance());
+		result.addRequirements(drivetrain);
 
-        return sc;
-    }
+		return result;
+	}
 
-    public static Command getAutoCommand(){
-        Pathfinding.setStartPosition(start().getSelected().getTranslation());
+	public static String getSimpleAuto() {
+		return simpleAutoChooser.getSelected();
+	}
 
-        Command result = Commands.sequence(
-        startToReef(), 
-        new SetElev(getLevel1().getSelected()),
-        Commands.race(
-            new RunOuttake(),
-            new Wait(0.25)
-        ),
-        new SetElev(0),
-        reefToHP1(),
-        new SetElev(ELEVNUM.HP),
-        Commands.race(
-            new RunIntake(),
-            new Wait(2)
-        ),
-        hpToReef1(),
-         new SetElev(getLevel2().getSelected()),
-        Commands.race(
-            new RunOuttake(),
-            new Wait(0.25)
-        ),
-        new SetElev(0),
-        reefToHP2(),
-        new SetElev(ELEVNUM.HP),
-        Commands.race(
-            new RunIntake(),
-            new Wait(2)
-        ),
-        hpToReef2(),
-        new SetElev(getLevel1().getSelected()),
-       Commands.race(
-           new RunOuttake(),
-           new Wait(0.25)
-       ),
-        new SetElev(0),
-        reefToHP3(),
-        new SetElev(ELEVNUM.HP),
-        Commands.race(
-            new RunIntake(),
-            new Wait(2)
-        )
-        );
-        result.addRequirements(Intake.getInstance());
-        result.addRequirements(Elevator.getInstance());
-        result.addRequirements(Drivetrain.getInstance());
-        return result;
-    }
+	public static Mode getMode() {
+		return autoMode.getSelected();
+	}
 
-    
+	public static class HumanPlayerPoses {	
+		public static final Pose2d left = new Pose2d(1.472, 7.210, new Rotation2d(125 * Math.PI / 180));
+		public static final Pose2d right = new Pose2d(1.472, 0.831, new Rotation2d(235 * Math.PI / 180));
+	}
 
-    public static void publishAll(){
-        SmartDashboard.putData("1st coral pos", reef1());
-        SmartDashboard.putData("2nd coral pos", reef2());
-        SmartDashboard.putData("3rd coral pos", reef3());
-        SmartDashboard.putData("1st HP station", humanPlayer1());
-        SmartDashboard.putData("2nd HP station", humanPlayer2());
-        SmartDashboard.putData("3rd HP station", humanPlayer3());
-        SmartDashboard.putData("1st coral lvl", getLevel1());
-        SmartDashboard.putData("2nd coral lvl", getLevel2());
-        SmartDashboard.putData("3rd coral lvl", getLevel3());
-        SmartDashboard.putData("Start pos", start());
-    }
+	public static class ReefPoses {
+		public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(180 * Math.PI / 180));
+		public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(180 * Math.PI / 180));
+		public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(240 * Math.PI / 180));
+		public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(240 * Math.PI / 180));
+		public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(300 * Math.PI / 180));
+		public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(300 * Math.PI / 180));
+		public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(0 * Math.PI / 180));
+		public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(0 * Math.PI / 180));
+		public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(60 * Math.PI / 180));
+		public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(60 * Math.PI / 180));
+		public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(120 * Math.PI / 180));
+		public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(120 * Math.PI / 180));
+	}
 
+	public static enum Mode { SIMPLE, BYO, CREEP, NONE }
 }

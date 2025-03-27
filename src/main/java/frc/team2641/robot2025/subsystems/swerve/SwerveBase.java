@@ -7,10 +7,10 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -73,14 +73,11 @@ public class SwerveBase extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    swerveDrive.setHeadingCorrection(!SwerveDriveTelemetry.isSimulation);
-    swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
-    swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
-    swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
+    swerveDrive.setHeadingCorrection(true);
+    swerveDrive.setCosineCompensator(true);
+    // swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
+    // swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
     setupPathPlanner();
-
-    
-
   }
 
   public SwerveBase(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
@@ -93,15 +90,6 @@ public class SwerveBase extends SubsystemBase {
         Rotation2d.fromDegrees(0)
       )
     );
-  }
-
-  @Override
-  public void periodic() {
-
-  }
-
-  @Override
-  public void simulationPeriodic() {
   }
 
   public void setupPathPlanner() {
@@ -151,6 +139,8 @@ public class SwerveBase extends SubsystemBase {
   }
 
   public Command driveToPose(Pose2d pose) {
+    Pathfinding.setStartPosition(getPose().getTranslation());
+
     PathConstraints constraints = new PathConstraints(
       swerveDrive.getMaximumChassisVelocity(), 4.0,
       swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));

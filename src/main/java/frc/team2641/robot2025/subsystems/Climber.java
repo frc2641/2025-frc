@@ -2,7 +2,6 @@ package frc.team2641.robot2025.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.ClimberConstants;
@@ -37,9 +36,8 @@ public class Climber extends SubsystemBase  {
   }
 
   private void configMotor() {
-motor = new TalonFX(CANConstants.climber);
-
-motor.setNeutralMode(NeutralModeValue.Coast);
+    motor = new TalonFX(CANConstants.climber);
+    motor.setNeutralMode(NeutralModeValue.Coast);
   }
 
   @Override

@@ -5,9 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.Constants.CANConstants;
 import frc.team2641.robot2025.Constants.IntakeConstants;
 
@@ -24,7 +22,6 @@ public class Intake extends SubsystemBase {
 
   private Intake() {
     configMotor();
-
   }
 
   public void stop() {
@@ -48,21 +45,8 @@ public class Intake extends SubsystemBase {
     outConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
     outConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
-        // TODO numbers are untested
-    // config.CurrentLimits.SupplyCurrentLimit = 40;
-    // config.CurrentLimits.SupplyCurrentLowerLimit = 45;
-    // config.CurrentLimits.SupplyCurrentLowerTime = 0.1;
-    // config.CurrentLimits.StatorCurrentLimit = 60;
-
     configer1.apply(config);
     configer2.apply(outConfig);
-
-  }
-
-  public void periodic() {
-    if (Robot.isReal() && Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
-      // System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
-    }
   }
 
   public TalonFX getMotor() {
@@ -79,8 +63,12 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(IntakeConstants.speedOut);
   }
 
-  public void superSpin(){
+  public void superSpin() {
     outtakeMotor.set(IntakeConstants.superSpeed);
     intakeMotor.set(IntakeConstants.superSpeed);
+  }
+
+  @Override
+  public void periodic() {
   }
 }

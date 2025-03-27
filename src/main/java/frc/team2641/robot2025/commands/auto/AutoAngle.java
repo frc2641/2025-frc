@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class AutoAngle extends Command {
-	private Drivetrain drivetrain;
+	private Drivetrain drivetrain = Drivetrain.getInstance();
 
 	private int targetAngle;
 	private int oppositeAngle;
@@ -25,8 +25,7 @@ public class AutoAngle extends Command {
 	private IntegerSubscriber stageSub;
 
 	public AutoAngle(int element, boolean isAutonomous) {
-		drivetrain = Drivetrain.getInstance();
-		
+
 		this.element = element;
 		this.isAutonomous = isAutonomous;
 

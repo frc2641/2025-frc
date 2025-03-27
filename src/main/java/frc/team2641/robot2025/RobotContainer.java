@@ -8,9 +8,9 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.team2641.robot2025.Constants.ELEVNUM;
@@ -18,8 +18,8 @@ import frc.team2641.robot2025.Constants.OperatorConstants;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.climbing.Climb;
 import frc.team2641.robot2025.commands.climbing.Wrap;
-import frc.team2641.robot2025.commands.elevator.MoveElev;
-import frc.team2641.robot2025.commands.elevator.SetElev;
+import frc.team2641.robot2025.commands.elevator.MoveElevator;
+import frc.team2641.robot2025.commands.elevator.SetElevator;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
 import frc.team2641.robot2025.commands.intake.SuperSpin;
@@ -29,29 +29,24 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-   final Elevator elev = Elevator.getInstance();
+  private final Elevator elevator = Elevator.getInstance();
 
-  CommandXboxController driverGamepad = new CommandXboxController(0);
-  CommandXboxController operatorGamepad = new CommandXboxController(1);
+  private final CommandXboxController driverGamepad = new CommandXboxController(0);
+  private final CommandXboxController operatorGamepad = new CommandXboxController(1);
 
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  private Command driveCommand;
 
-  Command driveCommand;
-  Command driveSim;
-
-  BooleanPublisher alignmentPub;
-  BooleanSubscriber alignmentSub;
+  private BooleanPublisher alignmentPub;
+  public BooleanSubscriber alignmentSub;
   
-  BooleanPublisher sniperPub;
-  BooleanSubscriber sniperSub;
+  private BooleanPublisher sniperPub;
+  public BooleanSubscriber sniperSub;
   
-  BooleanPublisher robotPub;
-  BooleanSubscriber robotSub;
+  private BooleanPublisher robotPub;
+  public BooleanSubscriber robotSub;
   
-  DoublePublisher angularVelocityPub;
-  DoubleSubscriber angularVelocitySub;
-  
-  SendableChooser<Boolean> autoStyle;
+  private DoublePublisher angularVelocityPub;
+  public DoubleSubscriber angularVelocitySub;
 
   public RobotContainer() {
     driverGamepad.a().whileTrue(new AutoAngle(1, false));
@@ -59,11 +54,9 @@ public class RobotContainer {
     driverGamepad.x().whileTrue(new AutoAngle(3, false));
     driverGamepad.y().whileTrue(new AutoAngle(4, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
-    
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
-
     driverGamepad.povUp().whileTrue(new Climb(true));
     driverGamepad.povDown().whileTrue(new Climb(false));
     driverGamepad.povLeft().whileTrue(new Wrap(true));
@@ -71,12 +64,12 @@ public class RobotContainer {
 
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new RunOuttake());
-    operatorGamepad.a().onTrue(new SetElev(ELEVNUM.L1));
-    operatorGamepad.b().onTrue(new SetElev(ELEVNUM.L2));
-    operatorGamepad.x().onTrue(new SetElev(ELEVNUM.L3));
-    operatorGamepad.y().onTrue(new SetElev(ELEVNUM.L4));
-    operatorGamepad.start().onTrue(new SetElev(ELEVNUM.HP));
-    operatorGamepad.back().onTrue(new SetElev(0));
+    operatorGamepad.a().onTrue(new SetElevator(ELEVNUM.L1));
+    operatorGamepad.b().onTrue(new SetElevator(ELEVNUM.L2));
+    operatorGamepad.x().onTrue(new SetElevator(ELEVNUM.L3));
+    operatorGamepad.y().onTrue(new SetElevator(ELEVNUM.L4));
+    operatorGamepad.start().onTrue(new SetElevator(ELEVNUM.HP));
+    operatorGamepad.back().onTrue(new SetElevator(0));
 
     operatorGamepad.rightBumper().whileTrue(new SuperSpin());
     
@@ -97,15 +90,13 @@ public class RobotContainer {
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
-    autoStyle = new SendableChooser<Boolean>();
-
     // with SRL
     driveCommand = drivetrain.driveCommand(
-      () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
-      () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
       () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -Constants.DriveConstants.rightX.calculate(driverGamepad.getRightX()) * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
-//  // w/o SRL
+    // w/o SRL
     // driveCommand = drivetrain.driveCommand(
     //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
@@ -113,37 +104,37 @@ public class RobotContainer {
     //   () -> robotSub.get());
 
     drivetrain.setDefaultCommand(driveCommand);
-    elev.setDefaultCommand(new MoveElev());
+    elevator.setDefaultCommand(new MoveElevator());
 
-    NamedCommands.registerCommand("creep", new Creep(0));
-    NamedCommands.registerCommand("creepAmp", new Creep(1));
+    NamedCommands.registerCommand("creep", new Creep());
     NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
-    NamedCommands.registerCommand("ElevL4", new SetElev(ELEVNUM.L4));
-    NamedCommands.registerCommand("ElevL3", new SetElev(ELEVNUM.L3));
-    NamedCommands.registerCommand("ElevL2", new SetElev(ELEVNUM.L2));
-    NamedCommands.registerCommand("ElevL1", new SetElev(ELEVNUM.L1));
-    NamedCommands.registerCommand("ElevHP", new SetElev(ELEVNUM.HP));
-    NamedCommands.registerCommand("ElevDown", new SetElev(0));
+    NamedCommands.registerCommand("ElevL4", new SetElevator(ELEVNUM.L4));
+    NamedCommands.registerCommand("ElevL3", new SetElevator(ELEVNUM.L3));
+    NamedCommands.registerCommand("ElevL2", new SetElevator(ELEVNUM.L2));
+    NamedCommands.registerCommand("ElevL1", new SetElevator(ELEVNUM.L1));
+    NamedCommands.registerCommand("ElevHP", new SetElevator(ELEVNUM.HP));
+    NamedCommands.registerCommand("ElevDown", new SetElevator(0));
     NamedCommands.registerCommand("spin", new SuperSpin());
     NamedCommands.registerCommand("Outtake", new RunOuttake());
     NamedCommands.registerCommand("Intake", new RunIntake());
 
-    Autos.publishAll();
-    simpleAuto();
+    Autos.init();
 
-    autoStyle.addOption("Pathplanner autos", true);
-    autoStyle.setDefaultOption("Pathplanner autos", true);
-    autoStyle.addOption("Build your own", false);
-    // autoStyle.setDefaultOption("Build your own", false);
-    
-    SmartDashboard.putData("Auto Style Chooser", autoStyle);
+    Alerts.MissingOperatorGamepad.set(!operatorGamepad.isConnected());
+    Alerts.MissingDriverGamepad.set(!driverGamepad.isConnected());
   }
 
   public Command getAutonomousCommand() {
-    if (autoStyle.getSelected())
-      return drivetrain.getAutonomousCommand(autoChooser.getSelected());
-      // TODO autobuilding autos are using incorrect start points.
-    return Autos.getAutoCommand();
+    switch (Autos.getMode()) {
+      case SIMPLE:
+        return drivetrain.getAutonomousCommand(Autos.getSimpleAuto());
+      case BYO:
+        return Autos.getAutoCommand();
+      case CREEP:
+        return new Creep();
+      default:
+        return Commands.none();
+    }
   }
 
   public void setMotorBrake(boolean brake) {
@@ -160,15 +151,11 @@ public class RobotContainer {
     return operatorGamepad.getRightY();
   }
 
-  private void simpleAuto() {
-    autoChooser.setDefaultOption("Middle Cage to J Branch", "Middle Cage to J Branch");
-    autoChooser.addOption("Middle Cage to K Branch", "Middle Cage to K Branch");
-    autoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
-    autoChooser.addOption("Left Cage to K Branch", "Left Cage to K Branch");
-    autoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
-    autoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
-    autoChooser.addOption("just go forward", "Straight");
+  public CommandXboxController getDriverGamepad() {
+    return driverGamepad;
+  }
 
-    SmartDashboard.putData("Choose Auto", autoChooser);
+  public CommandXboxController getOperatorGamepad() {
+    return operatorGamepad;
   }
 }

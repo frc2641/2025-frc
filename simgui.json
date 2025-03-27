@@ -2,35 +2,26 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/1st HP station": "String Chooser",
-      "/SmartDashboard/1st coral lvl": "String Chooser",
-      "/SmartDashboard/1st coral pos": "String Chooser",
-      "/SmartDashboard/2nd HP station": "String Chooser",
-      "/SmartDashboard/2nd coral lvl": "String Chooser",
-      "/SmartDashboard/2nd coral pos": "String Chooser",
-      "/SmartDashboard/3rd HP station": "String Chooser",
-      "/SmartDashboard/3rd coral lvl": "String Chooser",
-      "/SmartDashboard/3rd coral pos": "String Chooser",
       "/SmartDashboard/Alerts": "Alerts",
-      "/SmartDashboard/Auto": "String Chooser",
-      "/SmartDashboard/Auto Style Chooser": "String Chooser",
-      "/SmartDashboard/Choose Auto": "String Chooser",
-      "/SmartDashboard/Elevator Sim": "Mechanism2d",
+      "/SmartDashboard/Auto Mode": "String Chooser",
+      "/SmartDashboard/Commands": "Scheduler",
+      "/SmartDashboard/Cycle 1 Level": "String Chooser",
+      "/SmartDashboard/Cycle 1 Node": "String Chooser",
+      "/SmartDashboard/Cycle 2 Level": "String Chooser",
+      "/SmartDashboard/Cycle 2 Node": "String Chooser",
+      "/SmartDashboard/Cycle 2 Source": "String Chooser",
+      "/SmartDashboard/Cycle 3 Level": "String Chooser",
+      "/SmartDashboard/Cycle 3 Node": "String Chooser",
+      "/SmartDashboard/Cycle 3 Source": "String Chooser",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/IMU": "Alerts",
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/PathPlanner": "Alerts",
-      "/SmartDashboard/Start pos": "String Chooser",
+      "/SmartDashboard/Simple Auto Path": "String Chooser",
+      "/SmartDashboard/Starting Pose": "String Chooser",
       "/SmartDashboard/Swerve Drive": "Alerts"
-    },
-    "windows": {
-      "/SmartDashboard/Elevator Sim": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables": {
@@ -39,11 +30,11 @@
         "Elevator Sim": {
           "Elevator Root": {
             "Elevator": {
-              "open": true
+              "open": false
             },
-            "open": true
+            "open": false
           },
-          "open": true
+          "open": false
         },
         "Simulated Elevator": {
           "Elevator Root": {
@@ -51,80 +42,11 @@
               "open": false
             }
           }
-        },
-        "open": true
+        }
       }
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
-    "Connections": {
-      "open": true
-    },
-    "Server": {
-      "open": true
-    },
     "visible": true
-  },
-  "Plot": {
-    "Plot <0>": {
-      "plots": [
-        {
-          "backgroundColor": [
-            0.0,
-            0.0,
-            0.0,
-            0.8500000238418579
-          ],
-          "height": 962,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Elevator Sim/Elevator Root/Elevator/length"
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/goal"
-            }
-          ]
-        }
-      ]
-    },
-    "Plot <1>": {
-      "plots": [
-        {
-          "backgroundColor": [
-            0.0,
-            0.0,
-            0.0,
-            0.8500000238418579
-          ],
-          "height": 0,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/getOpLeftJoyStickY"
-            }
-          ]
-        }
-      ]
-    }
   }
 }

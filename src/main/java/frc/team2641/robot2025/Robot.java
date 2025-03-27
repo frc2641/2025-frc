@@ -2,17 +2,20 @@ package frc.team2641.robot2025;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2641.robot2025.subsystems.swerve.SwerveBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.team2641.robot2025.subsystems.Elevator;
+import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -21,11 +24,13 @@ public class Robot extends TimedRobot {
   private static Robot instance;
   private Command autoCommand;
 
+  private Drivetrain drivetrain;
+  private Elevator elevator;
+
   private static PowerDistribution pdh;
-  private static PneumaticHub ph;
   public RobotContainer robotContainer;
 
-  private Timer disabledTimer;
+  private CommandXboxController driverGamepad;
 
   public Robot() {
     instance = this;
@@ -37,48 +42,56 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
+
     CameraServer.startAutomaticCapture(0);
     CameraServer.startAutomaticCapture(1);
+
+    pdh = new PowerDistribution(21, ModuleType.kRev);
+    SmartDashboard.putData("PDH", pdh);
+    SmartDashboard.putData("Commands", CommandScheduler.getInstance());
+
     robotContainer = new RobotContainer();
-    disabledTimer = new Timer();
+
+    drivetrain = Drivetrain.getInstance();
+    elevator = Elevator.getInstance();
+
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 
     for (int port = 5800; port <= 5807; port++) 
       PortForwarder.add(port, "10.26.41.25", port);
 
-    if (isSimulation()) {
+    if (isSimulation())
       DriverStation.silenceJoystickConnectionWarning(true);
-    }
+    else
+      Elastic.selectTab("Pre-Match");
+
+    driverGamepad = robotContainer.getDriverGamepad();
+    robotContainer.setMotorBrake(true);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Time", DriverStation.getMatchTime());
   }
 
   @Override
   public void disabledInit() {
-    robotContainer.setMotorBrake(true);
-    disabledTimer.reset();
-    disabledTimer.start();
+    if (Robot.isReal()) Elastic.selectTab("Pre-Match");
   }
 
   @Override
   public void disabledPeriodic() {
-    if (disabledTimer.hasElapsed(Constants.DriveConstants.WHEEL_LOCK_TIME)) {
-      robotContainer.setMotorBrake(false);
-      disabledTimer.stop();
-    }
-    robotContainer.elev.goTo(robotContainer.elev.getPosition());
+    elevator.goTo(elevator.getPosition());
   }
 
   @Override
   public void autonomousInit() {
-    robotContainer.setMotorBrake(true);
-
+    if (Robot.isReal()) Elastic.selectTab("Autonomous");
     autoCommand = robotContainer.getAutonomousCommand();
-    if (autoCommand != null) {
-      autoCommand.schedule();
-    }
+    if (autoCommand != null) autoCommand.schedule();
   }
 
   @Override
@@ -87,26 +100,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    robotContainer.setMotorBrake(true);
-
-    if (autoCommand != null) {
-      autoCommand.cancel();
-    }
+    if (Robot.isReal()) Elastic.selectTab("Teleoperated");
+    if (autoCommand != null) autoCommand.cancel();
   }
 
   @Override
   public void teleopPeriodic() {
-// left joystick x > 0.1  
-    robotContainer.driverGamepad.setRumble(
+    driverGamepad.setRumble(
       RumbleType.kBothRumble,
-        robotContainer.sniperSub.get() ? 0 :
-       robotContainer.driverGamepad.getLeftX() > 0.4 && 
-        SwerveBase.getInstance().getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
-        ? rumble(true) :  
-        robotContainer.driverGamepad.getLeftY() > 0.4 && 
-        SwerveBase.getInstance().getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
-        ? rumble(true) : rumble( false ) 
-      );
+      robotContainer.sniperSub.get()
+        ? rumble(false)
+        : driverGamepad.getLeftX() > 0.4 && drivetrain.getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
+          ? rumble(true)
+          : driverGamepad.getLeftY() > 0.4 && drivetrain.getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
+            ? rumble(true)
+            : rumble(false) 
+    );
   }
 
   private int rumble(boolean on){
@@ -135,10 +144,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-}
-
-  public static PneumaticHub getPH() {
-    return ph;
   }
 
   public static PowerDistribution getPDH() {

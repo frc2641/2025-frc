@@ -9,14 +9,12 @@ import frc.team2641.robot2025.Limelight;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class LimelightTracking extends Command {
-  private final Drivetrain drivetrain;
+  private final Drivetrain drivetrain = Drivetrain.getInstance();
 
   private final PIDController controllerX;
   private final PIDController controllerAngle;
 
   public LimelightTracking() {
-    this.drivetrain = Drivetrain.getInstance();
-
     controllerX = new PIDController(3, 1, 0);
     controllerX.setTolerance(0.025);
     controllerX.setSetpoint(0.0);

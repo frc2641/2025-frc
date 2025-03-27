@@ -4,10 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.Intake;
 
 public class RunOuttake extends Command {
-  private Intake intake;
+  private Intake intake = Intake.getInstance();
 
   public RunOuttake() {
-    this.intake = Intake.getInstance();
     addRequirements(intake);
   }
 
@@ -18,7 +17,6 @@ public class RunOuttake extends Command {
 
   @Override
   public void execute() {
-    
   }
 
   @Override
