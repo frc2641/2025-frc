@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
 
   public void periodic() {
     if (Robot.isReal() && Math.abs(intakeMotor.getVelocity().getValue().baseUnitMagnitude()) < IntakeConstants.stallV) {
-      System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
+      // System.out.println("\n\n *** STALL DETECTED - INTAKE *** \n\n");
     }
   }
 

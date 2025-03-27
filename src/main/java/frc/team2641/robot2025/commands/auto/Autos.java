@@ -2,10 +2,11 @@ package frc.team2641.robot2025.commands.auto;
 
 import java.util.ArrayList;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -40,28 +41,28 @@ public class Autos {
             startRightCage =  PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().isPresent() ? PathPlannerPath.fromPathFile("Bottom First").getStartingHolonomicPose().get() : new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
             
         } catch (Exception e) {
-            startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(180 * Math.PI / 180));
-            startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(180 * Math.PI / 180));
-            startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(180 * Math.PI / 180));
+            startLeftCage = new Pose2d(7.592,7.239, new Rotation2d(270 * Math.PI / 180));
+            startMidCage = new Pose2d(7.592, 6.180, new Rotation2d(270 * Math.PI / 180));
+            startRightCage = new Pose2d(7.592, 5.083, new Rotation2d(270 * Math.PI / 180));
             e.printStackTrace();
         }
     }
 
-    public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(35 * Math.PI / 180));
-    public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(145 * Math.PI / 180));
+    public static final Pose2d humanPlayerT = new Pose2d(1.472, 7.210, new Rotation2d(125 * Math.PI / 180));
+    public static final Pose2d humanPlayerB = new Pose2d(1.472, 0.831, new Rotation2d(235 * Math.PI / 180));
      
-    public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(90 * Math.PI / 180));
-    public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(90 * Math.PI / 180));
-    public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(150 * Math.PI / 180));
-    public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(150 * Math.PI / 180));
-    public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(210 * Math.PI / 180));
-    public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(210 * Math.PI / 180));
-    public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(270 * Math.PI / 180));
-    public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(270 * Math.PI / 180));
-    public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(330 * Math.PI / 180));
-    public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(330 * Math.PI / 180));
-    public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(30 * Math.PI / 180));
-    public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(30 * Math.PI / 180));
+    public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(180 * Math.PI / 180));
+    public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(240 * Math.PI / 180));
+    public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(240 * Math.PI / 180));
+    public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(300 * Math.PI / 180));
+    public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(300 * Math.PI / 180));
+    public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(0 * Math.PI / 180));
+    public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(0 * Math.PI / 180));
+    public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(60 * Math.PI / 180));
+    public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(60 * Math.PI / 180));
+    public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(120 * Math.PI / 180));
+    public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(120 * Math.PI / 180));
 
 
     public static final PathConstraints constraints = new PathConstraints(
@@ -85,6 +86,7 @@ public class Autos {
     }
 
     public static SendableChooser<Pose2d> reef1() {
+        
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
 
         sc.addOption("none", null);
@@ -177,8 +179,6 @@ public class Autos {
     public static SendableChooser<Pose2d> start() {
         init();
         SendableChooser<Pose2d> sc = new SendableChooser<Pose2d>();
-        
-
 
         sc.addOption("top cage", startLeftCage);
         sc.addOption("middle cage", startMidCage);
@@ -205,7 +205,7 @@ public class Autos {
     public static Command startToReef() {
         if(reef1().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(reef1().getSelected(), constraints);
+        Command c = drive.driveToPose(reef1().getSelected());
         c.addRequirements(drive);
         return c;
     }
@@ -213,40 +213,40 @@ public class Autos {
     public static Command reefToHP1() {
         if(humanPlayer1().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(humanPlayer1().getSelected(), constraints);
-        c.addRequirements(drive);
+            Command c = drive.driveToPose(reef2().getSelected());
+            c.addRequirements(drive);
         return c;
     }
 
     public static Command hpToReef1() {
         if(reef2().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(reef2().getSelected(), constraints);
-        c.addRequirements(drive);
+            Command c = drive.driveToPose(reef3().getSelected());
+            c.addRequirements(drive);
         return c;
     }
 
     public static Command reefToHP2() {
         if(humanPlayer2().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(humanPlayer2().getSelected(), constraints);
-        c.addRequirements(drive);
+            Command c = drive.driveToPose(humanPlayer1().getSelected());
+            c.addRequirements(drive);
         return c;
     }
 
     public static Command hpToReef2() {
         if(reef3().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(reef3().getSelected(), constraints);
-        c.addRequirements(drive);
+            Command c = drive.driveToPose(humanPlayer2().getSelected());
+            c.addRequirements(drive);
         return c;
     }
 
     public static Command reefToHP3() {
         if(humanPlayer3().getSelected() == null)
             return new Wait(15);
-        Command c = AutoBuilder.pathfindToPose(humanPlayer3().getSelected(), constraints);
-        c.addRequirements(drive);
+            Command c = drive.driveToPose(humanPlayer3().getSelected());
+            c.addRequirements(drive);
         return c;
     }
 
@@ -283,6 +283,8 @@ public class Autos {
     }
 
     public static Command getAutoCommand(){
+        Pathfinding.setStartPosition(start().getSelected().getTranslation());
+
         Command result = Commands.sequence(
         startToReef(), 
         new SetElev(getLevel1().getSelected()),

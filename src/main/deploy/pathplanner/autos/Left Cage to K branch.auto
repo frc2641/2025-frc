@@ -11,13 +11,19 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ElevL2"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "spin"
+                  "name": "Outtake"
                 }
               },
               {

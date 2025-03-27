@@ -1,10 +1,8 @@
 package frc.team2641.robot2025.subsystems;
 
-// import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-// import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -13,7 +11,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.Constants.CANConstants;
@@ -23,7 +20,7 @@ import frc.team2641.robot2025.helpers.ElevatorConstrain;
 public class Elevator extends SubsystemBase implements AutoCloseable {
   private TalonFX motor;
   private boolean stalled;
-  // private final MotionMagicVoltage m_motmag = new MotionMagicVoltage(0);
+  private double prev;
   private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
 
@@ -76,7 +73,6 @@ public class Elevator extends SubsystemBase implements AutoCloseable {
     // double pidOutput = m_controller.calculate(m_encoder.getDistance());
     // double feedforwardOutput = m_feedforward.calculate(m_controller.getSetpoint().velocity);
     // motor.setVoltage(pidOutput + feedforwardOutput);
-
   }
 
   public double getPosition() {
@@ -117,33 +113,29 @@ public class Elevator extends SubsystemBase implements AutoCloseable {
 
     configer.apply(slot0Configs);
     
-    // // set Motion Magic settings
+    // // // // set Motion Magic settings
     // MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
-    // motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
-    // motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
-    // motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
+    // motionMagicConfigs.MotionMagicCruiseVelocity = 10; // 80 rps cruise velocity
+    // motionMagicConfigs.MotionMagicAcceleration = 10; // 160 rps/s acceleration (0.5 seconds)
+    // motionMagicConfigs.MotionMagicJerk = 20; // 1600 rps/s^2 jerk (0.1 seconds)
+    
+    // configer.apply(motionMagicConfigs);
+
   }
 
   public void periodic() {
-      
-  }
-
-  public void periodicnot() {
-
     // if (setpoint > ElevatorConstants.minPos) setpoint = ElevatorConstants.minPos;
     // if (setpoint < ElevatorConstants.maxPos) setpoint = ElevatorConstants.maxPos;
     setpoint = ElevatorConstrain.constrain(setpoint);
 
-      if(atPosition()){    
-    double value = new ElevatorConstrain(Constants.ElevatorConstants.SRL.calculate(setpoint)).get();
+    // double value = new ElevatorConstrain(setpoint).get();
+    double value = Constants.ElevatorConstants.SRL.calculate(setpoint);
 
     motor.setControl(posRequest.withPosition(value / Constants.ElevatorConstants.elevConvert));
-      }
     
-
     // m_motmag.Slot = 0;
     // motor.setControl(m_motmag.withPosition(200));
-
+    
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)) {
       // stop();
       stalled = true;
@@ -151,19 +143,24 @@ public class Elevator extends SubsystemBase implements AutoCloseable {
     else
     stalled = false;
     // TODO: Move setpoint retargeting to an else statement above
+    
+    if (MathUtil.applyDeadband(value-prev, 0.02) == 0 && stalled){
+      setpoint = ElevatorConstrain.constrain(setpoint - Constants.ElevatorConstants.elevatorSpeed * 0.3);
+    }
 
+    prev = value;
+    
     SmartDashboard.putNumber("Arm Elevator Real Pos", getPosition());
     SmartDashboard.putBoolean("Elevator Stall", stalled);
     SmartDashboard.putNumber("Current", motor.getTorqueCurrent().getValue().baseUnitMagnitude());
+    SmartDashboard.putNumber("Supply Current", motor.getSupplyCurrent().getValue().baseUnitMagnitude());
+    SmartDashboard.putNumber("Voltage", motor.getMotorVoltage().getValue().baseUnitMagnitude());
+    SmartDashboard.putNumber("Velocity", motor.getVelocity().getValue().baseUnitMagnitude());
     SmartDashboard.putNumber("Setpoint", setpoint);
   }
   
   public TalonFX getMotor() {
     return motor;
-  }
-
-  public void setDefaultCommand(Command command) {
-    super.setDefaultCommand(command);
   }
 
   public void close() {
@@ -172,11 +169,7 @@ public class Elevator extends SubsystemBase implements AutoCloseable {
     // m_mech2d.close();
   }
 
-
   public boolean atPosition() {
     return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.02) == 0;
   }
-
-
-  
 }

@@ -29,7 +29,7 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
 public class RobotContainer {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final Elevator elev = Elevator.getInstance();
+   final Elevator elev = Elevator.getInstance();
 
   CommandXboxController driverGamepad = new CommandXboxController(0);
   CommandXboxController operatorGamepad = new CommandXboxController(1);
@@ -100,17 +100,17 @@ public class RobotContainer {
     autoStyle = new SendableChooser<Boolean>();
 
     // with SRL
-    // driveCommand = drivetrain.driveCommand(
-    //   () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
-    //   () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
-    //   () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
-    //   () -> robotSub.get());
-
     driveCommand = drivetrain.driveCommand(
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE : -driverGamepad.getRightX(),
+      () -> Constants.DriveConstants.leftY.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)),
+      () -> Constants.DriveConstants.leftX.calculate(MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)),
+      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -Constants.DriveConstants.rightX.calculate(driverGamepad.getRightX()) * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
+//  // w/o SRL
+    // driveCommand = drivetrain.driveCommand(
+    //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    //   () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE : -driverGamepad.getRightX(),
+    //   () -> robotSub.get());
 
     drivetrain.setDefaultCommand(driveCommand);
     elev.setDefaultCommand(new MoveElev());

@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
       robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
+    robotContainer.elev.goTo(robotContainer.elev.getPosition());
   }
 
   @Override
