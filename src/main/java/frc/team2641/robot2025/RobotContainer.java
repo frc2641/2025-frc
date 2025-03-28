@@ -1,6 +1,5 @@
 package frc.team2641.robot2025;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
@@ -35,7 +34,7 @@ public class RobotContainer {
   private final CommandXboxController operatorGamepad = new CommandXboxController(1);
 
   private Command driveCommand;
-
+  
   private BooleanPublisher alignmentPub;
   public BooleanSubscriber alignmentSub;
   
@@ -47,12 +46,11 @@ public class RobotContainer {
   
   private DoublePublisher angularVelocityPub;
   public DoubleSubscriber angularVelocitySub;
+  private NetworkTable table;
 
   public RobotContainer() {
-    driverGamepad.a().whileTrue(new AutoAngle(1, false));
-    driverGamepad.b().whileTrue(new AutoAngle(2, false));
-    driverGamepad.x().whileTrue(new AutoAngle(3, false));
-    driverGamepad.y().whileTrue(new AutoAngle(4, false));
+    // driverGamepad.a().whileTrue(new AutoAngle(true, false));
+    // driverGamepad.b().whileTrue(new AutoAngle(false, false));
     driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
@@ -73,7 +71,7 @@ public class RobotContainer {
 
     operatorGamepad.rightBumper().whileTrue(new SuperSpin());
     
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+    table = NetworkTableInstance.getDefault().getTable("state");
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
     alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
@@ -94,7 +92,7 @@ public class RobotContainer {
     driveCommand = drivetrain.driveCommand(
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -Constants.DriveConstants.rightX.calculate(driverGamepad.getRightX()) * 0.75 : -driverGamepad.getRightX(),
+      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
       () -> robotSub.get());
     // w/o SRL
     // driveCommand = drivetrain.driveCommand(
@@ -105,18 +103,6 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(driveCommand);
     elevator.setDefaultCommand(new MoveElevator());
-
-    NamedCommands.registerCommand("creep", new Creep());
-    NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
-    NamedCommands.registerCommand("ElevL4", new SetElevator(ELEVNUM.L4));
-    NamedCommands.registerCommand("ElevL3", new SetElevator(ELEVNUM.L3));
-    NamedCommands.registerCommand("ElevL2", new SetElevator(ELEVNUM.L2));
-    NamedCommands.registerCommand("ElevL1", new SetElevator(ELEVNUM.L1));
-    NamedCommands.registerCommand("ElevHP", new SetElevator(ELEVNUM.HP));
-    NamedCommands.registerCommand("ElevDown", new SetElevator(0));
-    NamedCommands.registerCommand("spin", new SuperSpin());
-    NamedCommands.registerCommand("Outtake", new RunOuttake());
-    NamedCommands.registerCommand("Intake", new RunIntake());
 
     Autos.init();
 
@@ -157,5 +143,14 @@ public class RobotContainer {
 
   public CommandXboxController getOperatorGamepad() {
     return operatorGamepad;
+  }
+
+  public void updateAlerts(){
+    Alerts.MissingOperatorGamepad.set(!operatorGamepad.isConnected());
+    Alerts.MissingDriverGamepad.set(!driverGamepad.isConnected());
+  }
+
+  public NetworkTable getTable(){
+    return table;
   }
 }

@@ -23,9 +23,6 @@ public final class Constants {
     public static final double SNIPER_MODE = 0.2; // increase... around 25%
     public static final double ANGLE_SNIPER_MODE = 0.6; // increase... around 25%
 
-    public static final SlewRateLimiter leftX = new SlewRateLimiter(1);
-    public static final SlewRateLimiter leftY = new SlewRateLimiter(1);
-    public static final SlewRateLimiter rightX = new SlewRateLimiter(1);
   }
 
   public static class OperatorConstants {
@@ -71,8 +68,6 @@ public final class Constants {
     public static final PIDConstants PID = new PIDConstants(4.5, 0.0, 0.15);
     public static final SlewRateLimiter SRL = new SlewRateLimiter(1.25); // m/s
 
-    // TODO: Find elevator range
-
     public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
     public static final double initPos = 0;
 
@@ -114,4 +109,5 @@ public final class Constants {
   }
 
   public static enum ELEVNUM { L1, L2, L3, L4, HP }
+
 }

@@ -1,7 +1,6 @@
 package frc.team2641.robot2025.commands.auto;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -21,10 +20,7 @@ public class Creep extends Command {
 
   @Override
   public void execute() {
-    if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue))
-      drivetrain.drive(new Translation2d(-1.1, 0), 0, false);
-    else
-      drivetrain.drive(new Translation2d(-1.1, 0), 0, false);
+    drivetrain.drive(new Translation2d(-1.1, 0), 0, false);
   }
 
   @Override

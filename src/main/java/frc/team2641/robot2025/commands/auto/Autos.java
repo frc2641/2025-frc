@@ -1,6 +1,7 @@
 package frc.team2641.robot2025.commands.auto;
 
 import java.util.ArrayList;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,10 +12,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team2641.robot2025.Alerts;
 import frc.team2641.robot2025.Constants;
+import frc.team2641.robot2025.Robot;
 import frc.team2641.robot2025.Constants.ELEVNUM;
 import frc.team2641.robot2025.commands.elevator.SetElevator;
 import frc.team2641.robot2025.commands.intake.RunIntake;
 import frc.team2641.robot2025.commands.intake.RunOuttake;
+import frc.team2641.robot2025.commands.intake.SuperSpin;
 import frc.team2641.robot2025.subsystems.Elevator;
 import frc.team2641.robot2025.subsystems.Intake;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -30,6 +33,7 @@ public class Autos {
 
 	private static final SendableChooser<Autos.Mode> autoMode = new SendableChooser<Autos.Mode>();
 	private static final SendableChooser<String> simpleAutoChooser = new SendableChooser<String>();
+	private static final SendableChooser<Command> simpleAutoHeight = new SendableChooser<Command>();
 	private static final SendableChooser<Pose2d> start = new SendableChooser<Pose2d>();
 	private static final ArrayList<SendableChooser<Pose2d>> sources = new ArrayList<SendableChooser<Pose2d>>();
 	private static final ArrayList<SendableChooser<Pose2d>> destinations = new ArrayList<SendableChooser<Pose2d>>();
@@ -38,6 +42,19 @@ public class Autos {
 	private static final Drivetrain drivetrain = Drivetrain.getInstance();
 
 	public static void init() {
+		NamedCommands.registerCommand("creep", new Creep());
+    // NamedCommands.registerCommand("angleSource", new AutoAngle(4, true));
+    NamedCommands.registerCommand("ElevL4", new SetElevator(ELEVNUM.L4));
+    NamedCommands.registerCommand("ElevL3", new SetElevator(ELEVNUM.L3));
+    NamedCommands.registerCommand("ElevL2", new SetElevator(ELEVNUM.L2));
+    NamedCommands.registerCommand("ElevL1", new SetElevator(ELEVNUM.L1));
+    NamedCommands.registerCommand("ElevHP", new SetElevator(ELEVNUM.HP));
+    NamedCommands.registerCommand("ElevDown", new SetElevator(0));
+    NamedCommands.registerCommand("spin", new SuperSpin());
+    NamedCommands.registerCommand("Outtake", new RunOuttake());
+    NamedCommands.registerCommand("Intake", new RunIntake());
+    NamedCommands.registerCommand("ChosenElev", simpleAutoHeight.getSelected());
+
 		autoMode.setDefaultOption("Simple", Autos.Mode.SIMPLE);
     autoMode.addOption("Build Your Own", Autos.Mode.BYO);
 		autoMode.addOption("Creep", Autos.Mode.CREEP);
@@ -138,6 +155,16 @@ public class Autos {
 		simpleAutoChooser.onChange((String auto) -> checkValidAuto());
 
     SmartDashboard.putData("Simple Auto Path", simpleAutoChooser);
+
+    simpleAutoHeight.addOption("L1", new SetElevator(ELEVNUM.L1));
+    simpleAutoHeight.addOption("L2", new SetElevator(ELEVNUM.L2));
+    simpleAutoHeight.addOption("L3", new SetElevator(ELEVNUM.L3));
+    simpleAutoHeight.setDefaultOption("L4", new SetElevator(ELEVNUM.L4));
+		simpleAutoHeight.addOption("None", null);
+
+		simpleAutoChooser.onChange((String auto) -> checkValidAuto());
+
+    SmartDashboard.putData("Simple Auto Level", simpleAutoHeight);
 	}
 
 	private static void initSource(SendableChooser<Pose2d> sc) {
@@ -177,6 +204,7 @@ public class Autos {
 	}
 
 	public static boolean checkValidAuto() {
+		Robot.getInstance().robotContainer.updateAlerts();
 		boolean result = true;
 
 		if (start.getSelected() == null) {
@@ -191,7 +219,7 @@ public class Autos {
 				if (sources.get(2).getSelected() == null || destinations.get(2).getSelected() == null || levels.get(2).getSelected() == null) result = false;
 				break;
 			case SIMPLE:
-				if (simpleAutoChooser.getSelected() == null) result = false;
+				if (simpleAutoChooser.getSelected() == null || simpleAutoHeight.getSelected() == null) result = false;
 				break;
 			case CREEP:
 				break;
@@ -266,7 +294,7 @@ public class Autos {
 			// END
 			sequence.add(new SetElevator(0));
 		} else {
-			sequence.add(drivetrain.getAutonomousCommand("Straight"));
+			sequence.add(new Creep());
 		}
 
 		Command result = Commands.sequence(sequence.toArray(new Command[0]));
@@ -288,23 +316,23 @@ public class Autos {
 	}
 
 	public static class HumanPlayerPoses {	
-		public static final Pose2d left = new Pose2d(1.472, 7.210, new Rotation2d(125 * Math.PI / 180));
-		public static final Pose2d right = new Pose2d(1.472, 0.831, new Rotation2d(235 * Math.PI / 180));
+		public static final Pose2d left = new Pose2d(1.472, 7.210, new Rotation2d(305 * Math.PI / 180));
+		public static final Pose2d right = new Pose2d(1.472, 0.831, new Rotation2d(55 * Math.PI / 180));
 	}
 
 	public static class ReefPoses {
-		public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(180 * Math.PI / 180));
-		public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(180 * Math.PI / 180));
-		public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(240 * Math.PI / 180));
-		public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(240 * Math.PI / 180));
-		public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(300 * Math.PI / 180));
-		public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(300 * Math.PI / 180));
-		public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(0 * Math.PI / 180));
-		public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(0 * Math.PI / 180));
-		public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(60 * Math.PI / 180));
-		public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(60 * Math.PI / 180));
-		public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(120 * Math.PI / 180));
-		public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(120 * Math.PI / 180));
+		public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(0 * Math.PI / 180));
+		public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(0 * Math.PI / 180));
+		public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(60 * Math.PI / 180));
+		public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(60 * Math.PI / 180));
+		public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(120 * Math.PI / 180));
+		public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(120 * Math.PI / 180));
+		public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(180 * Math.PI / 180));
+		public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(180 * Math.PI / 180));
+		public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(240 * Math.PI / 180));
+		public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(240 * Math.PI / 180));
+		public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(300 * Math.PI / 180));
+		public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(300 * Math.PI / 180));
 	}
 
 	public static enum Mode { SIMPLE, BYO, CREEP, NONE }

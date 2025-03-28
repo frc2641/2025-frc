@@ -19,6 +19,7 @@
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/Simple Auto Level": "String Chooser",
       "/SmartDashboard/Simple Auto Path": "String Chooser",
       "/SmartDashboard/Starting Pose": "String Chooser",
       "/SmartDashboard/Swerve Drive": "Alerts"
