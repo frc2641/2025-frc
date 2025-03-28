@@ -106,8 +106,7 @@ public class RobotContainer {
 
     Autos.init();
 
-    Alerts.MissingOperatorGamepad.set(!operatorGamepad.isConnected());
-    Alerts.MissingDriverGamepad.set(!driverGamepad.isConnected());
+    updateAlerts();
   }
 
   public Command getAutonomousCommand() {
@@ -145,12 +144,12 @@ public class RobotContainer {
     return operatorGamepad;
   }
 
-  public void updateAlerts(){
+  public void updateAlerts() {
     Alerts.MissingOperatorGamepad.set(!operatorGamepad.isConnected());
     Alerts.MissingDriverGamepad.set(!driverGamepad.isConnected());
   }
 
-  public NetworkTable getTable(){
+  public NetworkTable getTable() {
     return table;
   }
 }
