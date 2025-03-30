@@ -55,7 +55,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final double winchSpeed = 0.75;
-    public static final double climberSpeed = 0.1;
+    public static final double climberSpeed = 0.25;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
@@ -109,5 +109,32 @@ public final class Constants {
   }
 
   public static enum ELEVNUM { L1, L2, L3, L4, HP }
+  public static enum AutoAngleNum {LEFT_HP(126, 234), RIGHT_HP(234, 126);
+  private double target;
+  private double opposite;
+  private AutoAngleNum(double target, double opposite){
+    this.target = target;
+    this.opposite = opposite;
+  }
+
+  public double getTarget(){
+    return target;
+  } 
+  public double getOpposite(){
+    return opposite;
+  } 
+  
+  }
+  public static enum PIPELINE {
+    left(1), right(0), center(2);
+    private int value;
+    private PIPELINE(int value){
+      this.value = value;
+    }
+
+    public int get(){
+      return value;
+    }
+  }
 
 }

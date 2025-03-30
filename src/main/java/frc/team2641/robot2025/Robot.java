@@ -116,6 +116,7 @@ public class Robot extends TimedRobot {
             ? rumble(true)
             : rumble(false) 
     );
+    SmartDashboard.putBoolean("April Tag Visible", canSeeID());
   }
 
   private int rumble(boolean on){
@@ -148,5 +149,9 @@ public class Robot extends TimedRobot {
 
   public static PowerDistribution getPDH() {
     return pdh;
+  }
+
+  public static boolean canSeeID(){
+    return (int)Limelight.getFiducialID("") != -1;
   }
 }

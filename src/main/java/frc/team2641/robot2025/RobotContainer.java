@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.team2641.robot2025.Constants.AutoAngleNum;
 import frc.team2641.robot2025.Constants.ELEVNUM;
 import frc.team2641.robot2025.Constants.OperatorConstants;
+import frc.team2641.robot2025.Constants.PIPELINE;
 import frc.team2641.robot2025.commands.auto.*;
 import frc.team2641.robot2025.commands.climbing.Climb;
 import frc.team2641.robot2025.commands.climbing.Wrap;
@@ -49,9 +51,6 @@ public class RobotContainer {
   private NetworkTable table;
 
   public RobotContainer() {
-    // driverGamepad.a().whileTrue(new AutoAngle(true, false));
-    // driverGamepad.b().whileTrue(new AutoAngle(false, false));
-    driverGamepad.leftBumper().whileTrue(new LimelightTracking());
     driverGamepad.leftTrigger().whileTrue(new SniperMode());
     driverGamepad.rightTrigger().whileTrue(new RobotRelative());
     driverGamepad.start().onTrue(new InstantCommand(drivetrain::zeroGyro));
@@ -59,6 +58,11 @@ public class RobotContainer {
     driverGamepad.povDown().whileTrue(new Climb(false));
     driverGamepad.povLeft().whileTrue(new Wrap(true));
     driverGamepad.povRight().whileTrue(new Wrap(false));
+
+    driverGamepad.x().whileTrue(new AutoAngle(AutoAngleNum.LEFT_HP, false));
+    driverGamepad.y().whileTrue(new AutoAngle(AutoAngleNum.RIGHT_HP, false));
+    driverGamepad.a().whileTrue(new LimelightTracking(PIPELINE.left));
+    driverGamepad.b().whileTrue(new LimelightTracking(PIPELINE.right));
 
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new RunOuttake());
