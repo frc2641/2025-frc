@@ -8,14 +8,14 @@ import frc.team2641.robot2025.Limelight;
 import frc.team2641.robot2025.Constants.PIPELINE;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 
-public class LimelightTracking extends Command {
+public class LimelightAlign extends Command {
   private final Drivetrain drivetrain = Drivetrain.getInstance();
 
   private final PIDController controllerX;
   private final PIDController controllerAngle;
   private int p;
 
-  public LimelightTracking(PIPELINE p) {
+  public LimelightAlign(PIPELINE p) {
     this.p = p.get();
 
     controllerX = new PIDController(3, 0, 0);
@@ -24,8 +24,7 @@ public class LimelightTracking extends Command {
 
     controllerAngle = new PIDController(2.25, 0, 0);
     controllerAngle.setTolerance(3 * Math.PI / 180);
-    controllerAngle.setSetpoint(-Math.PI / 2);
-    controllerAngle.setSetpoint( 0 );
+    controllerAngle.setSetpoint(0);
 
     addRequirements(this.drivetrain);
   }
@@ -46,8 +45,6 @@ public class LimelightTracking extends Command {
     double translationX = controllerX.calculate(tx);
     double rotation = controllerAngle.calculate(tangle);
 
-    // drivetrain.drive(new Translation2d(0, 0), -rotation, false);
-    // drivetrain.drive(new Translation2d(-translationX, 0), -0, false);
     drivetrain.drive(new Translation2d(-translationX, 0), -rotation, false);
     SmartDashboard.putNumber("translationX", -translationX);
     SmartDashboard.putNumber("rotation", -rotation);
@@ -55,7 +52,6 @@ public class LimelightTracking extends Command {
 
   @Override
   public boolean isFinished() {
-    // return Limelight.getFiducialID("") != -1 && controllerAngle.atSetpoint();
     return Limelight.getFiducialID("") != -1 && controllerX.atSetpoint() && controllerAngle.atSetpoint();
   }
 

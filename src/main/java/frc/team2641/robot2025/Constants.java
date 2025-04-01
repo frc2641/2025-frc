@@ -7,8 +7,7 @@ import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
 public final class Constants {
-  public static final double ROBOT_MASS = 52.1631; // 32lbs * kg per pound
-  // public static final double ROBOT_MASS = 47; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 52.1631;
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms spark max velocity lag
   
@@ -22,7 +21,6 @@ public final class Constants {
     public static final double MAX_SPEED = 6; // m/s, will be around 6 or 7
     public static final double SNIPER_MODE = 0.2; // increase... around 25%
     public static final double ANGLE_SNIPER_MODE = 0.6; // increase... around 25%
-
   }
 
   public static class OperatorConstants {
@@ -109,32 +107,35 @@ public final class Constants {
   }
 
   public static enum ELEVNUM { L1, L2, L3, L4, HP }
-  public static enum AutoAngleNum {LEFT_HP(126, 234), RIGHT_HP(234, 126);
-  private double target;
-  private double opposite;
-  private AutoAngleNum(double target, double opposite){
-    this.target = target;
-    this.opposite = opposite;
-  }
 
-  public double getTarget(){
-    return target;
-  } 
-  public double getOpposite(){
-    return opposite;
-  } 
-  
-  }
-  public static enum PIPELINE {
-    left(1), right(0), center(2);
-    private int value;
-    private PIPELINE(int value){
+  public static enum AutoAngleNum {
+    LEFT_HP(126),
+    RIGHT_HP(-126);
+
+    private double value;
+
+    private AutoAngleNum(double value) {
       this.value = value;
     }
 
-    public int get(){
+    public double get() {
       return value;
     }
   }
 
+  public static enum PIPELINE {
+    left(1),
+    right(0),
+    center(2);
+
+    private int value;
+
+    private PIPELINE(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
 }

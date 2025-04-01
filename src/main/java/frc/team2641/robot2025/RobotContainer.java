@@ -37,17 +37,18 @@ public class RobotContainer {
 
   private Command driveCommand;
   
-  private BooleanPublisher alignmentPub;
-  public BooleanSubscriber alignmentSub;
+  private BooleanPublisher gyroAlignPub;
+  public BooleanSubscriber gyroAlignSub;
   
+  private DoublePublisher gyroAlignVPub;
+  public DoubleSubscriber gyroAlignVSub;
+
   private BooleanPublisher sniperPub;
   public BooleanSubscriber sniperSub;
   
   private BooleanPublisher robotPub;
   public BooleanSubscriber robotSub;
   
-  private DoublePublisher angularVelocityPub;
-  public DoubleSubscriber angularVelocitySub;
   private NetworkTable table;
 
   public RobotContainer() {
@@ -58,11 +59,10 @@ public class RobotContainer {
     driverGamepad.povDown().whileTrue(new Climb(false));
     driverGamepad.povLeft().whileTrue(new Wrap(true));
     driverGamepad.povRight().whileTrue(new Wrap(false));
-
-    driverGamepad.x().whileTrue(new AutoAngle(AutoAngleNum.LEFT_HP, false));
-    driverGamepad.y().whileTrue(new AutoAngle(AutoAngleNum.RIGHT_HP, false));
-    driverGamepad.a().whileTrue(new LimelightTracking(PIPELINE.left));
-    driverGamepad.b().whileTrue(new LimelightTracking(PIPELINE.right));
+    driverGamepad.x().whileTrue(new GyroAlign(AutoAngleNum.LEFT_HP, false));
+    driverGamepad.y().whileTrue(new GyroAlign(AutoAngleNum.RIGHT_HP, false));
+    driverGamepad.a().whileTrue(new LimelightAlign(PIPELINE.left));
+    driverGamepad.b().whileTrue(new LimelightAlign(PIPELINE.right));
 
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new RunOuttake());
@@ -76,13 +76,13 @@ public class RobotContainer {
     
     table = NetworkTableInstance.getDefault().getTable("state");
 
-    alignmentPub = table.getBooleanTopic("autoAlign").publish();
-    alignmentPub.set(false);
-    alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
+    gyroAlignPub = table.getBooleanTopic("gyroAlign").publish();
+    gyroAlignPub.set(false);
+    gyroAlignSub = table.getBooleanTopic("gyroAlign").subscribe(false);
 
-    angularVelocityPub = table.getDoubleTopic("angularVelocity").publish();
-    angularVelocityPub.set(0);
-    angularVelocitySub = table.getDoubleTopic("angularVelocity").subscribe(0);
+    gyroAlignVPub = table.getDoubleTopic("angularVelocity").publish();
+    gyroAlignVPub.set(0);
+    gyroAlignVSub = table.getDoubleTopic("angularVelocity").subscribe(0);
 
     sniperPub = table.getBooleanTopic("sniperMode").publish();
     sniperPub.set(false);
@@ -92,27 +92,19 @@ public class RobotContainer {
     robotPub.set(false);
     robotSub = table.getBooleanTopic("robotRelative").subscribe(false);
 
-    // with SRL
     driveCommand = drivetrain.driveCommand(
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
       () -> {
-        SmartDashboard.putBoolean("bingbangboom", alignmentSub.get());
-        SmartDashboard.putNumber("bingbangboom2", angularVelocitySub.get());
-        if (alignmentSub.get()) {
-          return angularVelocitySub.get();
+        if (gyroAlignSub.get()) {
+          return gyroAlignVSub.get();
         } else {
           if (sniperSub.get()) return -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE;
-          else return -driverGamepad.getRightX();
-        }
+          return -driverGamepad.getRightX();
+        }    
       },
-      () -> robotSub.get());
-    // w/o SRL
-    // driveCommand = drivetrain.driveCommand(
-    //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //   () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-    //   () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE : -driverGamepad.getRightX(),
-    //   () -> robotSub.get());
+      () -> robotSub.get()
+    );
 
     drivetrain.setDefaultCommand(driveCommand);
     elevator.setDefaultCommand(new MoveElevator());

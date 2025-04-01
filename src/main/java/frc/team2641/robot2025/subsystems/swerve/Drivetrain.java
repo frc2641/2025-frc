@@ -28,10 +28,7 @@ public class Drivetrain extends SwerveBase {
     int allianceAprilTag = 17;
     try {
       allianceAprilTag = DriverStation.getAlliance().get() == Alliance.Blue ? 17 : 6;
-      
-    } catch (NoSuchElementException e) {
-      e.printStackTrace();
-    }
+    } catch (NoSuchElementException e) {}
     reefTagPoses = new Pose3d[6];
     for (int x = 0; x < 6; x++)
       {
