@@ -44,7 +44,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double speedIn1 = 0.05;
+    public static final double speedIn1 = 0.1;
     public static final double speedIn2 = -0.2;
     public static final double speedOut = 0.1;
     public static final double superSpeed = -1;
@@ -55,7 +55,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final double winchSpeed = 0.75;
-    public static final double climberSpeed = 0.25;
+    public static final double climberSpeed = 0.175;
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
@@ -101,11 +101,11 @@ public final class Constants {
   }
 
   public static final class ElevatorPositions {
-    public static final double L1 = 0.6898161006834332;
-    public static final double L2 = 0.8502850411837511;
-    public static final double L3 = 1.4037806205120347;
-    public static final double L4 = 2.179946163471534;
-    public static final double HP = 0.3372576874968421;
+    public static final double L1 = 0.7198161006834332;
+    public static final double L2 = 0.8802850411837511;
+    public static final double L3 = 1.4337806205120347;
+    public static final double L4 = 2.209946163471534;
+    public static final double HP = 0.3672576874968421;
   }
 
   public static enum ELEVNUM { L1, L2, L3, L4, HP }

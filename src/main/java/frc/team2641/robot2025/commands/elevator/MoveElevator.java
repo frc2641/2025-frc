@@ -22,11 +22,11 @@ public class MoveElevator extends Command {
   public void execute() {
     // if (!elevator.getAuto()) {
     double rightY = -MathUtil.applyDeadband(Robot.getInstance().robotContainer.getOpRightStickY(), 0.1);
-
-    double output = elevator.getSetpoint() + rightY * Constants.ElevatorConstants.elevatorSpeed; //* (Robot.isReal() ? 1 : 0.1);
+    
+    double output = rightY * Constants.ElevatorConstants.elevatorSpeed + elevator.getSetpoint(); //* (Robot.isReal() ? 1 : 0.1);
     // double output = rightY * Constants.ElevatorConstants.elevatorSpeed * (Robot.isReal() ? 1 : 0.1);
 
-    output = new ElevatorConstrain(output).get();
+    output = ElevatorConstrain.constrain(output);
     elevator.goTo(output);
     // }
   }

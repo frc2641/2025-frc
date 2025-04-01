@@ -1,5 +1,7 @@
 package frc.team2641.robot2025.subsystems.swerve;
 
+import java.util.NoSuchElementException;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,8 +25,13 @@ public class Drivetrain extends SwerveBase {
 
   public Drivetrain() {
     super();
-
-    int allianceAprilTag = DriverStation.getAlliance().get() == Alliance.Blue ? 17 : 6;
+    int allianceAprilTag = 17;
+    try {
+      allianceAprilTag = DriverStation.getAlliance().get() == Alliance.Blue ? 17 : 6;
+      
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+    }
     reefTagPoses = new Pose3d[6];
     for (int x = 0; x < 6; x++)
       {

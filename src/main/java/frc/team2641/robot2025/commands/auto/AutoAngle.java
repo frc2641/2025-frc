@@ -2,11 +2,10 @@ package frc.team2641.robot2025.commands.auto;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.BooleanPublisher;
-import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
+// import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2641.robot2025.Constants.AutoAngleNum;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
@@ -18,24 +17,23 @@ public class AutoAngle extends Command {
 
 	private BooleanPublisher alignmentPub;
 	private DoublePublisher angularVelocityPub;
-	private BooleanSubscriber alignmentSub;
 	private AutoAngleNum goal;
 
 	public AutoAngle(AutoAngleNum x, boolean isAutonomous) {
 		
 		this.isAutonomous = isAutonomous;
-		if ( x == null ) 
-			end(false);
-		else	
+		// if ( x == null ) 
+		// 	end(false);
+		// else	
 			goal = x;
 		
 
-		NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
-
-		alignmentPub = table.getBooleanTopic("autoAlign").publish();
-		alignmentPub.set(false);
-		alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
-		
+			
+			NetworkTable table = NetworkTableInstance.getDefault().getTable("state");
+			
+			alignmentPub = table.getBooleanTopic("autoAlign").publish();
+			alignmentPub.set(false);
+			
 
 		angularVelocityPub = table.getDoubleTopic("angularVelocity").publish();
 		angularVelocityPub.set(0);
@@ -47,9 +45,9 @@ public class AutoAngle extends Command {
 		alignmentPub.set(true);
 		
 		// TODO see if necesary
-		if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-
-		}
+		// if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+			
+		// }
 	}
 	
 
@@ -118,6 +116,6 @@ public class AutoAngle extends Command {
 	}
 
 	public boolean isFinished() {
-		return (alignmentSub.get()) && (drivetrain.getHeading().getDegrees()<(goal.getTarget()+1) && drivetrain.getHeading().getDegrees()>(goal.getTarget()-1));
+		return (drivetrain.getHeading().getDegrees()<(goal.getTarget()+1) && drivetrain.getHeading().getDegrees()>(goal.getTarget()-1));
 	}
 }

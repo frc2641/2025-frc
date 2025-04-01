@@ -72,10 +72,10 @@ public class RobotContainer {
     operatorGamepad.y().onTrue(new SetElevator(ELEVNUM.L4));
     operatorGamepad.start().onTrue(new SetElevator(ELEVNUM.HP));
     operatorGamepad.back().onTrue(new SetElevator(0));
-
     operatorGamepad.rightBumper().whileTrue(new SuperSpin());
     
     table = NetworkTableInstance.getDefault().getTable("state");
+
     alignmentPub = table.getBooleanTopic("autoAlign").publish();
     alignmentPub.set(false);
     alignmentSub = table.getBooleanTopic("autoAlign").subscribe(false);
@@ -96,7 +96,16 @@ public class RobotContainer {
     driveCommand = drivetrain.driveCommand(
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftY() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(sniperSub.get() ? -driverGamepad.getLeftX() * Constants.DriveConstants.SNIPER_MODE : -driverGamepad.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-      () -> alignmentSub.get() ? angularVelocitySub.get() : sniperSub.get() ? -driverGamepad.getRightX() * 0.75 : -driverGamepad.getRightX(),
+      () -> {
+        SmartDashboard.putBoolean("bingbangboom", alignmentSub.get());
+        SmartDashboard.putNumber("bingbangboom2", angularVelocitySub.get());
+        if (alignmentSub.get()) {
+          return angularVelocitySub.get();
+        } else {
+          if (sniperSub.get()) return -driverGamepad.getRightX() * Constants.DriveConstants.ANGLE_SNIPER_MODE;
+          else return -driverGamepad.getRightX();
+        }
+      },
       () -> robotSub.get());
     // w/o SRL
     // driveCommand = drivetrain.driveCommand(

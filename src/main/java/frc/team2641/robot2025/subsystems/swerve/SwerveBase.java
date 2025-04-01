@@ -73,8 +73,8 @@ public class SwerveBase extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    swerveDrive.setHeadingCorrection(true);
-    swerveDrive.setCosineCompensator(true);
+    // swerveDrive.setHeadingCorrection(true);
+    // swerveDrive.setCosineCompensator(true);
     // swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
     // swerveDrive.setModuleEncoderAutoSynchronize(true, 3);
     setupPathPlanner();
