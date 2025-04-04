@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.team2641.robot2025.commands.shifts.RobotRelative;
-import frc.team2641.robot2025.commands.shifts.SniperMode;
 import frc.team2641.robot2025.subsystems.Elevator;
 import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
+
 import swervelib.parser.SwerveParser;
 
 public class Robot extends TimedRobot {
@@ -33,6 +33,13 @@ public class Robot extends TimedRobot {
   public RobotContainer robotContainer;
 
   private CommandXboxController driverGamepad;
+
+  private double accelX;
+  private double accelY;
+  private double accelPrevX = 0;
+  private double accelPrevY = 0;
+  private double jerkX;
+  private double jerkY;
 
   public Robot() {
     instance = this;
@@ -104,28 +111,48 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (Robot.isReal()) Elastic.selectTab("Teleoperated");
     if (autoCommand != null) autoCommand.cancel();
-    if (driverGamepad.leftTrigger().getAsBoolean()) new SniperMode().schedule();
-    if (driverGamepad.rightTrigger().getAsBoolean()) new RobotRelative().schedule();
   }
 
   @Override
   public void teleopPeriodic() {
-    driverGamepad.setRumble(
-      RumbleType.kBothRumble,
-      robotContainer.sniperSub.get()
-        ? rumble(false)
-        : driverGamepad.getLeftX() > 0.4 && drivetrain.getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
-          ? rumble(true)
-          : driverGamepad.getLeftY() > 0.4 && drivetrain.getSwerveDrive().getFieldVelocity().vyMetersPerSecond < 0.1 
-            ? rumble(true)
-            : rumble(false) 
-    );
+    try {
+      accelX =  drivetrain.getSwerveDrive().getAccel().get().getX();
+      accelY =  drivetrain.getSwerveDrive().getAccel().get().getY();
+      
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+      accelX = 0;
+      accelY = 0;
+    }
+
+    jerkX = (accelX - accelPrevX) / kDefaultPeriod;
+    jerkY = (accelY - accelPrevY) / kDefaultPeriod;
+
+    accelPrevX = accelX;
+    accelPrevY = accelY;
+
+    SmartDashboard.putBoolean("Rumble", setRumble());
+
     SmartDashboard.putBoolean("April Tag Visible", canSeeID());
   }
 
-  private int rumble(boolean on){
-    SmartDashboard.putBoolean("Rumble", on);
-    return on ? 1 : 0;
+  private boolean setRumble(){
+    if(robotContainer.sniperSub.get()){
+      driverGamepad.setRumble(RumbleType.kBothRumble, 0);
+      return false;
+    }
+    else if (driverGamepad.getLeftX() > 0.4 && jerkX < 0){
+      driverGamepad.setRumble(RumbleType.kBothRumble, 1);
+      return true;
+    }
+    else if (driverGamepad.getLeftY() > 0.4 && jerkY < 0) {
+      driverGamepad.setRumble(RumbleType.kBothRumble, 1);
+      return true;
+    }
+    else 
+      driverGamepad.setRumble(RumbleType.kBothRumble, 0);
+      return false;
+
   }
 
   @Override

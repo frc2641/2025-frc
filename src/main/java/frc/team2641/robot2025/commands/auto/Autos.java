@@ -53,7 +53,7 @@ public class Autos {
     NamedCommands.registerCommand("spin", new SuperSpin());
     NamedCommands.registerCommand("Outtake", new RunOuttake());
     NamedCommands.registerCommand("Intake", new RunIntake());
-    NamedCommands.registerCommand("ChosenElev", simpleAutoHeight.getSelected());
+    NamedCommands.registerCommand("ChosenElev", Commands.runOnce(() -> simpleAutoHeight.getSelected().schedule()));
 
 		autoMode.setDefaultOption("Simple", Autos.Mode.SIMPLE);
     autoMode.addOption("Build Your Own", Autos.Mode.BYO);
@@ -307,8 +307,8 @@ public class Autos {
 		return result;
 	}
 
-	public static String getSimpleAuto() {
-		return simpleAutoChooser.getSelected();
+	public static Command getSimpleAuto() {
+		return drivetrain.getAutonomousCommand(simpleAutoChooser.getSelected());
 	}
 
 	public static Mode getMode() {
@@ -316,23 +316,23 @@ public class Autos {
 	}
 
 	public static class HumanPlayerPoses {	
-		public static final Pose2d left = new Pose2d(1.472, 7.210, new Rotation2d(305 * Math.PI / 180));
-		public static final Pose2d right = new Pose2d(1.472, 0.831, new Rotation2d(55 * Math.PI / 180));
+		public static final Pose2d left = new Pose2d(1.31, 7.181, new Rotation2d(305 * Math.PI / 180));
+		public static final Pose2d right = new Pose2d(1.337, 0.841, new Rotation2d(55 * Math.PI / 180));
 	}
 
 	public static class ReefPoses {
-		public static final Pose2d reefA = new Pose2d(3.156, 3.938, new Rotation2d(0 * Math.PI / 180));
-		public static final Pose2d reefB = new Pose2d(3.156, 3.621, new Rotation2d(0 * Math.PI / 180));
+		public static final Pose2d reefA = new Pose2d(3.214, 4.381, new Rotation2d(-90 * Math.PI / 180));
+		public static final Pose2d reefB = new Pose2d(3.21, 4.140, new Rotation2d(-90 * Math.PI / 180));
 		public static final Pose2d reefC = new Pose2d(3.897, 2.822, new Rotation2d(60 * Math.PI / 180));
-		public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(60 * Math.PI / 180));
-		public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(120 * Math.PI / 180));
-		public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(120 * Math.PI / 180));
-		public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(180 * Math.PI / 180));
-		public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(180 * Math.PI / 180));
-		public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(240 * Math.PI / 180));
-		public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(240 * Math.PI / 180));
-		public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(300 * Math.PI / 180));
-		public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(300 * Math.PI / 180));
+		public static final Pose2d reefD = new Pose2d(4.185, 2.659, new Rotation2d(-30 * Math.PI / 180));
+		public static final Pose2d reefE = new Pose2d(5.196, 2.890, new Rotation2d(30 * Math.PI / 180));
+		public static final Pose2d reefF = new Pose2d(5.513, 3.053, new Rotation2d(30 * Math.PI / 180));
+		public static final Pose2d reefG = new Pose2d(5.821, 4.112, new Rotation2d(90 * Math.PI / 180));
+		public static final Pose2d reefH = new Pose2d(5.821, 4.400, new Rotation2d(90 * Math.PI / 180));
+		public static final Pose2d reefI = new Pose2d(5.071, 5.218, new Rotation2d(150 * Math.PI / 180));
+		public static final Pose2d reefJ = new Pose2d(4.782, 5.391, new Rotation2d(150 * Math.PI / 180));
+		public static final Pose2d reefK = new Pose2d(3.791, 5.151, new Rotation2d(-150 * Math.PI / 180));
+		public static final Pose2d reefL = new Pose2d(3.473, 4.958, new Rotation2d(-150 * Math.PI / 180));
 	}
 
 	public static enum Mode { SIMPLE, BYO, CREEP, NONE }

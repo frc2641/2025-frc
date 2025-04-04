@@ -227,6 +227,19 @@
               "red_start_time": 15,
               "yellow_start_time": 30
             }
+          },
+          {
+            "title": "Simple Auto Level",
+            "x": 288.0,
+            "y": 144.0,
+            "width": 144.0,
+            "height": 144.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Simple Auto Level",
+              "period": 0.06,
+              "sort_options": false
+            }
           }
         ]
       }
@@ -415,7 +428,7 @@
             }
           },
           {
-            "title": "Intake",
+            "title": "Climber",
             "x": 0.0,
             "y": 0.0,
             "width": 528.0,
@@ -423,19 +436,6 @@
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/USB Camera 0",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "Climber",
-            "x": 528.0,
-            "y": 0.0,
-            "width": 480.0,
-            "height": 720.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/USB Camera 1",
               "period": 0.06,
               "rotation_turns": 0
             }
@@ -454,6 +454,19 @@
               "time_display_mode": "Minutes and Seconds",
               "red_start_time": 15,
               "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Limelight",
+            "x": 528.0,
+            "y": 0.0,
+            "width": 480.0,
+            "height": 720.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]

@@ -15,12 +15,12 @@ public class LimelightAlign extends Command {
   private final PIDController controllerAngle;
   private int p;
 
-  public LimelightAlign(PIPELINE p) {
+  public LimelightAlign(PIPELINE p, double xSetpoint) {
     this.p = p.get();
 
     controllerX = new PIDController(3, 0, 0);
-    controllerX.setTolerance(0.05);
-    controllerX.setSetpoint(0.0);
+    controllerX.setTolerance(0.01);
+    controllerX.setSetpoint(xSetpoint);
 
     controllerAngle = new PIDController(2.25, 0, 0);
     controllerAngle.setTolerance(3 * Math.PI / 180);

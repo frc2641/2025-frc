@@ -61,8 +61,8 @@ public class RobotContainer {
     driverGamepad.povRight().whileTrue(new Wrap(false));
     driverGamepad.x().whileTrue(new GyroAlign(AutoAngleNum.LEFT_HP, false));
     driverGamepad.y().whileTrue(new GyroAlign(AutoAngleNum.RIGHT_HP, false));
-    driverGamepad.a().whileTrue(new LimelightAlign(PIPELINE.left));
-    driverGamepad.b().whileTrue(new LimelightAlign(PIPELINE.right));
+    driverGamepad.a().whileTrue(new LimelightAlign(PIPELINE.left, 0.1));
+    driverGamepad.b().whileTrue(new LimelightAlign(PIPELINE.right, 0.42));
 
     operatorGamepad.leftTrigger().whileTrue(new RunIntake());
     operatorGamepad.rightTrigger().whileTrue(new RunOuttake());
@@ -117,7 +117,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (Autos.getMode()) {
       case SIMPLE:
-        return drivetrain.getAutonomousCommand(Autos.getSimpleAuto());
+        return Autos.getSimpleAuto();
       case BYO:
         return Autos.getAutoCommand();
       case CREEP:
