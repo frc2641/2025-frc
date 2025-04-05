@@ -14,14 +14,14 @@ public class Climb extends Command {
 
   @Override
   public void initialize() {
+  }
+  
+  @Override
+  public void execute() {
     if(forwards)
       climber.extend();
     else
     climber.retract();
-  }
-
-  @Override
-  public void execute() {
   }
 
   @Override

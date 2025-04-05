@@ -1,8 +1,10 @@
 package frc.team2641.robot2025.commands.elevator;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team2641.robot2025.Constants;
 import frc.team2641.robot2025.subsystems.Elevator;
+import frc.team2641.robot2025.Constants.ELEVNUM;
 import frc.team2641.robot2025.Constants.ElevatorPositions;
 
 public class SetElevator extends InstantCommand {
@@ -15,6 +17,25 @@ public class SetElevator extends InstantCommand {
   }
 
   public SetElevator(Constants.ELEVNUM pos) {
+    setSetpoint(pos);
+    addRequirements(elevator);
+  }
+
+  public SetElevator(SendableChooser<ELEVNUM> pos){
+    setSetpoint(pos.getSelected());
+    pos.onChange((ELEVNUM newPos) -> {
+      setSetpoint(newPos);
+    });
+    addRequirements(elevator);
+  }
+
+  @Override
+  public void initialize() {
+    elevator.goTo(setpoint);
+    end(false);
+  }
+
+  private void setSetpoint(ELEVNUM pos){
     setpoint = 0;
 
     if (pos != null) {
@@ -44,12 +65,5 @@ public class SetElevator extends InstantCommand {
           break;
       }
     }
-
-    addRequirements(elevator);
-  }
-
-  @Override
-  public void initialize() {
-    elevator.goTo(setpoint);
   }
 }

@@ -23,28 +23,15 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Outtake"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              }
-            ]
+            "name": "ElevDown"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevDown"
+            "name": "PatientOuttake"
           }
         }
       ]

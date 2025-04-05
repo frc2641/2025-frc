@@ -1,6 +1,7 @@
 package frc.team2641.robot2025;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -19,7 +20,6 @@ import frc.team2641.robot2025.subsystems.swerve.Drivetrain;
 import java.io.File;
 import java.io.IOException;
 import java.util.NoSuchElementException;
-
 import swervelib.parser.SwerveParser;
 
 public class Robot extends TimedRobot {
@@ -54,8 +54,11 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
 
-    CameraServer.startAutomaticCapture(0);
-    CameraServer.startAutomaticCapture(1);
+    UsbCamera intakeCamera = CameraServer.startAutomaticCapture(0);
+    intakeCamera.setBrightness(25);
+    
+    UsbCamera climberCamera = CameraServer.startAutomaticCapture(1);
+    climberCamera.setBrightness(25);
 
     pdh = new PowerDistribution(21, ModuleType.kRev);
     SmartDashboard.putData("PDH", pdh);

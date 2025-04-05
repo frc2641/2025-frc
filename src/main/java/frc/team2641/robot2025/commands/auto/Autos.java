@@ -33,7 +33,7 @@ public class Autos {
 
 	private static final SendableChooser<Autos.Mode> autoMode = new SendableChooser<Autos.Mode>();
 	private static final SendableChooser<String> simpleAutoChooser = new SendableChooser<String>();
-	private static final SendableChooser<Command> simpleAutoHeight = new SendableChooser<Command>();
+	private static final SendableChooser<ELEVNUM> simpleAutoHeight = new SendableChooser<ELEVNUM>();
 	private static final SendableChooser<Pose2d> start = new SendableChooser<Pose2d>();
 	private static final ArrayList<SendableChooser<Pose2d>> sources = new ArrayList<SendableChooser<Pose2d>>();
 	private static final ArrayList<SendableChooser<Pose2d>> destinations = new ArrayList<SendableChooser<Pose2d>>();
@@ -52,8 +52,13 @@ public class Autos {
     NamedCommands.registerCommand("ElevDown", new SetElevator(0));
     NamedCommands.registerCommand("spin", new SuperSpin());
     NamedCommands.registerCommand("Outtake", new RunOuttake());
+		NamedCommands.registerCommand("PatientOuttake", Commands.race(
+			new RunOuttake(),
+			Commands.waitSeconds(2)
+		));
     NamedCommands.registerCommand("Intake", new RunIntake());
-    NamedCommands.registerCommand("ChosenElev", Commands.runOnce(() -> simpleAutoHeight.getSelected().schedule()));
+    // NamedCommands.registerCommand("ChosenElev", Commands.runOnce(() -> new SetElevator(simpleAutoHeight.getSelected())));
+    NamedCommands.registerCommand("ChosenElev", new SetElevator(simpleAutoHeight));
 
 		autoMode.setDefaultOption("Simple", Autos.Mode.SIMPLE);
     autoMode.addOption("Build Your Own", Autos.Mode.BYO);
@@ -148,7 +153,9 @@ public class Autos {
     simpleAutoChooser.addOption("Left Cage to J Branch", "Left Cage to J Branch");
     simpleAutoChooser.addOption("Left Cage to K Branch", "Left Cage to K Branch");
     simpleAutoChooser.addOption("Right Cage to J Branch", "Right Cage to J Branch");
+    simpleAutoChooser.addOption("Right Cage to G Branch", "Right Cage to G Branch");
     simpleAutoChooser.addOption("Right Cage to K Branch", "Right Cage to K Branch");
+		simpleAutoChooser.addOption("Center to G Branch", "Center to G Branch");
     simpleAutoChooser.addOption("Just Go Forward", "Straight");
     simpleAutoChooser.addOption("None", null);
 
@@ -156,10 +163,10 @@ public class Autos {
 
     SmartDashboard.putData("Simple Auto Path", simpleAutoChooser);
 
-    simpleAutoHeight.addOption("L1", new SetElevator(ELEVNUM.L1));
-    simpleAutoHeight.addOption("L2", new SetElevator(ELEVNUM.L2));
-    simpleAutoHeight.addOption("L3", new SetElevator(ELEVNUM.L3));
-    simpleAutoHeight.setDefaultOption("L4", new SetElevator(ELEVNUM.L4));
+    simpleAutoHeight.addOption("L1", ELEVNUM.L1);
+    simpleAutoHeight.addOption("L2", ELEVNUM.L2);
+    simpleAutoHeight.addOption("L3", ELEVNUM.L3);
+    simpleAutoHeight.setDefaultOption("L4", ELEVNUM.L4);
 		simpleAutoHeight.addOption("None", null);
 
 		simpleAutoChooser.onChange((String auto) -> checkValidAuto());
@@ -257,7 +264,7 @@ public class Autos {
 			}
 
 			if (levels.get(0).getSelected() != null) {
-				sequence.add(new SetElevator(levels.get(0).getSelected()));
+				sequence.add(new SetElevator(levels.get(0)));
 				sequence.add(new RunOuttake().withTimeout(0.5));
 			}
 
@@ -272,7 +279,7 @@ public class Autos {
 			}
 
 			if (levels.get(1).getSelected() != null) {
-				sequence.add(new SetElevator(levels.get(1).getSelected()));
+				sequence.add(new SetElevator(levels.get(1)));
 				sequence.add(new RunOuttake().withTimeout(0.5));
 			}
 
@@ -287,7 +294,7 @@ public class Autos {
 			}
 
 			if (levels.get(2).getSelected() != null) {
-				sequence.add(new SetElevator(levels.get(2).getSelected()));
+				sequence.add(new SetElevator(levels.get(2)));
 				sequence.add(new RunOuttake().withTimeout(0.5));
 			}
 

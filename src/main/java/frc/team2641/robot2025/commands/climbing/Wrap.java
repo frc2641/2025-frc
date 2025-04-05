@@ -14,14 +14,14 @@ public class Wrap extends Command {
 
   @Override
   public void initialize() {
+  }
+  
+  @Override
+  public void execute() {
     if (forwards)
       winch.extend();
     else
       winch.retract();
-  }
-
-  @Override
-  public void execute() {
   }
 
   @Override

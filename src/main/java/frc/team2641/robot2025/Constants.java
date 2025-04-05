@@ -19,7 +19,7 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double WHEEL_LOCK_TIME = 10; // seconds
     public static final double MAX_SPEED = 6; // m/s, will be around 6 or 7
-    public static final double SNIPER_MODE = 0.2; // increase... around 25%
+    public static final double SNIPER_MODE = 0.25; // increase... around 25%
     public static final double ANGLE_SNIPER_MODE = 0.6; // increase... around 25%
   }
 
@@ -57,6 +57,9 @@ public final class Constants {
 
     public static final double stallV = 0.1;
     public static final double stallI = 30;
+
+    public static final double lowSoftStop = 0;
+    public static final double highSoftStop = 0.849375;
   }
 
   public static final class ElevatorConstants {
@@ -69,9 +72,8 @@ public final class Constants {
     public static final double elevConvert = (2 * 1.0 / 12 * Units.inchesToMeters(2) * Math.PI) / 0.584; // gearbox * sprocket diameter 
     public static final double initPos = 0;
 
-    public static final double stallV = 0.075;
-    public static final double stallI = 24.5
-    ;
+    public static final double stallV = 0.01;
+    public static final double stallI = 24.75;
 
     // from https://www.reca.lc/linear?angle=%7B%22s%22%3A90%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=80&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A6.58691%2C%22u%22%3A%22kg%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%2A%22%7D&ratio=%7B%22magnitude%22%3A12%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A0.5%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A2.35%2C%22u%22%3A%22m%22%7D
     public static final double kS = 6.4;
@@ -104,7 +106,7 @@ public final class Constants {
     public static final double L2 = 0.8922850411837511;
     public static final double L3 = 1.4457806205120347;
     public static final double L4 = 2.222946163471534;
-    public static final double HP = 0.3232556401718673;
+    public static final double HP = 0.3282556401718673;
   }
 
   public static enum ELEVNUM { L1, L2, L3, L4, HP }

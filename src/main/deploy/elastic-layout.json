@@ -401,26 +401,11 @@
             }
           },
           {
-            "title": "Swerve",
-            "x": 1008.0,
-            "y": 0.0,
+            "title": "Alerts",
+            "x": 1296.0,
+            "y": 432.0,
             "width": 288.0,
             "height": 288.0,
-            "type": "YAGSL Swerve Drive",
-            "properties": {
-              "topic": "/SmartDashboard/swerve",
-              "period": 0.06,
-              "show_robot_rotation": true,
-              "show_desired_states": true,
-              "angle_offset": 0.0
-            }
-          },
-          {
-            "title": "Alerts",
-            "x": 1008.0,
-            "y": 288.0,
-            "width": 288.0,
-            "height": 432.0,
             "type": "Alerts",
             "properties": {
               "topic": "/SmartDashboard/Alerts",
@@ -429,10 +414,10 @@
           },
           {
             "title": "Climber",
-            "x": 0.0,
-            "y": 0.0,
+            "x": 768.0,
+            "y": 336.0,
             "width": 528.0,
-            "height": 720.0,
+            "height": 384.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/USB Camera 0",
@@ -458,13 +443,26 @@
           },
           {
             "title": "Limelight",
-            "x": 528.0,
+            "x": 768.0,
             "y": 0.0,
-            "width": 480.0,
-            "height": 720.0,
+            "width": 528.0,
+            "height": 336.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Outtake",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 768.0,
+            "height": 720.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/USB Camera 1",
               "period": 0.06,
               "rotation_turns": 0
             }
@@ -612,14 +610,12 @@
             "y": 288.0,
             "width": 288.0,
             "height": 288.0,
-            "type": "Graph",
+            "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Elevator Setpoint",
               "period": 0.033,
               "data_type": "double",
-              "time_displayed": 5.0,
-              "color": 4278238420,
-              "line_width": 2.0
+              "show_submit_button": false
             }
           },
           {

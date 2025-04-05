@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2641.robot2025.Constants;
@@ -19,6 +20,7 @@ import frc.team2641.robot2025.helpers.ElevatorConstrain;
 public class Elevator extends SubsystemBase {
   private TalonFX motor;
   private boolean stalled;
+  // private Timer timer;
   private double prev;
   private double setpoint = ElevatorConstants.initPos;
   private final PositionVoltage posRequest = new PositionVoltage(0).withSlot(0);
@@ -30,6 +32,7 @@ public class Elevator extends SubsystemBase {
   }
 
   private Elevator() {
+    // timer = new Timer();
     configMotor();
     setpoint = getPosition();
   }
@@ -92,9 +95,12 @@ public class Elevator extends SubsystemBase {
     if ((Math.abs(motor.getVelocity().getValue().baseUnitMagnitude()) < ElevatorConstants.stallV) && (motor.getTorqueCurrent().getValue().baseUnitMagnitude() > ElevatorConstants.stallI)) {
       // stop();
       stalled = true;
-    } else stalled = false;
-    
-    if (MathUtil.applyDeadband(value-prev, 0.02) == 0 && stalled){
+      // timer.start();
+    } else {stalled = false;
+      // timer.reset();    
+      // timer.stop();
+    }
+    if (MathUtil.applyDeadband(value-prev, 0.02) == 0 && stalled ){
       setpoint = ElevatorConstrain.constrain(setpoint - Constants.ElevatorConstants.elevatorSpeed * 0.3);
     }
 
@@ -115,6 +121,6 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean atPosition() {
-    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.02) == 0;
+    return MathUtil.applyDeadband(getPosition()-getSetpoint(), 0.05) == 0;
   }
 }

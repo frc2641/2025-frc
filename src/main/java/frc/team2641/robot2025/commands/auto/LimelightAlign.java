@@ -22,8 +22,8 @@ public class LimelightAlign extends Command {
     controllerX.setTolerance(0.01);
     controllerX.setSetpoint(xSetpoint);
 
-    controllerAngle = new PIDController(2.25, 0, 0);
-    controllerAngle.setTolerance(3 * Math.PI / 180);
+    controllerAngle = new PIDController(3.25, 0, 0);
+    controllerAngle.setTolerance(1.5 * Math.PI / 180);
     controllerAngle.setSetpoint(0);
 
     addRequirements(this.drivetrain);
